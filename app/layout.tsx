@@ -1,0 +1,26 @@
+"use client";
+import { Metadata } from "next";
+import { ThirdwebProvider } from "@thirdweb-dev/react";
+
+export const metadata: Metadata = {
+  title: "Home",
+  description: "Welcome to Next.js",
+};
+
+const activeChain = "mumbai";
+
+export default function RootLayout({
+  // Layouts must accept a children prop.
+  // This will be populated with nested layouts or pages
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <ThirdwebProvider activeChain={activeChain}>
+      <html lang="en">
+        <body>{children}</body>
+      </html>
+    </ThirdwebProvider>
+  );
+}
