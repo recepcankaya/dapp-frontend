@@ -6,7 +6,14 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        bgColor: "#17143D",
+        textColor: "#B5AEE4",
+        btnNotifyColor: "#4E3A9B",
+        purpleColor: "#6E1777",
+      },
+    },
   },
   plugins: [],
 };
