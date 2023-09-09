@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body {
+    @apply p-0 m-0;
+  }
+
+  a {
+    @apply text-purpleColor no-underline;
+  }
+
+  * {
+    @apply box-border;
+  }
+
+  body {
+    @apply text-textColor bg-bgColor;
+  }
+}

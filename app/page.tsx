@@ -2,7 +2,7 @@
 import { NextPage } from "next";
 
 const Home: NextPage = () => {
-  return <h1 className="text-3xl font-bold underline">Hello world!</h1>;
+  return <p className="">Hello world!</p>;
 };
 
 export default Home;
