@@ -9,7 +9,7 @@
   }
 
   a {
-    @apply text-purpleColor no-underline;
+    @apply no-underline;
   }
 
   * {
