@@ -14,13 +14,13 @@
 .textWithRect::after {
   background: linear-gradient(-45deg, red, blue);
   transform: translateZ(-50px);
-  animation: make-visible 1.5s ease-in forwards;
+  animation: make-visible 3s ease-in-out forwards;
 }
 
 .textWithRect::before {
   background: black;
   transform: translateZ(-49px);
-  animation: make-visible 1.5s ease-in forwards;
+  animation: make-visible 3s ease-in-out forwards;
 }
 
 .second,
@@ -29,19 +29,19 @@
 }
 
 .first {
-  animation: make-visible 1.5s ease-in forwards;
+  animation: make-visible 3s ease-in-out forwards;
 }
 
 .second {
-  animation: make-visible 1.5s ease-in 1s forwards;
+  animation: make-visible 3s ease-in-out 0.25s forwards;
 }
 
 .third {
-  animation: make-visible 1.5s ease-in 2s forwards;
+  animation: make-visible 3s ease-in-out 0.5s forwards;
 }
 
 .fourth {
-  animation: make-visible 1.5s ease-in 3s forwards;
+  animation: make-visible 3s ease-in-out 0.75s forwards;
 }
 
 @keyframes make-visible {

@@ -1,11 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Holtwood+One+SC&display=swap");
 
 @layer base {
   html,
   body {
     @apply p-0 m-0;
+    scroll-behavior: smooth;
   }
 
   a {
@@ -17,6 +19,6 @@
   }
 
   body {
-    @apply text-textColor bg-bgColor;
+    @apply text-textColor bg-black;
   }
 }
