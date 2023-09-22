@@ -19,6 +19,15 @@ module.exports = {
       fontFamily: {
         holtwood: ["'Holtwood One SC'", "serif"],
       },
+      animation: {
+        visibleHeroH2: "visibleHeroH2 1s ease-in forwards",
+      },
+      keyframes: {
+        visibleHeroH2: {
+          "0%": { opacity: 0 },
+          "100%": { opacity: 1 },
+        },
+      },
     },
   },
   plugins: [],

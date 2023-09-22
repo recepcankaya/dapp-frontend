@@ -4,6 +4,7 @@
   transform: perspective(5000px) rotateY(-30deg) rotateX(30deg);
   transform-style: preserve-3d;
   scale: 0;
+  animation: make-visible 3s ease-in-out forwards;
 }
 
 .textWithRect::before,
@@ -28,20 +29,16 @@
   margin-top: 6rem;
 }
 
-.first {
-  animation: make-visible 3s ease-in-out forwards;
-}
-
 .second {
-  animation: make-visible 3s ease-in-out 0.25s forwards;
+  animation-delay: 0.25s;
 }
 
 .third {
-  animation: make-visible 3s ease-in-out 0.5s forwards;
+  animation-delay: 0.5s;
 }
 
 .fourth {
-  animation: make-visible 3s ease-in-out 0.75s forwards;
+  animation-delay: 0.75s;
 }
 
 @keyframes make-visible {

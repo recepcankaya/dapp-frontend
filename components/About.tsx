@@ -2,7 +2,6 @@ import { useInView } from "react-intersection-observer";
 import Image from "next/image";
 
 import aboutBg from "../public/images/about-bg.png";
-import circle from "../public/images/about-circle.png";
 import styles from "../styles/About.module.css";
 
 type TextWithRectProps = {
@@ -26,62 +25,6 @@ const TextWithRect = ({
   );
 };
 
-const CircleImages = () => {
-  return (
-    <>
-      <Image
-        src={circle}
-        alt="a circle"
-        width={79}
-        height={78}
-        className="absolute top-32 left-10"
-      />
-      <Image
-        src={circle}
-        alt="a circle"
-        width={79}
-        height={78}
-        className="absolute top-60 left-64"
-      />
-      <Image
-        src={circle}
-        alt="a circle"
-        width={79}
-        height={78}
-        className="absolute bottom-72 left-40"
-      />
-      <Image
-        src={circle}
-        alt="a circle"
-        width={79}
-        height={78}
-        className="absolute bottom-28 left-10"
-      />
-      <Image
-        src={circle}
-        alt="a circle"
-        width={79}
-        height={78}
-        className="absolute bottom-4 left-72"
-      />
-      <Image
-        src={circle}
-        alt="a circle"
-        width={79}
-        height={78}
-        className="absolute top-40 right-72"
-      />
-      <Image
-        src={circle}
-        alt="a circle"
-        width={79}
-        height={78}
-        className="absolute bottom-44 right-52"
-      />
-    </>
-  );
-};
-
 export default function About() {
   const { ref: scrollRef, inView: isCompVisible } = useInView();
 
@@ -93,10 +36,9 @@ export default function About() {
         className="absolute top-0 left-0 w-full h-full opacity-10"
       />
       <h2 className="text-5xl text-center pt-12">ABOUT OUR PROJECT</h2>
-      <CircleImages />
       <div className="flex justify-center items-center pt-28">
         <div
-          className="grid grid-cols-2 grid-rows-2"
+          className="grid grid-cols-2 grid-rows-2 gap-8"
           style={{ transform: "rotateZ(15deg)" }}>
           <TextWithRect order="first" isCompVisible={isCompVisible}>
             Develop habits with the
