@@ -8,7 +8,7 @@ export default function HeroSection() {
   const { ref: secondH2Ref, inView: isSecondH2Visible } = useInView();
 
   return (
-    <header className="relative h-[847px]">
+    <header ref={firstH2Ref} className="relative h-[847px]">
       <div className="w-full h-full z-10 opacity-25">
         <div className="w-full h-full -z-10">
           <Image
@@ -34,7 +34,6 @@ export default function HeroSection() {
         </div>
       </div>
       <h2
-        ref={firstH2Ref}
         className={`${
           isFirstH2Visible
             ? "text-5xl font-holtwood absolute top-32 left-28 animate-visibleHeroH2"

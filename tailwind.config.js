@@ -20,12 +20,12 @@ module.exports = {
         holtwood: ["'Holtwood One SC'", "serif"],
       },
       animation: {
-        visibleHeroH2: "visibleHeroH2 1s ease-in forwards",
+        visibleHeroH2: "visibleHeroH2 0.7s ease-in forwards",
       },
       keyframes: {
         visibleHeroH2: {
-          "0%": { opacity: 0 },
-          "100%": { opacity: 1 },
+          "0%": { opacity: 0, transform: "translateY(100%)" },
+          "100%": { opacity: 1, transform: "translateY(0)" },
         },
       },
     },
