@@ -16,6 +16,18 @@ module.exports = {
         btnNotifyColor: "#4E3A9B",
         purpleColor: "#6E1777",
       },
+      fontFamily: {
+        holtwood: ["'Holtwood One SC'", "serif"],
+      },
+      animation: {
+        visibleHeroH2: "visibleHeroH2 1s ease-in forwards",
+      },
+      keyframes: {
+        visibleHeroH2: {
+          "0%": { opacity: 0 },
+          "100%": { opacity: 1 },
+        },
+      },
     },
   },
   plugins: [],
