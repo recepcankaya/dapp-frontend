@@ -1,5 +1,4 @@
 "use client";
-import { Metadata } from "next";
 import { ThirdwebProvider } from "@thirdweb-dev/react";
 
 import "./globals.css";
