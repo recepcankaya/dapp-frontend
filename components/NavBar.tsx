@@ -2,6 +2,7 @@ import Link from "next/link";
 import CustomButton from "./CustomButton";
 
 export default function NavBar() {
+  // @todo - navbarın yüksekliğini responsive yap
   return (
     <nav className="w-full h-44 bg-gradient-to-b from-[#574E70]/75 to-[#0A002F]/0">
       <div className="h-full pt-5 flex justify-between">

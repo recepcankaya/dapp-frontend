@@ -36,7 +36,7 @@ export default function About() {
         className="absolute top-0 left-0 w-full h-full opacity-10"
       />
       <h2 className="text-5xl text-center pt-12">ABOUT OUR PROJECT</h2>
-      <div className="flex justify-center items-center pt-28">
+      <div className="flex justify-center items-center pt-28 overflow-hidden">
         <div
           className="grid grid-cols-2 grid-rows-2 gap-8"
           style={{ transform: "rotateZ(15deg)" }}>

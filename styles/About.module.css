@@ -1,10 +1,10 @@
 .textWithRect {
-  @apply w-[359px] h-[9rem] relative border transition-transform duration-[0.5s] ease-[ease] rounded-[100px] border-solid border-[#6e1777] after:inset-[-1rem] before:blur-[15px] before:opacity-50 before:inset-3;
+  @apply sm:w-[200px] md:w-[280px] lg:w-[360px]  h-[9rem] relative border transition-transform duration-[0.5s] ease-[ease] rounded-[100px] border-solid border-[#6e1777] after:inset-[-1rem] before:blur-[15px] before:opacity-50 before:inset-3;
   background: linear-gradient(90deg, #17143d, #6e1777);
   transform: perspective(5000px) rotateY(-30deg) rotateX(30deg);
   transform-style: preserve-3d;
   scale: 0;
-  animation: make-visible 3s ease-in-out forwards;
+  animation: make-visible 2s ease-in-out forwards;
 }
 
 .textWithRect::before,
@@ -15,13 +15,13 @@
 .textWithRect::after {
   background: linear-gradient(-45deg, red, blue);
   transform: translateZ(-50px);
-  animation: make-visible 3s ease-in-out forwards;
+  animation: make-visible 2s ease-in-out forwards;
 }
 
 .textWithRect::before {
   background: black;
   transform: translateZ(-49px);
-  animation: make-visible 3s ease-in-out forwards;
+  animation: make-visible 2s ease-in-out forwards;
 }
 
 .second,
