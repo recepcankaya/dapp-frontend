@@ -1,5 +1,5 @@
 import Link from "next/link";
-import CustomButton from "./CustomButton";
+import { Button, buttonVariants } from "./ui/Button";
 
 export default function NavBar() {
   return (
@@ -13,10 +13,7 @@ export default function NavBar() {
           <Link href="" className="opacity-0 md:opacity-100">
             About Us
           </Link>
-          <CustomButton
-            text="Log In"
-            classNames="w-1/4 h-6 md:h-10 bg-btnNotifyColor rounded-3xl italic hover:bg-gradient-to-r from-bgColor to-purpleColor"
-          />
+          <Button>Log In</Button>
         </ul>
       </div>
     </nav>

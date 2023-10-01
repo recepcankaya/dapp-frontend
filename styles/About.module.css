@@ -1,5 +1,5 @@
 .textWithRect {
-  @apply mb-10 mr-8 w-44 md:w-60 lg:w-[360px] h-16 md:h-24 lg:h-[9rem] relative border transition-transform duration-[0.5s] ease-[ease] rounded-[100px] border-solid border-[#6e1777] after:inset-[-1rem] before:blur-[15px] before:opacity-50 before:inset-3;
+  @apply mb-10 mr-8 w-44 md:w-60 lg:w-[360px] h-16 md:h-24 lg:h-[9rem] relative border transition-transform duration-500 ease-in rounded-[100px] border-solid border-[#6e1777] after:inset-[-1rem] before:blur-[15px] before:opacity-50 before:inset-3;
   background: linear-gradient(90deg, #17143d, #6e1777);
   transform: perspective(5000px) rotateY(-30deg) rotateX(30deg);
   transform-style: preserve-3d;
@@ -9,7 +9,7 @@
 
 .textWithRect::before,
 .textWithRect::after {
-  @apply content-[""] absolute transition-[background-color] duration-[0.75s] rounded-[inherit];
+  @apply content-[""] absolute transition-[background-color] duration-700 rounded-[inherit];
 }
 
 .textWithRect::after {

@@ -11,13 +11,19 @@
     "deploy": "next build && next export && npx thirdweb@latest upload out"
   },
   "dependencies": {
+    "@radix-ui/react-slot": "^1.0.2",
     "@thirdweb-dev/react": "^3",
     "@thirdweb-dev/sdk": "^3",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.0.0",
     "ethers": "^5",
+    "lucide-react": "^0.279.0",
     "next": "^13.5.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-intersection-observer": "^9.5.2"
+    "react-intersection-observer": "^9.5.2",
+    "tailwind-merge": "^1.14.0",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@types/node": "^18.11.11",
