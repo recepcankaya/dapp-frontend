@@ -1,13 +1,7 @@
 "use client";
-import { Metadata } from "next";
 import { ThirdwebProvider } from "@thirdweb-dev/react";
 
 import "./globals.css";
-
-export const metadata: Metadata = {
-  title: "Home",
-  description: "Welcome to Next.js",
-};
 
 const activeChain = "mumbai";
 

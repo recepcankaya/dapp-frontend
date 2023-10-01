@@ -20,7 +20,9 @@ const TextWithRect = ({
       className={`${
         isCompVisible ? `${styles.textWithRect} ${styles[order]}` : ""
       } `}>
-      <p className="text-2xl text-center pt-6">{children}</p>
+      <p className="text-center text-xs md:text-lg lg:text-2xl lg:pt-6">
+        {children}
+      </p>
     </div>
   );
 };
@@ -29,16 +31,18 @@ export default function About() {
   const { ref: scrollRef, inView: isCompVisible } = useInView();
 
   return (
-    <section ref={scrollRef} className="relative min-h-[53rem] w-full">
+    <section ref={scrollRef} className="relative lg:min-h-[50rem] w-full">
       <Image
         src={aboutBg}
         alt="bubbles"
         className="absolute top-0 left-0 w-full h-full opacity-10"
       />
-      <h2 className="text-5xl text-center pt-12">ABOUT OUR PROJECT</h2>
-      <div className="flex justify-center items-center pt-28">
+      <h2 className="text-2xl md:text-4xl lg:text-5xl text-center pt-12">
+        ABOUT OUR PROJECT
+      </h2>
+      <div className="flex justify-center items-center pt-10 md:pt-24 lg:pt-28 ">
         <div
-          className="grid grid-cols-2 grid-rows-2 gap-8"
+          className="md:grid md:grid-cols-2 md:grid-rows-2 md:gap-8 xl:gap-16"
           style={{ transform: "rotateZ(15deg)" }}>
           <TextWithRect order="first" isCompVisible={isCompVisible}>
             Develop habits with the
