@@ -31,7 +31,7 @@ export default function About() {
   const { ref: scrollRef, inView: isCompVisible } = useInView();
 
   return (
-    <section ref={scrollRef} className="relative lg:min-h-[50rem] w-full">
+    <section ref={scrollRef} className="relative lg:min-h-[50rem] w-full pb-8">
       <Image
         src={aboutBg}
         alt="bubbles"
