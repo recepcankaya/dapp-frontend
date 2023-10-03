@@ -8,25 +8,29 @@ import userImages from "../public/images/user-images.png";
 
 const FirstImageFromApp = () => {
   return (
-    <div className="h-44 w-32 absolute left-6 top-6 rounded-3xl bg-black text-sm">
+    <div className="h-44 w-32 sm:h-60 sm:w-40 absolute left-6 top-6 sm:top-24 rounded-3xl bg-black text-sm">
       <div className="h-10 w-full bg-btnNotifyColor rounded-t-3xl flex justify-around items-center">
         <Image src={iconLogout} alt="logout" className="w-4 h-4" />
         <p className="text-sm font-bold">profile</p>
         <Image src={iconProfileCircle} alt="profile" className="w-4 h-4" />
       </div>
-      <div className="mt-2 flex flex-col items-center">
-        <Image src={iconUser} alt="icon user" className="w-6 h-6" />
-        <div className="w-16 h-4 mt-4 rounded-full bg-slate-100/75 relative">
-          <span className="text-xs text-black absolute top-0 left-3 italic">
-            Sign up
-          </span>
-        </div>
-        <span className="italic">or</span>
-        <div className="w-16 h-4 rounded-full bg-slate-100/75 relative">
-          <span className="text-xs text-black absolute top-0 left-4 italic">
-            Log in
-          </span>
-        </div>
+      <div className="mt-2 w-11/12 h-4 m-auto flex flex-col items-center">
+        <Image
+          src={iconUser}
+          alt="icon user"
+          className="w-6 h-6 sm:h-10 sm:w-10"
+        />
+        <input
+          type="text"
+          placeholder="Log in"
+          className="w-full mt-2 bg-gray-400 rounded-full placeholder:text-black placeholder:font-semibold placeholder:text-center placeholder:text-xs placeholder:italic"
+        />
+        <p className="italic">or</p>
+        <input
+          type="text"
+          placeholder="Sign up"
+          className="w-full mt-2 bg-gray-400 rounded-full placeholder:text-black placeholder:font-semibold placeholder:text-center placeholder:text-xs placeholder:italic"
+        />
       </div>
     </div>
   );
@@ -34,7 +38,7 @@ const FirstImageFromApp = () => {
 
 const SecondImageFromApp = () => {
   return (
-    <div className="h-44 w-32 absolute right-4 top-2 rounded-3xl bg-white text-sm">
+    <div className="h-44 w-32 sm:h-60 sm:w-40 absolute right-4 top-2 rounded-3xl bg-white text-sm">
       <div className="h-10 w-full bg-btnNotifyColor rounded-t-3xl pt-1">
         <Image src={iconProfileCircle} alt="profile" className="w-4 h-4 ml-4" />
         <p className=" italic font-bold pl-4">Hey, Sam</p>
@@ -55,7 +59,7 @@ const SecondImageFromApp = () => {
 
 const ThirdImageFromApp = () => {
   return (
-    <div className="h-44 w-32 absolute right-4 bottom-4 rounded-3xl bg-black text-sm">
+    <div className="h-44 w-32 sm:h-60 sm:w-40 absolute right-4 bottom-4 sm:bottom-20 rounded-3xl bg-black text-sm">
       <div className="h-10 w-full flex items-center bg-btnNotifyColor rounded-t-3xl pt-1 pl-1">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -84,7 +88,7 @@ const ThirdImageFromApp = () => {
         viewBox="0 0 309 248"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="w-20 h-20 m-auto mt-2">
+        className="w-20 h-20 sm:w-28 sm:h-28 m-auto mt-2 sm:mt-4">
         <line
           x1="5.5"
           y1="232.027"
@@ -128,7 +132,7 @@ const ThirdImageFromApp = () => {
 
 const FourthImageFromApp = () => {
   return (
-    <div className="h-44 w-32 absolute left-6 bottom-0 rounded-3xl bg-white mt-8 text-sm">
+    <div className="h-44 w-32 sm:h-60 sm:w-40 absolute left-6 bottom-0 sm:bottom-4 rounded-3xl bg-white mt-12 text-sm">
       <div className="h-10 w-full flex items-center bg-btnNotifyColor rounded-t-3xl pt-1 pl-2">
         <svg
           width="16"
@@ -150,7 +154,7 @@ const FourthImageFromApp = () => {
           Contact to other people
         </p>
       </div>
-      <div className="mt-2 mx-auto w-11/12 max-h-28 overflow-hidden">
+      <div className="mt-2 mx-auto w-11/12 h-28 sm:h-32 overflow-hidden">
         <Image
           src={userImages}
           alt="user images"
@@ -164,7 +168,7 @@ const FourthImageFromApp = () => {
 export default function HowItWorks() {
   return (
     <section className="bg-background h-auto pb-8">
-      <h2 className="text-2xl md:text-4xl lg:text-5xl text-center py-4">
+      <h2 className="text-2xl md:text-4xl lg:text-5xl font-semibold text-center py-4">
         How It Works
       </h2>
       <div className="relative">

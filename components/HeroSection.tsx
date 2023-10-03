@@ -8,7 +8,9 @@ export default function HeroSection() {
   const { ref: secondH2Ref, inView: isSecondH2Visible } = useInView();
 
   return (
-    <header ref={firstH2Ref} className="relative h-[400px] lg:h-[847px]">
+    <header
+      ref={firstH2Ref}
+      className="relative h-[400px] lg:h-[847px] font-bold">
       <Image
         src={bubbleBg}
         alt="bubbles"
