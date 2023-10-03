@@ -35,7 +35,7 @@ export default function About() {
       <Image
         src={aboutBg}
         alt="bubbles"
-        className="absolute top-0 left-0 w-full h-full opacity-10"
+        className="absolute top-0 left-0 w-full h-full opacity-10 object-cover"
       />
       <h2 className="text-2xl md:text-4xl lg:text-5xl text-center pt-12">
         ABOUT OUR PROJECT
