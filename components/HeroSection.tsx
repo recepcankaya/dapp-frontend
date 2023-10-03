@@ -12,7 +12,7 @@ export default function HeroSection() {
       <Image
         src={bubbleBg}
         alt="bubbles"
-        className="absolute top-0 left-0 w-full h-full opacity-10"
+        className="absolute top-0 left-0 w-full h-full opacity-10 object-cover"
       />
       <h2
         className={`${

@@ -31,11 +31,11 @@ export default function About() {
   const { ref: scrollRef, inView: isCompVisible } = useInView();
 
   return (
-    <section ref={scrollRef} className="relative lg:min-h-[50rem] w-full">
+    <section ref={scrollRef} className="relative lg:min-h-[50rem] w-full pb-8">
       <Image
         src={aboutBg}
         alt="bubbles"
-        className="absolute top-0 left-0 w-full h-full opacity-10"
+        className="absolute top-0 left-0 w-full h-full opacity-10 object-cover"
       />
       <h2 className="text-2xl md:text-4xl lg:text-5xl text-center pt-12">
         ABOUT OUR PROJECT
