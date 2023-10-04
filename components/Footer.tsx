@@ -4,23 +4,26 @@ export default function Footer() {
   return (
     <footer className="w-full p-4">
       <div className="container mx-auto text-center">
-        <div className="flex justify-center space-x-4 text-purpleColor hover:text-btnNotifyColor">
+        <div className="flex justify-center space-x-4 text-purpleColor">
           <Link
-            href="https://twitter.com/your-twitter"
+            href="https://twitter.com/LadderitApp"
             target="_blank"
-            rel="noopener noreferrer">
+            rel="noopener noreferrer"
+            className="hover:text-foreground">
             Twitter
           </Link>
           <Link
-            href="https://www.facebook.com/your-facebook"
+            href="https://www.linkedin.com/company/ladder-it/about/"
             target="_blank"
-            rel="noopener noreferrer">
+            rel="noopener noreferrer"
+            className="hover:text-foreground">
             Linkedin
           </Link>
           <Link
-            href="https://www.instagram.com/your-instagram"
+            href="https://www.instagram.com/ladderitapp/"
             target="_blank"
-            rel="noopener noreferrer">
+            rel="noopener noreferrer"
+            className="hover:text-foreground">
             Instagram
           </Link>
         </div>
