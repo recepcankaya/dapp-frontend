@@ -1,7 +1,14 @@
 "use client";
+import { Metadata } from "next";
 import { ThirdwebProvider } from "@thirdweb-dev/react";
 
 import "./globals.css";
+
+export const metatada: Metadata = {
+  title: "Ladder It",
+  description: "A blockchain/socialfi app which level you up in the life",
+  keywords: "blockchain, decentralized social media, socialfi, ladder, habit",
+};
 
 const activeChain = "mumbai";
 
