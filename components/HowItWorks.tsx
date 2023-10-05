@@ -91,10 +91,10 @@ const ThirdImageFromApp = () => {
           <path
             d="M13 25.3176L3.81366 16.1314C2.72878 15.0465 2.72878 13.2712 3.81366 12.1863L13 3"
             stroke="#B5AEE4"
-            stroke-width="5"
-            stroke-miterlimit="10"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="5"
+            strokeMiterlimit="10"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
         </svg>
         <p className="italic font-bold pl-2 md:pl-3">Your progress</p>
@@ -115,7 +115,7 @@ const ThirdImageFromApp = () => {
           x2="5.5"
           y2="0.973236"
           stroke="white"
-          stroke-width="10"
+          strokeWidth="10"
         />
         <line
           x1="308.121"
@@ -123,7 +123,7 @@ const ThirdImageFromApp = () => {
           x2="10.8788"
           y2="243"
           stroke="white"
-          stroke-width="10"
+          strokeWidth="10"
         />
         <line
           x1="45.0559"
@@ -131,7 +131,7 @@ const ThirdImageFromApp = () => {
           x2="99.0559"
           y2="107.107"
           stroke="white"
-          stroke-width="7"
+          strokeWidth="7"
         />
         <line
           x1="99.5071"
@@ -139,7 +139,7 @@ const ThirdImageFromApp = () => {
           x2="169.188"
           y2="176.087"
           stroke="white"
-          stroke-width="7"
+          strokeWidth="7"
         />
         <path
           d="M263.44 46.3541C263.083 44.4543 261.254 43.2034 259.354 43.5601L228.395 49.3734C226.495 49.7301 225.244 51.5594 225.601 53.4592C225.958 55.359 227.787 56.6099 229.687 56.2531L257.206 51.0858L262.373 78.6049C262.73 80.5047 264.559 81.7556 266.459 81.3988C268.359 81.0421 269.61 79.2128 269.253 77.313L263.44 46.3541ZM169.889 184.976L262.889 48.9756L257.111 45.0244L164.111 181.024L169.889 184.976Z"
@@ -165,10 +165,10 @@ const FourthImageFromApp = () => {
           <path
             d="M3 25.3178L12.1863 16.1315C13.2712 15.0466 13.2712 13.2713 12.1863 12.1864L3 3"
             stroke="#ADA5DF"
-            stroke-width="5"
-            stroke-miterlimit="10"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="5"
+            strokeMiterlimit="10"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
         </svg>
         <p className="italic font-bold leading-none pl-2">
