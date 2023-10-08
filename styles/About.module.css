@@ -1,5 +1,5 @@
 .textWithRect {
-  @apply mb-10 mr-8 w-44 md:w-60 lg:w-[360px] h-16 md:h-24 lg:h-[9rem] relative border transition-transform duration-500 ease-in rounded-[100px] border-solid border-[#6e1777] after:inset-[-1rem] before:blur-[15px] before:opacity-50 before:inset-3;
+  @apply mb-10 mr-8 w-44 md:w-60 lg:w-[360px] 2xl:w-[38rem] h-16 md:h-24 lg:h-[9rem] 2xl:h-[15rem] relative border transition-transform duration-500 ease-in rounded-[100px] border-solid border-[#6e1777] after:inset-[-1rem] before:blur-[15px] before:opacity-50 before:inset-3;
   background: linear-gradient(90deg, #17143d, #6e1777);
   transform: perspective(5000px) rotateY(-30deg) rotateX(30deg);
   transform-style: preserve-3d;
@@ -37,6 +37,12 @@
 .third {
   animation-delay: 0.5s;
   padding-top: 1rem;
+}
+
+@media (min-width: 1536px) {
+  .third {
+    padding-top: 2.5rem;
+  }
 }
 
 .fourth {

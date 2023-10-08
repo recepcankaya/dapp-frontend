@@ -2,9 +2,9 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="w-full p-4">
+    <footer className="w-full p-4 2xl:p-12">
       <div className="container mx-auto text-center">
-        <div className="flex justify-center space-x-4 text-purpleColor">
+        <div className="flex justify-center space-x-4 text-purpleColor 2xl:text-4xl 2xl:mb-4">
           <Link
             href="https://twitter.com/LadderitApp"
             target="_blank"
@@ -27,7 +27,7 @@ export default function Footer() {
             Instagram
           </Link>
         </div>
-        <p className="text-sm pt-3">
+        <p className="text-sm 2xl:text-2xl pt-3">
           &copy; {new Date().getFullYear()} Ladder It
         </p>
       </div>
