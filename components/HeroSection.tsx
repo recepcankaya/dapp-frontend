@@ -1,31 +1,62 @@
-import { useInView } from "react-intersection-observer";
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 import bubbleBg from "../public/images/hero-bg.png";
 
-export default function HeroSection() {
-  const { ref: secondH2Ref, inView: isSecondH2Visible } = useInView();
+const firstHeadingVariants = {
+  hidden: {
+    opacity: 0,
+    y: -100,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 1,
+      delay: 0.25,
+      ease: "easeInOut",
+    },
+  },
+};
 
+const secondHeadingVariants = {
+  hidden: {
+    opacity: 0,
+    y: 100,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 1,
+      delay: 0.5,
+      ease: "easeInOut",
+    },
+  },
+};
+
+export default function HeroSection() {
   return (
-    // @todo - 2 partlı animasyonu tek parta değiştir
-    <header className="relative h-[400px] lg:h-[847px] 2xl:h-[85rem] font-bold">
+    <header className="relative h-[400px] lg:h-[30rem] 2xl:h-[60rem] font-bold flex flex-col justify-center items-center gap-16 lg:block">
       <Image
         src={bubbleBg}
         alt="bubbles"
         className="absolute top-0 left-0 w-full h-full opacity-10 object-cover"
       />
-      <h2 className="text-2xl sm:text-4xl lg:text-5xl 2xl:text-7xl font-holtwood text-center pt-12 lg:absolute lg:top-32 lg:left-28 animate-visibleHeroH2">
+      <motion.h2
+        className="text-2xl sm:text-4xl lg:text-5xl 2xl:text-8xl font-holtwood text-center lg:absolute lg:top-24 lg:left-28 2xl:left-36 2xl:top-48"
+        variants={firstHeadingVariants}
+        initial="hidden"
+        whileInView="visible">
         WHEN YOU LADDER IT
-      </h2>
-      <h2
-        ref={secondH2Ref}
-        className={`${
-          isSecondH2Visible
-            ? "text-2xl sm:text-4xl lg:text-5xl 2xl:text-7xl font-holtwood text-center pt-48 lg:absolute lg:right-28 lg:bottom-72 animate-visibleHeroH2"
-            : "text-2xl sm:text-4xl lg:text-5xl font-holtwood text-center pt-48 lg:absolute lg:right-28 lg:bottom-72 opacity-0"
-        }`}>
+      </motion.h2>
+      <motion.h2
+        className="text-2xl sm:text-4xl lg:text-5xl 2xl:text-8xl font-holtwood text-center lg:absolute lg:right-28 lg:top-60 2xl:right-36 2xl:top-[40rem]"
+        variants={secondHeadingVariants}
+        initial="hidden"
+        whileInView="visible">
         YOU CAN GATHER IT
-      </h2>
+      </motion.h2>
     </header>
   );
 }

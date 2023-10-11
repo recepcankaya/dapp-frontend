@@ -53,15 +53,10 @@ module.exports = {
         holtwood: ["'Holtwood One SC'", "serif"],
       },
       animation: {
-        visibleHeroH2: "visibleHeroH2 0.25s ease-in forwards",
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
       keyframes: {
-        visibleHeroH2: {
-          "0%": { opacity: 0, transform: "translateY(100%)" },
-          "100%": { opacity: 1, transform: "translateY(0)" },
-        },
         "accordion-down": {
           from: { height: 0 },
           to: { height: "var(--radix-accordion-content-height)" },

@@ -16,6 +16,7 @@
     "@radix-ui/react-slot": "^1.0.2",
     "@thirdweb-dev/react": "^3",
     "@thirdweb-dev/sdk": "^3",
+    "@uidotdev/usehooks": "^2.3.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "ethers": "^5",
