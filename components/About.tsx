@@ -1,4 +1,5 @@
 import { useInView } from "react-intersection-observer";
+import { motion } from "framer-motion";
 import Image from "next/image";
 
 import aboutBg from "../public/images/about-bg.png";
@@ -16,14 +17,22 @@ const TextWithRect = ({
   isCompVisible,
 }: TextWithRectProps) => {
   return (
-    <div
+    <motion.div
       className={`${
         isCompVisible ? `${styles.textWithRect} ${styles[order]}` : ""
-      } `}>
+      }`}
+      drag
+      dragConstraints={{
+        top: 125,
+        left: -125,
+        right: 125,
+        bottom: -125,
+      }}
+      dragElastic={0.2}>
       <p className="text-center text-xs md:text-lg lg:text-2xl 2xl:text-5xl lg:pt-6 2xl:pt-10">
         {children}
       </p>
-    </div>
+    </motion.div>
   );
 };
 
