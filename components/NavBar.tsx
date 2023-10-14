@@ -32,7 +32,7 @@ export default function NavBar() {
             }}
             whileTap={{ scale: 0.9 }}>
             <Button asChild>
-              <Link href="/login">Log In</Link>
+              <Link href="/login">Login</Link>
             </Button>
           </motion.li>
         </ul>
