@@ -1,6 +1,12 @@
 "use client";
 import { Metadata } from "next";
 import { ThirdwebProvider } from "@thirdweb-dev/react";
+import {
+  metamaskWallet,
+  coinbaseWallet,
+  walletConnect,
+  localWallet,
+} from "@thirdweb-dev/react";
 
 import "./globals.css";
 
@@ -20,7 +26,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ThirdwebProvider activeChain={activeChain}>
+    <ThirdwebProvider
+      activeChain={activeChain}
+      supportedWallets={[
+        metamaskWallet(),
+        coinbaseWallet(),
+        walletConnect(),
+        localWallet(),
+      ]}>
       <html lang="en">
         <body>{children}</body>
       </html>
