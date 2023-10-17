@@ -48,7 +48,7 @@ export default function About() {
         alt="bubbles"
         className="absolute top-0 left-0 w-full h-full opacity-10 object-cover"
       />
-      <h2 className="text-2xl md:text-4xl lg:text-5xl 2xl:text-8xl text-center font-semibold pt-12">
+      <h2 className="text-2xl md:text-4xl lg:text-5xl 2xl:text-8xl text-center font-semibold pt-12 italic">
         ABOUT OUR PROJECT
       </h2>
       <div className="flex justify-center items-center pt-10 md:pt-24 lg:pt-28 2xl:pt-44">

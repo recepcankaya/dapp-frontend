@@ -1,11 +1,11 @@
 "use client";
 import { Metadata } from "next";
-import { ThirdwebProvider } from "@thirdweb-dev/react";
 import {
+  ThirdwebProvider,
+  magicLink,
   metamaskWallet,
   coinbaseWallet,
   walletConnect,
-  localWallet,
 } from "@thirdweb-dev/react";
 
 import "./globals.css";
@@ -32,7 +32,12 @@ export default function RootLayout({
         metamaskWallet(),
         coinbaseWallet(),
         walletConnect(),
-        localWallet(),
+        magicLink({
+          apiKey: "YOUR_MAGIC_API_KEY",
+          oauthOptions: {
+            providers: ["google", "facebook", "twitter", "apple"],
+          },
+        }),
       ]}>
       <html lang="en">
         <body>{children}</body>
