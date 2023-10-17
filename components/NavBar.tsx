@@ -1,9 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { ConnectWallet } from "@thirdweb-dev/react";
 
 import logo from "../public/images/logo.jpg";
-import { Button } from "./ui/Button";
 
 export default function NavBar() {
   return (
@@ -31,9 +31,14 @@ export default function NavBar() {
               transition: { duration: 0.2 },
             }}
             whileTap={{ scale: 0.9 }}>
-            <Button asChild>
-              <Link href="/login">Login</Link>
-            </Button>
+            <ConnectWallet
+              className="!bg-btnNotifyColor !text-foreground hover:bg-gradient-to-r from-background to-purpleColor"
+              btnTitle={"Login"}
+              modalTitle={"Select"}
+              switchToActiveChain={true}
+              modalSize={"wide"}
+              modalTitleIconUrl={""}
+            />
           </motion.li>
         </ul>
       </div>

@@ -1,18 +1,119 @@
 import Image from "next/image";
+import { motion } from "framer-motion";
+import { useMediaQuery } from "@uidotdev/usehooks";
 
 import LandingPageSVGs from "./LandingPageSVGs";
 import iconLogout from "../public/icons/icon-logout.svg";
 import iconProfileCircle from "../public/icons/icon-profile-circle.svg";
 import iconUser from "../public/icons/icon-user.svg";
 import userImages from "../public/images/user-images.png";
+import useWindowWidth from "@/hooks/useWindowWidth";
 
 const SIZE_OF_DIVS =
   "h-44 w-32 sm:h-60 sm:w-40 md:h-80 md:w-48 lg:h-96 lg:w-60 2xl:h-1/4 2xl:w-1/6";
 
-const FirstImageFromApp = () => {
+type MediaQueriesProp = {
+  mediaQueries: {
+    isMobile: boolean;
+    isTablet: boolean;
+    isLaptop: boolean;
+    isLaptopL: boolean;
+    is4K: boolean;
+  };
+};
+
+const FirstImageFromApp = ({ mediaQueries }: MediaQueriesProp) => {
+  const windowWidth = useWindowWidth();
+  const { isMobile, isTablet, isLaptop, isLaptopL, is4K } = mediaQueries;
+
+  const firstCardVariants = isMobile
+    ? {
+        initial: {
+          x: 0,
+          y: 0,
+        },
+        animate: {
+          x: 0,
+          y: 0,
+        },
+      }
+    : isTablet
+    ? {
+        initial: {
+          x: 0,
+          y: 0,
+        },
+        animate: {
+          x: [0, windowWidth * 0.65, windowWidth * 0.65, 0, 0],
+          y: [0, 0, 350, 350, 0],
+          transition: {
+            duration: 25,
+            repeat: Infinity,
+          },
+        },
+      }
+    : isLaptop
+    ? {
+        initial: {
+          x: 0,
+          y: 0,
+        },
+        animate: {
+          x: [0, windowWidth * 0.65, windowWidth * 0.65, 0, 0],
+          y: [0, 0, 550, 550, 0],
+          transition: {
+            duration: 25,
+            repeat: Infinity,
+          },
+        },
+      }
+    : isLaptopL
+    ? {
+        initial: {
+          x: 0,
+          y: 0,
+        },
+        animate: {
+          x: [0, windowWidth * 0.65, windowWidth * 0.65, 0, 0],
+          y: [0, 0, 750, 750, 0],
+          transition: {
+            duration: 25,
+            repeat: Infinity,
+          },
+        },
+      }
+    : is4K
+    ? {
+        initial: {
+          x: 0,
+          y: 0,
+        },
+        animate: {
+          x: [0, windowWidth * 0.65, windowWidth * 0.65, 0, 0],
+          y: [0, 0, 750, 750, 0],
+          transition: {
+            duration: 25,
+            repeat: Infinity,
+          },
+        },
+      }
+    : {
+        initial: {
+          x: 0,
+          y: 0,
+        },
+        animate: {
+          x: 0,
+          y: 0,
+        },
+      };
+
   return (
-    <div
-      className={`${SIZE_OF_DIVS} absolute left-6 top-6 sm:top-24 lg:top-40 2xl:left-12 2xl:top-52 rounded-3xl bg-black`}>
+    <motion.div
+      className={`${SIZE_OF_DIVS} absolute left-8 top-6 sm:top-24 lg:top-40 2xl:left-16 2xl:top-52 rounded-3xl bg-black `}
+      variants={firstCardVariants}
+      initial="initial"
+      animate="animate">
       <div className="h-1/4 w-full bg-btnNotifyColor rounded-t-3xl flex justify-around items-center">
         <Image
           src={iconLogout}
@@ -46,14 +147,114 @@ const FirstImageFromApp = () => {
           disabled
         />
       </div>
-    </div>
+    </motion.div>
   );
 };
 
-const SecondImageFromApp = () => {
+const SecondImageFromApp = ({ mediaQueries }: MediaQueriesProp) => {
+  const windowWidth = useWindowWidth();
+  const { isMobile, isTablet, isLaptop, isLaptopL, is4K } = mediaQueries;
+
+  const secondCardVariants = isMobile
+    ? {
+        initial: {
+          x: 0,
+          y: 0,
+        },
+        animate: {
+          x: 0,
+          y: 0,
+        },
+      }
+    : isTablet
+    ? {
+        initial: {
+          x: 0,
+          y: 0,
+        },
+        animate: {
+          x: [0, 0, -windowWidth * 0.65, -windowWidth * 0.65, 0],
+          y: [0, 350, 350, 0, 0],
+          transition: {
+            duration: 25,
+            repeat: Infinity,
+          },
+        },
+      }
+    : isLaptop
+    ? {
+        initial: {
+          x: 0,
+          y: 0,
+        },
+        animate: {
+          x: [0, 0, -windowWidth * 0.65, -windowWidth * 0.65, 0],
+          y: [0, 550, 550, 0, 0],
+          transition: {
+            duration: 25,
+            repeat: Infinity,
+          },
+        },
+      }
+    : isLaptopL
+    ? {
+        initial: {
+          x: 0,
+          y: 0,
+        },
+        animate: {
+          x: [0, 0, -windowWidth * 0.65, -windowWidth * 0.65, 0],
+          y: [0, 750, 750, 0, 0],
+          transition: {
+            duration: 25,
+            repeat: Infinity,
+          },
+        },
+      }
+    : is4K
+    ? {
+        initial: {
+          x: 0,
+          y: 0,
+        },
+        animate: {
+          x: [0, 0, -windowWidth * 0.65, -windowWidth * 0.65, 0],
+          y: [0, 750, 750, 0, 0],
+          transition: {
+            duration: 25,
+            repeat: Infinity,
+          },
+        },
+      }
+    : {
+        initial: {
+          x: 0,
+          y: 0,
+        },
+        animate: {
+          x: 0,
+          y: 0,
+        },
+      };
+
+  // initial: {
+  //   x: 0,
+  //   y: 0,
+  // },
+  // animate: {
+  //   x: [0, 0, -100 * 0.7, -100 * 0.7, 0],
+  //   y: [0, 100 * 2, 100 * 2, 0, 0],
+  //   transition: {
+  //     duration: 25,
+  //     repeat: Infinity,
+  //   },
+  // },
   return (
-    <div
-      className={`${SIZE_OF_DIVS} absolute right-4 top-2 2xl:right-12 rounded-3xl bg-white`}>
+    <motion.div
+      className={`${SIZE_OF_DIVS} absolute right-8 top-6 sm:top-24 lg:top-40 2xl:right-16 2xl:top-52 rounded-3xl bg-white`}
+      variants={secondCardVariants}
+      initial="initial"
+      animate="animate">
       <div className="h-1/4 w-full bg-btnNotifyColor rounded-t-3xl pt-1 sm:pt-2 lg:pl-2 2xl:pt-8 2xl:pl-6">
         <Image
           src={iconProfileCircle}
@@ -75,14 +276,115 @@ const SecondImageFromApp = () => {
           disabled
         />
       </div>
-    </div>
+    </motion.div>
   );
 };
 
-const ThirdImageFromApp = () => {
+const ThirdImageFromApp = ({ mediaQueries }: MediaQueriesProp) => {
+  const windowWidth = useWindowWidth();
+  const { isMobile, isTablet, isLaptop, isLaptopL, is4K } = mediaQueries;
+
+  const thirdCardVariants = isMobile
+    ? {
+        initial: {
+          x: 0,
+          y: 0,
+        },
+        animate: {
+          x: 0,
+          y: 0,
+        },
+      }
+    : isTablet
+    ? {
+        initial: {
+          x: 0,
+          y: 0,
+        },
+        animate: {
+          x: [0, -windowWidth * 0.65, -windowWidth * 0.65, 0, 0],
+          y: [0, 0, -350, -350, 0],
+          transition: {
+            duration: 25,
+            repeat: Infinity,
+          },
+        },
+      }
+    : isLaptop
+    ? {
+        initial: {
+          x: 0,
+          y: 0,
+        },
+        animate: {
+          x: [0, -windowWidth * 0.65, -windowWidth * 0.65, 0, 0],
+          y: [0, 0, -550, -550, 0],
+          transition: {
+            duration: 25,
+            repeat: Infinity,
+          },
+        },
+      }
+    : isLaptopL
+    ? {
+        initial: {
+          x: 0,
+          y: 0,
+        },
+        animate: {
+          x: [0, -windowWidth * 0.65, -windowWidth * 0.65, 0, 0],
+          y: [0, 0, -750, -750, 0],
+          transition: {
+            duration: 25,
+            repeat: Infinity,
+          },
+        },
+      }
+    : is4K
+    ? {
+        initial: {
+          x: 0,
+          y: 0,
+        },
+        animate: {
+          x: [0, -windowWidth * 0.65, -windowWidth * 0.65, 0, 0],
+          y: [0, 0, -750, -750, 0],
+          transition: {
+            duration: 25,
+            repeat: Infinity,
+          },
+        },
+      }
+    : {
+        initial: {
+          x: 0,
+          y: 0,
+        },
+        animate: {
+          x: 0,
+          y: 0,
+        },
+      };
+
+  // initial: {
+  //   x: 0,
+  //   y: 0,
+  // },
+  // animate: {
+  //   x: [0, -100 * 0.7, -100 * 0.7, 0, 0],
+  //   y: [0, 0, -100 * 2, -100 * 2, 0],
+  //   transition: {
+  //     duration: 25,
+  //     repeat: Infinity,
+  //   },
+  // },
+
   return (
-    <div
-      className={`${SIZE_OF_DIVS} absolute right-4 2xl:right-12 bottom-4 sm:bottom-20 lg:bottom-32 rounded-3xl bg-black`}>
+    <motion.div
+      className={`${SIZE_OF_DIVS} absolute right-8 2xl:right-16 bottom-4 sm:bottom-20 lg:bottom-32 rounded-3xl bg-black`}
+      variants={thirdCardVariants}
+      initial="initial"
+      animate="animate">
       <div className="h-1/4 w-full flex items-center bg-btnNotifyColor rounded-t-3xl pt-1 pl-1 sm:pl-2 md:pl-3 2xl:pl-5">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -149,14 +451,115 @@ const ThirdImageFromApp = () => {
           fill="white"
         />
       </svg>
-    </div>
+    </motion.div>
   );
 };
 
-const FourthImageFromApp = () => {
+const FourthImageFromApp = ({ mediaQueries }: MediaQueriesProp) => {
+  const windowWidth = useWindowWidth();
+  const { isMobile, isTablet, isLaptop, isLaptopL, is4K } = mediaQueries;
+
+  const fourthCardVariants = isMobile
+    ? {
+        initial: {
+          x: 0,
+          y: 0,
+        },
+        animate: {
+          x: 0,
+          y: 0,
+        },
+      }
+    : isTablet
+    ? {
+        initial: {
+          x: 0,
+          y: 0,
+        },
+        animate: {
+          x: [0, 0, windowWidth * 0.65, windowWidth * 0.65, 0],
+          y: [0, -350, -350, 0, 0],
+          transition: {
+            duration: 25,
+            repeat: Infinity,
+          },
+        },
+      }
+    : isLaptop
+    ? {
+        initial: {
+          x: 0,
+          y: 0,
+        },
+        animate: {
+          x: [0, 0, windowWidth * 0.65, windowWidth * 0.65, 0],
+          y: [0, -550, -550, 0, 0],
+          transition: {
+            duration: 25,
+            repeat: Infinity,
+          },
+        },
+      }
+    : isLaptopL
+    ? {
+        initial: {
+          x: 0,
+          y: 0,
+        },
+        animate: {
+          x: [0, 0, windowWidth * 0.65, windowWidth * 0.65, 0],
+          y: [0, -750, -750, 0, 0],
+          transition: {
+            duration: 25,
+            repeat: Infinity,
+          },
+        },
+      }
+    : is4K
+    ? {
+        initial: {
+          x: 0,
+          y: 0,
+        },
+        animate: {
+          x: [0, 0, windowWidth * 0.65, windowWidth * 0.65, 0],
+          y: [0, -750, -750, 0, 0],
+          transition: {
+            duration: 25,
+            repeat: Infinity,
+          },
+        },
+      }
+    : {
+        initial: {
+          x: 0,
+          y: 0,
+        },
+        animate: {
+          x: 0,
+          y: 0,
+        },
+      };
+
+  // initial: {
+  //   x: 0,
+  //   y: 0,
+  // },
+  // animate: {
+  //   x: [0, 0, 100 * 0.7, 100 * 0.7, 0],
+  //   y: [0, -100 * 2, -100 * 2, 0, 0],
+  //   transition: {
+  //     duration: 25,
+  //     repeat: Infinity,
+  //   },
+  // },
+
   return (
-    <div
-      className={`${SIZE_OF_DIVS} absolute left-6 2xl:left-12 bottom-0 sm:bottom-4 rounded-3xl bg-white mt-12 overflow-hidden`}>
+    <motion.div
+      className={`${SIZE_OF_DIVS} absolute left-8 2xl:left-16 bottom-4 sm:bottom-20 lg:bottom-32 rounded-3xl bg-white mt-12 overflow-hidden`}
+      variants={fourthCardVariants}
+      initial="initial"
+      animate="animate">
       <div className="h-1/4 w-full flex items-center bg-btnNotifyColor rounded-t-3xl pt-1 pl-2 2xl:pl-6">
         <svg
           width="16"
@@ -185,22 +588,39 @@ const FourthImageFromApp = () => {
           className="pt-2.5 object-cover w-auto h-auto"
         />
       </div>
-    </div>
+    </motion.div>
   );
 };
 
 export default function HowItWorks() {
+  const mediaQueries = {
+    isMobile: useMediaQuery("only screen and (max-width : 425px)"),
+    isTablet: useMediaQuery(
+      "only screen and (min-width : 426px) and (max-width : 768px)"
+    ),
+    isLaptop: useMediaQuery(
+      "only screen and (min-width : 769px) and (max-width : 1024px)"
+    ),
+    isLaptopL: useMediaQuery(
+      "only screen and (min-width : 1025px) and (max-width : 1440px)"
+    ),
+    is4K: useMediaQuery(
+      "only screen and (min-width : 1441px) and (max-width : 2560px)"
+    ),
+  };
+
   return (
-    <section className="bg-background h-auto pb-8">
-      <h2 className="text-2xl md:text-4xl lg:text-5xl 2xl:text-8xl font-semibold text-center py-4 md:py-8 lg:py-12">
+    <section className="bg-background h-auto">
+      <h2 className="text-2xl md:text-4xl lg:text-5xl 2xl:text-8xl font-semibold text-center py-4 md:py-8 lg:py-12 italic">
         How It Works
       </h2>
-      <div className="relative w-full text-sm sm:text-base md:text-lg lg:text-2xl 2xl:text-4xl">
-        <LandingPageSVGs />
-        <FirstImageFromApp />
-        <SecondImageFromApp />
-        <ThirdImageFromApp />
-        <FourthImageFromApp />
+      <div className="relative w-full h-auto text-sm sm:text-base md:text-lg lg:text-2xl 2xl:text-4xl">
+        <LandingPageSVGs>
+          <FirstImageFromApp mediaQueries={mediaQueries} />
+          <SecondImageFromApp mediaQueries={mediaQueries} />
+          <ThirdImageFromApp mediaQueries={mediaQueries} />
+          <FourthImageFromApp mediaQueries={mediaQueries} />
+        </LandingPageSVGs>
       </div>
     </section>
   );
