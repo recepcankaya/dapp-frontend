@@ -1,11 +1,19 @@
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { ConnectWallet, useConnectionStatus } from "@thirdweb-dev/react";
 import { motion } from "framer-motion";
-import { ConnectWallet } from "@thirdweb-dev/react";
 
 import logo from "@/public/images/logo.jpg";
 
 export default function NavBar() {
+  const router = useRouter();
+  const connectionStatus = useConnectionStatus();
+
+  if (connectionStatus === "connected") {
+    router.push("/missions");
+  }
+
   return (
     <nav className="w-full h-20 md:h-24 lg:h-32 2xl:h-48 bg-gradient-to-b from-[#574E70]/75 to-[#0A002F]/0">
       <div className="h-full flex justify-around items-center">

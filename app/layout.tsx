@@ -27,13 +27,14 @@ export default function RootLayout({
 }) {
   return (
     <ThirdwebProvider
+      clientId="33cf5af1f3380055e7f1b7ba3161d6c1"
       activeChain={activeChain}
       supportedWallets={[
         metamaskWallet(),
         coinbaseWallet(),
         walletConnect(),
         magicLink({
-          apiKey: "YOUR_MAGIC_API_KEY",
+          apiKey: "33cf5af1f3380055e7f1b7ba3161d6c1",
           oauthOptions: {
             providers: ["google", "facebook", "twitter", "apple"],
           },

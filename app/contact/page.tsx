@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { NextPage } from "next";
 
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -40,7 +41,7 @@ import { CardContent, Card } from "@/components/ui/card";
 //   }
 // }
 
-export default function ContactUs() {
+const ContactUs: NextPage = () => {
   return (
     <>
       <div className="fixed inset-0 z-50 bg-black/75 transition-opacity">
@@ -141,4 +142,4 @@ export default function ContactUs() {
       </form>
     </>
   );
-}
+};
