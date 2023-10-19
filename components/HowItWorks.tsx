@@ -1,7 +1,6 @@
 "use client";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { useMediaQuery } from "@uidotdev/usehooks";
 
 import LandingPageSVGs from "./LandingPageSVGs";
 import iconLogout from "../public/icons/icon-logout.svg";
@@ -9,6 +8,7 @@ import iconProfileCircle from "../public/icons/icon-profile-circle.svg";
 import iconUser from "../public/icons/icon-user.svg";
 import userImages from "../public/images/user-images.png";
 import useWindowWidth from "@/hooks/useWindowWidth";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 const SIZE_OF_DIVS =
   "h-44 w-32 sm:h-60 sm:w-40 md:h-80 md:w-48 lg:h-96 lg:w-60 2xl:h-1/4 2xl:w-1/6";
