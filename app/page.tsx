@@ -1,11 +1,11 @@
 "use client";
 import { NextPage } from "next";
 
-import NavBar from "@/components/NavBar";
-import HeroSection from "@/components/HeroSection";
-import About from "@/components/About";
-import HowItWorks from "@/components/HowItWorks";
-import Footer from "@/components/Footer";
+import NavBar from "@/components/landingpage/NavBar";
+import HeroSection from "@/components/landingpage/HeroSection";
+import About from "@/components/landingpage/About";
+import HowItWorks from "@/components/landingpage/HowItWorks";
+import Footer from "@/components/landingpage/Footer";
 
 const Home: NextPage = () => {
   return (
