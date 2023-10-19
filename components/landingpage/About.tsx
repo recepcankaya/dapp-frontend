@@ -2,8 +2,8 @@ import { useInView } from "react-intersection-observer";
 import { motion } from "framer-motion";
 import Image from "next/image";
 
-import aboutBg from "../public/images/about-bg.png";
-import styles from "../styles/About.module.css";
+import aboutBg from "@/public/images/about-bg.png";
+import styles from "@/styles/About.module.css";
 
 type TextWithRectProps = {
   children: React.ReactNode;

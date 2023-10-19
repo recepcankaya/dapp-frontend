@@ -3,10 +3,10 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 
 import LandingPageSVGs from "./LandingPageSVGs";
-import iconLogout from "../public/icons/icon-logout.svg";
-import iconProfileCircle from "../public/icons/icon-profile-circle.svg";
-import iconUser from "../public/icons/icon-user.svg";
-import userImages from "../public/images/user-images.png";
+import iconLogout from "@/public/icons/icon-logout.svg";
+import iconProfileCircle from "@/public/icons/icon-profile-circle.svg";
+import iconUser from "@/public/icons/icon-user.svg";
+import userImages from "@/public/images/user-images.png";
 import useWindowWidth from "@/hooks/useWindowWidth";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 

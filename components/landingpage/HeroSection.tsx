@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 
-import bubbleBg from "../public/images/hero-bg.png";
+import bubbleBg from "@/public/images/hero-bg.png";
 
 const firstHeadingVariants = {
   hidden: {
