@@ -4,15 +4,15 @@ import { NextPage } from "next";
 import MissionForm from "@/components/missions/MissionForm";
 import MissionList from "@/components/missions/MissionList";
 import { useState } from "react";
+import { Mission } from "@/types/MissionType.types";
 
 const Missions: NextPage = () => {
-  const [text, setText] = useState("");
-  const [missions, setMissions] = useState<string[]>([]);
+  const [missions, setMissions] = useState<Mission[]>([]);
 
   return (
     <div>
-      <MissionForm text={text} setText={setText} setMissions={setMissions} />
-      <MissionList missions={missions} />
+      <MissionForm setMissions={setMissions} />
+      <MissionList missions={missions} setMissions={setMissions} />
     </div>
   );
 };

@@ -1,29 +1,44 @@
+import { useState } from "react";
+
 import { Button } from "../ui/Button";
 import { Input } from "../ui/input";
+import { Mission } from "@/types/MissionType.types";
 
 type MissionFormProps = {
-  text: string;
-  setText: React.Dispatch<React.SetStateAction<string>>;
-  setMissions: React.Dispatch<React.SetStateAction<string[]>>;
+  setMissions: React.Dispatch<React.SetStateAction<Mission[]>>;
 };
 
-export default function MissionForm({
-  text,
-  setText,
-  setMissions,
-}: MissionFormProps) {
+let _id = 0;
+
+export default function MissionForm({ setMissions }: MissionFormProps) {
+  // Input value for the mission
+  const [text, setText] = useState("");
+
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (text.length < 3) {
       return handleLessText();
     }
-    setMissions((prev) => [...prev, text]);
+
+    setMissions((prev) => [
+      ...prev,
+      { id: _id, text: text, isCompleted: false },
+    ]);
+    _id++;
   };
 
+  /**
+   * handles the text input which is written by the user for the mission
+   * @param e the event that is triggered when the user types in the input
+   */
   const handleText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
   };
 
+  /**
+   * handles the case when the user enters less than 3 characters and return an error
+   * @todo - add a toast message instead of an alert
+   */
   const handleLessText = () => {
     if (text.length < 3) {
       alert("You cannot enter a mission");
