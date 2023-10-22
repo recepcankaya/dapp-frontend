@@ -1,15 +1,23 @@
-"use client";
-import { useState } from "react";
 import { Button } from "../ui/Button";
+import { Input } from "../ui/input";
 
-export default function MissionForm() {
-  const [text, setText] = useState("");
+type MissionFormProps = {
+  text: string;
+  setText: React.Dispatch<React.SetStateAction<string>>;
+  setMissions: React.Dispatch<React.SetStateAction<string[]>>;
+};
 
+export default function MissionForm({
+  text,
+  setText,
+  setMissions,
+}: MissionFormProps) {
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (text.length < 3) {
       return handleLessText();
     }
+    setMissions((prev) => [...prev, text]);
   };
 
   const handleText = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,17 +33,16 @@ export default function MissionForm() {
   return (
     <>
       <form
-        className="w-1/2 h-72 p-12 flex flex-col justify-between bg-ultraViolet border border-solid border-ultraViolet rounded-md"
+        className="w-1/2 h-72 p-12 flex flex-col justify-between bg-btnNotifyColor rounded-md text-foreground"
         onSubmit={handleFormSubmit}>
-        <h2 className="text-2xl text-bgColor text-center">Add Missions</h2>
-        <input
-          className="h-[1.80rem] pl-2 py-4 rounded-xl border border-solid border-ultraViolet focus:outline-none"
+        <h2 className="text-2xl text-center">Add Missions</h2>
+        <Input
+          placeholder="Run 3 miles"
+          className="placeholder:italic"
           value={text}
           onChange={handleText}
         />
-        <Button className="mx-auto py-2 w-1/2 bg-bgColor rounded-3xl hover:bg-[#6A666C] hover:text-bgColor">
-          Add
-        </Button>
+        <Button variant="outline">Add</Button>
       </form>
     </>
   );
