@@ -37,7 +37,7 @@ const secondHeadingVariants = {
 
 export default function HeroSection() {
   return (
-    <header className="relative h-[400px] lg:h-[30rem] 2xl:h-[60rem] font-bold flex flex-col justify-center items-center gap-16 lg:block">
+    <header className="relative h-[400px] lg:h-[30rem] 2xl:h-[60rem] font-bold flex flex-col justify-center items-center gap-16 lg:block bg-black/75">
       <Image
         src={bubbleBg}
         alt="bubbles"

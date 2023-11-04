@@ -1,8 +1,5 @@
 "use client";
-import { useState } from "react";
-import { useReward } from "react-rewards";
 
-import styles from "@/styles/MissionList.module.css";
 import { Button } from "../ui/Button";
 import {
   AlertDialog,
@@ -16,10 +13,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alertdialog";
 import { Mission } from "@/types/MissionType.types";
-
-type SelectedItemIndex = {
-  index: number;
-};
+import styles from "@/styles/MissionList.module.css";
 
 type MissionListProps = {
   missions: Mission[];
@@ -30,11 +24,9 @@ export default function MissionList({
   missions,
   setMissions,
 }: MissionListProps) {
-  const { reward, isAnimating } = useReward("rewardId", "confetti");
-
   /**
    * The action that marks the mission as completed
-   * @param _index the index of the mission
+   * @param index the index of the mission
    */
   const handleCompleted = (index: number) => {
     setMissions((prev) => {
@@ -49,10 +41,10 @@ export default function MissionList({
 
   /**
    * The action that deletes the mission
-   * @param _index the index of the mission
+   * @param mission the mission that is going to be deleted
    */
-  const handleDeleted = (_mission: Mission) => {
-    setMissions(missions.filter((m) => m.id !== _mission.id));
+  const handleDeleted = (mission: Mission) => {
+    setMissions(missions.filter((m) => m.id !== mission.id));
   };
 
   return missions.map((mission, idx) => (
@@ -61,13 +53,12 @@ export default function MissionList({
         <AlertDialog>
           <AlertDialogTrigger>
             <Button
-              disabled={isAnimating}
+              disabled={mission.isCompleted}
               onClick={() => {
                 handleCompleted(idx);
-                reward();
               }}
-              className="bg-[#974EC3]">
-              <span id="rewardId">Finish</span>
+              className="hover:bg-green-700 hover:text-foreground disabled:!pointer-events-auto disabled:hover:bg-foreground disabled:hover:text-bgColor">
+              Finish
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
@@ -86,14 +77,16 @@ export default function MissionList({
         <p className="text-center text-foreground text-2xl">{mission.text}</p>
         <AlertDialog>
           <AlertDialogTrigger>
-            <Button className="bg-[#77037B]">Delete</Button>
+            <Button className="hover:bg-red-700 hover:text-foreground">
+              Delete
+            </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
               <AlertDialogDescription>
-                Do you want to delete your mission 🥺? If you sure, you will
-                lose your progress for this mission.
+                Do you want to delete your mission🥺? If you sure, you will lose
+                your progress for this mission.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>

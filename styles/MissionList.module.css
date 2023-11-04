@@ -49,17 +49,37 @@
   background: transparent;
 }
 
+/* This happens when the user completes the mission */
 .cardChanged {
   width: 100%;
   height: 100%;
-  box-shadow: 15px 15px 0px black;
   border-radius: 8px;
-  /* Buradaki background-color rengi değişecek */
-  /* background-color: rgb(10, 13, 116); */
   transform: rotateX(0) rotateY(0);
   display: flex;
   justify-content: space-around;
   align-items: center;
   text-decoration: line-through;
   border: 1px solid #6e1777;
+}
+
+.cardChanged::before,
+.cardChanged::after {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  border-radius: inherit;
+}
+
+.cardChanged::before {
+  inset: 0;
+  background: linear-gradient(90deg, #77037b, #210062);
+  z-index: -1;
+}
+
+.cardChanged::after {
+  inset: 0.5rem;
+  background: linear-gradient(-45deg, blue, red);
+  filter: blur(5px);
+  z-index: -2;
 }

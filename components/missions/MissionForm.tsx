@@ -1,16 +1,22 @@
 import { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { Button } from "../ui/Button";
 import { Input } from "../ui/input";
 import { Mission } from "@/types/MissionType.types";
 
 type MissionFormProps = {
+  missions: Mission[];
   setMissions: React.Dispatch<React.SetStateAction<Mission[]>>;
 };
 
 let _id = 0;
 
-export default function MissionForm({ setMissions }: MissionFormProps) {
+export default function MissionForm({
+  setMissions,
+  missions,
+}: MissionFormProps) {
   // Input value for the mission
   const [text, setText] = useState("");
 
@@ -25,6 +31,7 @@ export default function MissionForm({ setMissions }: MissionFormProps) {
       { id: _id, text: text, isCompleted: false },
     ]);
     _id++;
+    setText("");
   };
 
   /**
@@ -35,14 +42,42 @@ export default function MissionForm({ setMissions }: MissionFormProps) {
     setText(e.target.value);
   };
 
+  // =================== IT WILL BE ACTIVATED LATER ===================
+  /**
+   * function that iterate over the missions array and if there is a mission with the same text
+   * @param _text the text of the mission
+   */
+  // const checkMission = (_text: string) => {
+  //   const mission = missions.find((m) => m.text === _text);
+  //   if (mission !== undefined) {
+  //     toast.error("You have that mission already", {
+  //       position: "top-right",
+  //       autoClose: 2000,
+  //       hideProgressBar: false,
+  //       closeOnClick: true,
+  //       pauseOnHover: false,
+  //       draggable: false,
+  //       progress: undefined,
+  //       theme: "light",
+  //     });
+  //   }
+  // };
+  // ==================================================================
+
   /**
    * handles the case when the user enters less than 3 characters and return an error
-   * @todo - add a toast message instead of an alert
    */
   const handleLessText = () => {
-    if (text.length < 3) {
-      alert("You cannot enter a mission");
-    }
+    toast.error("You have to enter a mission", {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: false,
+      progress: undefined,
+      theme: "light",
+    });
   };
 
   return (
@@ -57,7 +92,8 @@ export default function MissionForm({ setMissions }: MissionFormProps) {
           value={text}
           onChange={handleText}
         />
-        <Button variant="outline">Add</Button>
+        <Button type="submit">Add</Button>
+        <ToastContainer />
       </form>
     </>
   );

@@ -41,7 +41,7 @@ export default function NavBar() {
             whileTap={{ scale: 0.9 }}>
             <ConnectWallet
               className="!h-8 !min-w-[auto] !px-4 !py-1 md:!px-5 md:!py-3 lg:!px-7 lg:!py-5 
-              2xl:!px-9 2xl:!py-7 2xl:!rounded-lg !text-sm md:!text-base lg:!text-lg 2xl:!text-2xl !bg-btnNotifyColor !text-foreground hover:bg-gradient-to-r from-background to-purpleColor"
+              2xl:!px-9 2xl:!py-7 2xl:!rounded-lg !text-sm md:!text-base lg:!text-lg 2xl:!text-2xl !bg-foreground !text-bgColor hover:bg-gradient-to-r from-btnNotifyColor to-purpleColor hover:!text-foreground"
               btnTitle="Login"
               modalTitle="Select an option"
               modalTitleIconUrl=""
