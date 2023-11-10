@@ -1,7 +1,6 @@
 "use client";
 import { NextPage } from "next";
 import { useState } from "react";
-import { ConnectWallet } from "@thirdweb-dev/react";
 import useWindowSize from "react-use/lib/useWindowSize";
 import Confetti from "react-confetti";
 
@@ -15,7 +14,7 @@ const Missions: NextPage = () => {
   const { width, height } = useWindowSize();
 
   return (
-    <div className="relative pb-10">
+    <main className="bg-[#9376E0] h-auto w-full relative pb-10">
       {/* @note - A bug in confetti: Confetti displays behind alertdialog  */}
       {missions.map((mission) =>
         mission.isCompleted === true ? (
@@ -35,11 +34,8 @@ const Missions: NextPage = () => {
         ) : null
       )}
       <MissionForm setMissions={setMissions} missions={missions} />
-      <div className="flex justify-center items-center my-12">
-        <ConnectWallet switchToActiveChain={true} hideTestnetFaucet={true} />
-      </div>
       <MissionList missions={missions} setMissions={setMissions} />
-    </div>
+    </main>
   );
 };
 

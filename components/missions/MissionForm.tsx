@@ -1,14 +1,25 @@
-import { useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { useState, useEffect } from "react";
+import { motion, useAnimate } from "framer-motion";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import { toastError, toastSuccess } from "@/lib/toast/toast";
+import { Mission } from "@/types/MissionType.types";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/input";
-import { Mission } from "@/types/MissionType.types";
 
 type MissionFormProps = {
   missions: Mission[];
   setMissions: React.Dispatch<React.SetStateAction<Mission[]>>;
+};
+
+const pathVariants = {
+  initial: { opacity: 0, pathLength: 0 },
+  animate: {
+    opacity: 1,
+    pathLength: 1,
+    transition: { duration: 3, ease: "easeInOut" },
+  },
 };
 
 let _id = 0;
@@ -19,11 +30,13 @@ export default function MissionForm({
 }: MissionFormProps) {
   // Input value for the mission
   const [text, setText] = useState("");
+  const [scope, animate] = useAnimate();
 
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (text.length < 3) {
-      return handleLessText();
+      toastError("The mission should be at least 3 characters");
+      return;
     }
 
     setMissions((prev) => [
@@ -32,6 +45,7 @@ export default function MissionForm({
     ]);
     _id++;
     setText("");
+    toastSuccess("The mission is added");
   };
 
   /**
@@ -64,37 +78,65 @@ export default function MissionForm({
   // };
   // ==================================================================
 
-  /**
-   * handles the case when the user enters less than 3 characters and return an error
-   */
-  const handleLessText = () => {
-    toast.error("You have to enter a mission", {
-      position: "top-right",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: false,
-      draggable: false,
-      progress: undefined,
-      theme: "light",
-    });
+  const handleAnimation = async () => {
+    await animate(
+      "path",
+      { opacity: [0, 1], pathLength: [0, 1] },
+      { duration: 3, ease: "easeInOut" }
+    );
+    await animate(
+      "h2",
+      { opacity: 1, y: [-100, 0] },
+      { duration: 1, ease: "easeInOut" }
+    );
+    await animate(
+      "input",
+      { opacity: 1, y: [100, 0] },
+      { duration: 1, ease: "easeInOut" }
+    );
+    await animate(
+      "button",
+      { opacity: 1, y: [100, 0] },
+      { duration: 1, ease: "easeInOut" }
+    );
   };
 
+  useEffect(() => {
+    handleAnimation();
+  }, []);
+
   return (
-    <>
+    <section ref={scope} className="h-screen w-full relative">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 1543 1355"
+        width="100%"
+        height="75%"
+        fill="none">
+        <path
+          d="M423.63 46.4301L8 140.302V1001.51L771.5 1346L1535 1001.51V140.302L1119.37 46.4301C890.932 -4.81004 652.068 -4.81004 423.63 46.4301Z"
+          fill="#D3C189"
+          stroke="#EB596E"
+          strokeWidth="15"
+        />
+      </svg>
       <form
-        className="w-1/2 h-72 p-12 flex flex-col justify-between bg-btnNotifyColor rounded-md text-foreground"
-        onSubmit={handleFormSubmit}>
-        <h2 className="text-2xl text-center">Add Missions</h2>
+        onSubmit={handleFormSubmit}
+        className="absolute top-20 left-1/2 -translate-x-1/2 flex flex-col items-center w-1/3">
+        <h2 className="text-2xl text-center opacity-0">Add Missions</h2>
         <Input
           placeholder="Run 3 miles"
-          className="placeholder:italic"
+          className="mt-8 py-4 bg-white border-2 border-[#EB596E] placeholder:italic opacity-0"
           value={text}
           onChange={handleText}
         />
-        <Button type="submit">Add</Button>
-        <ToastContainer />
+        <Button
+          type="submit"
+          className="mt-8 w-full bg-[#EB596E] border-2 border-white opacity-0">
+          Add
+        </Button>
       </form>
-    </>
+      <ToastContainer />
+    </section>
   );
 }

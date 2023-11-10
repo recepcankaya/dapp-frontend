@@ -1,16 +1,15 @@
 .card {
-  width: 100%;
+  width: 90%;
   height: 100%;
   position: relative;
-  /* Buradaki background-color rengi değişecek */
-  background: linear-gradient(90deg, #77037b, #210062);
-  border: 1px solid #6e1777;
-  border-radius: 8px;
-  transform: perspective(5000px) rotateY(45deg) rotateX(45deg);
+  background-color: #d3c189;
+  border: 2px solid #eb596e;
+  border-radius: 24px;
+  transform: perspective(5000px) rotateY(30deg) rotateX(30deg);
   transform-style: preserve-3d;
   transition: transform 0.5s ease;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -24,7 +23,7 @@
 
 .card::after {
   inset: -1rem;
-  background: linear-gradient(-45deg, blue, red);
+  background: linear-gradient(90deg, #f55a9b, #4b68e8);
   transform: translateZ(-50px);
 }
 
@@ -53,33 +52,13 @@
 .cardChanged {
   width: 100%;
   height: 100%;
-  border-radius: 8px;
+  background-color: #d4c187bf;
+  border-radius: 24px;
   transform: rotateX(0) rotateY(0);
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   text-decoration: line-through;
-  border: 1px solid #6e1777;
-}
-
-.cardChanged::before,
-.cardChanged::after {
-  content: "";
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  border-radius: inherit;
-}
-
-.cardChanged::before {
-  inset: 0;
-  background: linear-gradient(90deg, #77037b, #210062);
-  z-index: -1;
-}
-
-.cardChanged::after {
-  inset: 0.5rem;
-  background: linear-gradient(-45deg, blue, red);
-  filter: blur(5px);
-  z-index: -2;
+  border: 1px solid #eb596e;
+  box-shadow: 10px 10px 0px black;
 }
