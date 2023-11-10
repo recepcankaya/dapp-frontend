@@ -611,7 +611,7 @@ export default function HowItWorks() {
   };
 
   return (
-    <section className="bg-background h-auto">
+    <section className="bg-background text-foreground h-auto">
       <h2 className="text-2xl md:text-4xl lg:text-5xl 2xl:text-8xl font-semibold text-center py-4 md:py-8 lg:py-12 italic">
         How It Works
       </h2>

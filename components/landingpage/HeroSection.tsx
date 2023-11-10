@@ -37,12 +37,7 @@ const secondHeadingVariants = {
 
 export default function HeroSection() {
   return (
-    <header className="relative h-[400px] lg:h-[30rem] 2xl:h-[60rem] font-bold flex flex-col justify-center items-center gap-16 lg:block bg-black/75">
-      <Image
-        src={bubbleBg}
-        alt="bubbles"
-        className="absolute top-0 left-0 w-full h-full opacity-10 object-cover"
-      />
+    <header className="relative h-[400px] lg:h-[30rem] 2xl:h-[60rem] font-bold flex flex-col justify-center items-center gap-16 lg:block bg-background text-foreground">
       <motion.h2
         className="text-2xl sm:text-4xl lg:text-5xl 2xl:text-8xl font-holtwood text-center lg:absolute lg:top-24 lg:left-28 2xl:left-36 2xl:top-48"
         variants={firstHeadingVariants}
