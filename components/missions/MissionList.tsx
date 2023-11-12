@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "../ui/Button";
+import { Button } from "@/components/ui/Button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -48,13 +48,23 @@ export default function MissionList({
   };
 
   return (
-    <section className="">
+    <section className="pt-12 w-full">
       {missions.map((mission, idx) => (
         <ul
-          className="mx-auto mb-8 w-[80%] h-24 flex justify-around gap-12"
+          className="mx-auto mb-16 w-[90%] h-auto sm:flex sm:items-center sm:justify-around sm:gap-1.5"
           key={mission.id}>
+          {/* @todo - work with border here. add it to divs */}
+          <div className="mx-auto w-1/2 sm:w-auto h-16 md:h-20 mb-4 sm:mb-0 font-bold text-sm md:text-base sm:order-last">
+            <p className="-mb-2">Completed days</p>
+            <div className="bg-[url('/designs/sand-watch.svg')] bg-no-repeat w-full h-full bg-contain bg-center flex flex-col items-center justify-center gap-2">
+              <span>5</span>
+              <span>21</span>
+            </div>
+          </div>
           <li
-            className={mission.isCompleted ? styles.cardChanged : styles.card}>
+            className={`${
+              mission.isCompleted ? styles.cardChanged : styles.card
+            } w-full sm:w-3/4 xl:7/12 h-16 md:h-20 rounded-3xl flex items-center justify-between mx-auto`}>
             <AlertDialog>
               <AlertDialogTrigger>
                 <Button
@@ -62,7 +72,7 @@ export default function MissionList({
                   onClick={() => {
                     handleCompleted(idx);
                   }}
-                  className="bg-[url('/designs/button-shield.svg')] bg-no-repeat bg-transparent h-full hover:bg-[url('/designs/button-shield-finish-hover.svg')] hover:bg-transparent"
+                  className="bg-[url('/designs/button-shield.svg')] bg-no-repeat bg-transparent h-full hover:bg-[url('/designs/button-shield-finish-hover.svg')] hover:bg-transparent text-sm lg:text-base"
                   style={{
                     backgroundSize: "100% 100%",
                   }}>
@@ -76,7 +86,7 @@ export default function MissionList({
                   </AlertDialogTitle>
                   <AlertDialogDescription>
                     You completed today&apos;s mission. Keep up the good work!
-                    As your reward, we sent LDT token to your account 🥳🎉
+                    As your reward, we sent LDT token to your account🥳🎉
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
@@ -84,11 +94,13 @@ export default function MissionList({
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
-            <p className="text-center text-2xl">{mission.text}</p>
+            <p className="text-center text-lg sm:text-xl md:text-2xl">
+              {mission.text}
+            </p>
             <AlertDialog>
               <AlertDialogTrigger>
                 <Button
-                  className="bg-[url('/designs/button-shield.svg')] bg-no-repeat bg-transparent h-full hover:bg-[url('/designs/button-shield-delete-hover.svg')] hover:bg-transparent"
+                  className="bg-[url('/designs/button-shield.svg')] bg-no-repeat bg-transparent h-full hover:bg-[url('/designs/button-shield-delete-hover.svg')] hover:bg-transparent text-sm lg:text-base"
                   style={{
                     backgroundSize: "100% 100%",
                   }}>
@@ -116,14 +128,6 @@ export default function MissionList({
               </AlertDialogContent>
             </AlertDialog>
           </li>
-          {/* @todo - work with border here. add it to divs */}
-          <div className="flex flex-col justify-center w-32 h-28">
-            <p className="font-bold text-sm">Completed days</p>
-            <div className="bg-[url('/designs/sand-watch.svg')] bg-no-repeat w-full h-full bg-contain bg-center flex flex-col items-center justify-center gap-3">
-              <span className="font-bold">5</span>
-              <span className="font-bold">21</span>
-            </div>
-          </div>
         </ul>
       ))}
     </section>

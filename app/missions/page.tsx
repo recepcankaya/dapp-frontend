@@ -14,7 +14,7 @@ const Missions: NextPage = () => {
   const { width, height } = useWindowSize();
 
   return (
-    <main className="bg-[#9376E0] h-auto w-full relative pb-10">
+    <main className="bg-[#9376E0] min-h-screen w-full relative pb-10">
       {/* @note - A bug in confetti: Confetti displays behind alertdialog  */}
       {missions.map((mission) =>
         mission.isCompleted === true ? (

@@ -106,36 +106,41 @@ export default function MissionForm({
   }, []);
 
   return (
-    <section ref={scope} className="h-screen w-full relative">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 1543 1355"
-        width="100%"
-        height="75%"
-        fill="none">
-        <path
-          d="M423.63 46.4301L8 140.302V1001.51L771.5 1346L1535 1001.51V140.302L1119.37 46.4301C890.932 -4.81004 652.068 -4.81004 423.63 46.4301Z"
-          fill="#D3C189"
-          stroke="#EB596E"
-          strokeWidth="15"
-        />
-      </svg>
-      <form
-        onSubmit={handleFormSubmit}
-        className="absolute top-20 left-1/2 -translate-x-1/2 flex flex-col items-center w-1/3">
-        <h2 className="text-2xl text-center opacity-0">Add Missions</h2>
-        <Input
-          placeholder="Run 3 miles"
-          className="mt-8 py-4 bg-white border-2 border-[#EB596E] placeholder:italic opacity-0"
-          value={text}
-          onChange={handleText}
-        />
-        <Button
-          type="submit"
-          className="mt-8 w-full bg-[#EB596E] border-2 border-white opacity-0">
-          Add
-        </Button>
-      </form>
+    <section ref={scope} className="h-auto w-full pt-12">
+      <div className="w-72 sm:w-96 md:w-[30rem] lg:w-[36rem] h-72 sm:h-96 md:h-[30rem] lg:h-[36rem] relative mx-auto">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 1543 1355"
+          width="1543"
+          height="1355"
+          fill="none"
+          className="absolute top-0 left-0 w-full h-full">
+          <path
+            d="M423.63 46.4301L8 140.302V1001.51L771.5 1346L1535 1001.51V140.302L1119.37 46.4301C890.932 -4.81004 652.068 -4.81004 423.63 46.4301Z"
+            fill="#D3C189"
+            stroke="#EB596E"
+            strokeWidth="15"
+          />
+        </svg>
+        <form
+          onSubmit={handleFormSubmit}
+          className="absolute top-12 sm:top-16 md:top-20 lg:top-24 left-8 sm:left-12 md:left-16 lg:left-20 flex flex-col items-center gap-0 sm:gap-4 md:gap-8 w-3/4 h-auto">
+          <h2 className="text-xl md:text-2xl lg:text-3xl font-semibold text-center opacity-0">
+            Add Mission
+          </h2>
+          <Input
+            placeholder="Run 3 miles"
+            className="mt-5 py-3 md:py-4 lg:py-6 lg:text-lg bg-white border-2 border-[#EB596E] placeholder:italic opacity-0"
+            value={text}
+            onChange={handleText}
+          />
+          <Button
+            type="submit"
+            className="mt-5 w-full bg-[#EB596E] border-2 border-white opacity-0">
+            Add
+          </Button>
+        </form>
+      </div>
       <ToastContainer />
     </section>
   );
