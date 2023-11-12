@@ -2,10 +2,12 @@
 import { Metadata } from "next";
 import {
   ThirdwebProvider,
-  magicLink,
+  embeddedWallet,
   metamaskWallet,
   coinbaseWallet,
   walletConnect,
+  rainbowWallet,
+  safeWallet,
 } from "@thirdweb-dev/react";
 
 import "./globals.css";
@@ -30,15 +32,12 @@ export default function RootLayout({
       clientId="33cf5af1f3380055e7f1b7ba3161d6c1"
       activeChain={activeChain}
       supportedWallets={[
-        metamaskWallet(),
+        embeddedWallet({ recommended: true }),
+        metamaskWallet({ recommended: true }),
         coinbaseWallet(),
         walletConnect(),
-        magicLink({
-          apiKey: "33cf5af1f3380055e7f1b7ba3161d6c1",
-          oauthOptions: {
-            providers: ["google", "facebook", "twitter", "apple"],
-          },
-        }),
+        rainbowWallet(),
+        safeWallet(),
       ]}>
       <html lang="en">
         <body>{children}</body>
