@@ -28,7 +28,7 @@ export default function UserLayout({
               colors: { secondaryText: "#000" },
             })}
             detailsBtn={() => (
-              <Button className="bg-[#D3C189] border-2 border-missionBorder rounded-[90px]">
+              <Button className="bg-[#D3C189] border-2 border-missionBorder rounded-[90px] hover:bg-[#EB596E]">
                 {address?.slice(0, 5)}...{address?.slice(-4)}
               </Button>
             )}

@@ -7,7 +7,6 @@ import Confetti from "react-confetti";
 import MissionForm from "@/components/missions/MissionForm";
 import MissionList from "@/components/missions/MissionList";
 import { Mission } from "@/types/MissionType.types";
-import { Button } from "@/components/ui/Button";
 
 const Missions: NextPage = () => {
   const [missions, setMissions] = useState<Mission[]>([]);

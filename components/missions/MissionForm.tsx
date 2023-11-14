@@ -1,28 +1,15 @@
 import { useState, useEffect } from "react";
-import { motion, useAnimate } from "framer-motion";
+import { useAnimate } from "framer-motion";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { toastError, toastSuccess } from "@/lib/toast/toast";
 import { Mission } from "@/types/MissionType.types";
-import { Button } from "../ui/Button";
-import { Input } from "../ui/input";
+import ServerForm from "./ServerForm";
 
 type MissionFormProps = {
   missions: Mission[];
   setMissions: React.Dispatch<React.SetStateAction<Mission[]>>;
 };
-
-const pathVariants = {
-  initial: { opacity: 0, pathLength: 0 },
-  animate: {
-    opacity: 1,
-    pathLength: 1,
-    transition: { duration: 3, ease: "easeInOut" },
-  },
-};
-
-let _id = 0;
 
 export default function MissionForm({
   setMissions,
@@ -31,30 +18,6 @@ export default function MissionForm({
   // Input value for the mission
   const [text, setText] = useState("");
   const [scope, animate] = useAnimate();
-
-  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (text.length < 3) {
-      toastError("The mission should be at least 3 characters");
-      return;
-    }
-
-    setMissions((prev) => [
-      ...prev,
-      { id: _id, text: text, isCompleted: false },
-    ]);
-    _id++;
-    setText("");
-    toastSuccess("The mission is added");
-  };
-
-  /**
-   * handles the text input which is written by the user for the mission
-   * @param e the event that is triggered when the user types in the input
-   */
-  const handleText = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setText(e.target.value);
-  };
 
   // =================== IT WILL BE ACTIVATED LATER ===================
   /**
@@ -122,24 +85,7 @@ export default function MissionForm({
             strokeWidth="15"
           />
         </svg>
-        <form
-          onSubmit={handleFormSubmit}
-          className="absolute top-12 sm:top-16 md:top-20 lg:top-24 left-8 sm:left-12 md:left-16 lg:left-20 flex flex-col items-center gap-0 sm:gap-4 md:gap-8 w-3/4 h-auto">
-          <h2 className="text-xl md:text-2xl lg:text-3xl font-semibold text-center opacity-0">
-            Add Mission
-          </h2>
-          <Input
-            placeholder="Run 3 miles"
-            className="mt-5 py-3 md:py-4 lg:py-6 lg:text-lg bg-white border-2 border-[#EB596E] placeholder:italic opacity-0"
-            value={text}
-            onChange={handleText}
-          />
-          <Button
-            type="submit"
-            className="mt-5 w-full bg-[#EB596E] border-2 border-white opacity-0">
-            Add
-          </Button>
-        </form>
+        <ServerForm text={text} setText={setText} />
       </div>
       <ToastContainer />
     </section>
