@@ -1,5 +1,4 @@
 "use client";
-import { NextPage } from "next";
 import { useState } from "react";
 import useWindowSize from "react-use/lib/useWindowSize";
 import Confetti from "react-confetti";
@@ -8,7 +7,7 @@ import MissionForm from "@/components/missions/MissionForm";
 import MissionList from "@/components/missions/MissionList";
 import { Mission } from "@/types/MissionType.types";
 
-const Missions: NextPage = () => {
+const Missions = ({ params }: { params: { user: string } }) => {
   const [missions, setMissions] = useState<Mission[]>([]);
   const { width, height } = useWindowSize();
 
@@ -32,8 +31,16 @@ const Missions: NextPage = () => {
           />
         ) : null
       )}
-      <MissionForm setMissions={setMissions} missions={missions} />
-      <MissionList missions={missions} setMissions={setMissions} />
+      <MissionForm
+        setMissions={setMissions}
+        missions={missions}
+        user={params.user}
+      />
+      <MissionList
+        missions={missions}
+        setMissions={setMissions}
+        user={params.user}
+      />
     </main>
   );
 };

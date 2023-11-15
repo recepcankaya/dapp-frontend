@@ -1,17 +1,48 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { ConnectWallet, useConnectionStatus } from "@thirdweb-dev/react";
+import {
+  ConnectWallet,
+  useAddress,
+  useWallet,
+  useConnectionStatus,
+} from "@thirdweb-dev/react";
 import { motion } from "framer-motion";
 
 import logo from "@/public/images/logo.jpg";
+import { useState } from "react";
+
+type User = {
+  username: string;
+  email: string;
+  wallet: string;
+};
 
 export default function NavBar() {
   const router = useRouter();
   const connectionStatus = useConnectionStatus();
+  const loggedAddress = useAddress();
+  const embeddedWallet = useWallet("embeddedWallet");
+  const [loading, setLoading] = useState(false);
 
-  if (connectionStatus === "connected") {
-    router.push("/missions");
+  const handleLogin = async () => {
+    setLoading(true);
+    const res = await fetch("/api");
+    const data = await res.json();
+    const loggedEmail = await embeddedWallet?.getEmail();
+    data.map((user: User) => {
+      const { username, email, wallet } = user;
+      if (loggedEmail === email || loggedAddress === wallet) {
+        router.push(`/${username}`);
+      } else {
+        // router.push("/login");
+      }
+    });
+    setLoading(false);
+  };
+
+  if (connectionStatus === "connected" && !loading) {
+    handleLogin();
   }
 
   return (

@@ -12,44 +12,69 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alertdialog";
-import { Mission } from "@/types/MissionType.types";
 import styles from "@/styles/MissionList.module.css";
-
-type MissionListProps = {
-  missions: Mission[];
-  setMissions: React.Dispatch<React.SetStateAction<Mission[]>>;
-};
+import { useCallback, useEffect } from "react";
+import { FormPropsTypes, Mission } from "@/types/MissionType.types";
 
 export default function MissionList({
   missions,
   setMissions,
-}: MissionListProps) {
+  user,
+}: FormPropsTypes) {
   /**
-   * The action that marks the mission as completed
-   * @param index the index of the mission
+   * Marks the mission at the specified index as completed and updates the state and server accordingly.
+   * @param index - The index of the mission to mark as completed.
    */
-  const handleCompleted = (index: number) => {
-    setMissions((prev) => {
-      const updatedMissions = [...prev]; // Create a copy of the missions array
-      updatedMissions[index] = {
-        ...updatedMissions[index],
-        isCompleted: true,
-      };
-      return updatedMissions; // Update the state with the modified array
-    });
+  const handleCompleted = async (index: number) => {
+    try {
+      const mission = missions.find((m) => m.id === index);
+      if (mission) {
+        mission.isCompleted = true;
+      }
+      const res = await fetch(`/api/users/${user}`, {
+        method: "POST",
+        body: JSON.stringify({ ...mission, type: "finish" }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await res.json();
+      console.log("Finished mission", data);
+      setMissions((prev) => {
+        const updatedMissions = [...prev]; // Create a copy of the missions array
+        updatedMissions[index] = {
+          ...updatedMissions[index],
+          isCompleted: true,
+        };
+        return updatedMissions; // Update the state with the modified array
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   /**
-   * The action that deletes the mission
-   * @param mission the mission that is going to be deleted
+   * Deletes a mission from the list of missions and sends a DELETE request to the server.
+   * @param index - The index of the mission to be deleted.
    */
-  const handleDeleted = (mission: Mission) => {
-    setMissions(missions.filter((m) => m.id !== mission.id));
+  const handleDeleted = async (index: number) => {
+    try {
+      const mission = missions.find((m) => m.id === index);
+      const res = await fetch(`/api/users/${user}`, {
+        method: "DELETE",
+        body: JSON.stringify({ id: mission?.id }),
+      });
+      const data = await res.json();
+      console.log("Deleted mission", data);
+      setMissions(missions.filter((m) => m.id !== mission?.id));
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
     <section className="pt-12 w-full">
-      {missions.map((mission, idx) => (
+      {missions.map((mission) => (
         <ul
           className="mx-auto mb-16 w-[90%] h-auto sm:flex sm:items-center sm:justify-around sm:gap-1.5"
           key={mission.id}>
@@ -63,14 +88,14 @@ export default function MissionList({
           </div>
           <li
             className={`${
-              mission.isCompleted ? styles.cardChanged : styles.card
+              mission?.isCompleted ? styles.cardChanged : styles.card
             } w-full sm:w-3/4 xl:7/12 h-16 md:h-20 rounded-3xl flex items-center justify-between mx-auto`}>
             <AlertDialog>
               <AlertDialogTrigger>
                 <Button
                   disabled={mission.isCompleted}
                   onClick={() => {
-                    handleCompleted(idx);
+                    handleCompleted(mission.id);
                   }}
                   className="bg-[url('/designs/button-shield.svg')] bg-no-repeat bg-transparent h-full hover:bg-[url('/designs/button-shield-finish-hover.svg')] hover:bg-transparent text-sm lg:text-base"
                   style={{
@@ -121,7 +146,7 @@ export default function MissionList({
                   <AlertDialogCancel className="text-foreground">
                     Cancel
                   </AlertDialogCancel>
-                  <AlertDialogAction onClick={() => handleDeleted(mission)}>
+                  <AlertDialogAction onClick={() => handleDeleted(mission.id)}>
                     Continue
                   </AlertDialogAction>
                 </AlertDialogFooter>

@@ -1,15 +1,30 @@
 "use client";
+import { useRouter } from "next/navigation";
 import { ConnectWallet, darkTheme, useAddress } from "@thirdweb-dev/react";
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/Button";
 
 export default function UserLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: { user: string };
 }) {
   const address = useAddress();
+  const router = useRouter();
+
+  const handleToProfile = () => {
+    router.push(`/${params.user}/profile`);
+  };
+
   return (
     <>
       <nav className="bg-[#9376E0] text-black flex items-center justify-between pt-8">
@@ -18,9 +33,20 @@ export default function UserLayout({
             <AvatarImage src="https://github.com/shadcn.png" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
-          <div className="bg-[#F5EA5AA6] border-2 border-missionBorder rounded-[90px] mt-1 px-6 lg:px-10 py-2 font-bold">
-            <h2 className="text-sm lg:text-base">Matilda</h2>
-          </div>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={handleToProfile}
+                  className="text-sm lg:text-base bg-[#F5EA5AA6] border-2 border-missionBorder rounded-[90px] mt-1 px-6 lg:px-10 py-2 font-bold text-black hover:bg-[#EB596E]">
+                  {params.user}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Go to profile</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
         <div className="mr-2 sm:mr-6 md:mr-10">
           <ConnectWallet

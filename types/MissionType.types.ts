@@ -3,3 +3,9 @@ export type Mission = {
   text: string;
   isCompleted: boolean;
 };
+
+export type FormPropsTypes = {
+  missions: Mission[];
+  setMissions: React.Dispatch<React.SetStateAction<Mission[]>>;
+  user: string;
+};

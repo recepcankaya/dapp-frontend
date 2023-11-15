@@ -1,45 +1,108 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAnimate } from "framer-motion";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { Mission } from "@/types/MissionType.types";
-import ServerForm from "./ServerForm";
+import { FormPropsTypes, Mission } from "@/types/MissionType.types";
+import { toastError, toastSuccess } from "@/lib/toast/toast";
 
-type MissionFormProps = {
-  missions: Mission[];
-  setMissions: React.Dispatch<React.SetStateAction<Mission[]>>;
-};
+import { Input } from "../ui/input";
+import { Button } from "../ui/Button";
 
 export default function MissionForm({
   setMissions,
   missions,
-}: MissionFormProps) {
+  user,
+}: FormPropsTypes) {
   // Input value for the mission
   const [text, setText] = useState("");
   const [scope, animate] = useAnimate();
 
-  // =================== IT WILL BE ACTIVATED LATER ===================
   /**
-   * function that iterate over the missions array and if there is a mission with the same text
-   * @param _text the text of the mission
+   * handles the text input which is written by the user for the mission
+   * @param e the event that is triggered when the user types in the input
    */
-  // const checkMission = (_text: string) => {
-  //   const mission = missions.find((m) => m.text === _text);
-  //   if (mission !== undefined) {
-  //     toast.error("You have that mission already", {
-  //       position: "top-right",
-  //       autoClose: 2000,
-  //       hideProgressBar: false,
-  //       closeOnClick: true,
-  //       pauseOnHover: false,
-  //       draggable: false,
-  //       progress: undefined,
-  //       theme: "light",
-  //     });
-  //   }
-  // };
-  // ==================================================================
+  const handleText = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setText(e.target.value);
+  };
+
+  /**
+   * Handles the form submission for adding a new mission.
+   * @param e - The form event.
+   */
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (text.length < 3) {
+      toastError("The mission should be at least 3 characters");
+      return;
+    }
+    const latestId = await getUserLatestMissionId();
+    const newId = latestId ? latestId + 1 : 1;
+    await addMission({ id: newId, text, isCompleted: false });
+    setText("");
+    toastSuccess("The mission is added");
+    displayMissions();
+  };
+
+  /**
+   * Retrieves the latest mission ID for a given user.
+   * @returns {Promise<number>} The latest mission ID.
+   */
+  const getUserLatestMissionId = async () => {
+    try {
+      const res = await fetch(`/api/users/${user}`);
+      const data = await res.json();
+      return data.user.missions[data.user.missions.length - 1].id;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  /**
+   * Adds a new mission to the database.
+   * @param {Mission} mission - The mission object to be added.
+   * @returns {Promise<void>} - A promise that resolves when the mission is successfully added.
+   */
+  const addMission = async (mission: Mission) => {
+    try {
+      const { id, text, isCompleted } = mission;
+      const res = await fetch(`/api/users/${user}`, {
+        method: "POST",
+        body: JSON.stringify({ id, text, isCompleted, type: "add" }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await res.json();
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  /**
+   * Fetches the missions for the given user and updates the state with the new missions.
+   * @returns {Promise<void>}
+   */
+  const displayMissions = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/users/${user}`);
+      const data = await res.json();
+      if (data.user && data.user.missions) {
+        const newMissions = data.user.missions.map((missionData: any) => {
+          const { id, text, isCompleted } = missionData;
+          return { id, text, isCompleted };
+        });
+        setMissions(newMissions);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [user, setMissions]);
+
+  useEffect(() => {
+    displayMissions();
+  }, [displayMissions]);
 
   const handleAnimation = async () => {
     await animate(
@@ -85,7 +148,30 @@ export default function MissionForm({
             strokeWidth="15"
           />
         </svg>
-        <ServerForm text={text} setText={setText} />
+        <form
+          onSubmit={handleFormSubmit}
+          className="absolute top-12 sm:top-16 md:top-20 lg:top-24 left-8 sm:left-12 md:left-16 lg:left-20 flex flex-col items-center gap-0 sm:gap-4 md:gap-8 w-3/4 h-auto">
+          <h2 className="text-xl md:text-2xl lg:text-3xl font-semibold text-center opacity-0">
+            Add Mission
+          </h2>
+          {/* make this label responsive */}
+          {/* <Label htmlFor="mission" className="lg:text-lg -mb-10 float-left">
+        Mission
+      </Label> */}
+          <Input
+            placeholder="Run 3 miles"
+            className="mt-5 py-3 md:py-4 lg:py-6 lg:text-lg bg-white border-2 border-[#EB596E] placeholder:italic opacity-0"
+            value={text}
+            onChange={handleText}
+            id="mission"
+            name="mission"
+          />
+          <Button
+            type="submit"
+            className="mt-5 w-full bg-[#EB596E] border-2 border-white opacity-0">
+            Add
+          </Button>
+        </form>
       </div>
       <ToastContainer />
     </section>

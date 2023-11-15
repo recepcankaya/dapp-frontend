@@ -17,6 +17,7 @@
     "@radix-ui/react-select": "^2.0.0",
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-toast": "^1.1.5",
+    "@radix-ui/react-tooltip": "^1.0.7",
     "@thirdweb-dev/react": "^4.0.3",
     "@thirdweb-dev/sdk": "^4.0.2",
     "@uidotdev/usehooks": "^2.3.1",
