@@ -3,7 +3,7 @@ export const users = [
     username: "hypeman",
     email: "hypeman@outlook.com",
     wallet: "0x7e16F6880cF0415b796e4865C69b21e1e4ee3B6c",
-    timezone: "",
+    timezone: "UTC(+1)",
     missions: [
       {
         id: 0,

@@ -93,11 +93,14 @@ export default function MissionList({
             <AlertDialog>
               <AlertDialogTrigger>
                 <Button
-                  disabled={mission.isCompleted}
+                  disabled={mission?.isCompleted}
                   onClick={() => {
                     handleCompleted(mission.id);
                   }}
-                  className="bg-[url('/designs/button-shield.svg')] bg-no-repeat bg-transparent h-full hover:bg-[url('/designs/button-shield-finish-hover.svg')] hover:bg-transparent text-sm lg:text-base"
+                  // @todo - does not work
+                  className={`${
+                    mission?.isCompleted ? "cursor-not-allowed" : ""
+                  } bg-[url('/designs/button-shield.svg')] bg-no-repeat bg-transparent h-full hover:bg-[url('/designs/button-shield-finish-hover.svg')] hover:bg-transparent text-sm lg:text-base`}
                   style={{
                     backgroundSize: "100% 100%",
                   }}>

@@ -1,6 +1,6 @@
 {
   "name": "ladder",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -23,10 +23,13 @@
     "@uidotdev/usehooks": "^2.3.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
+    "encoding": "^0.1.13",
     "ethers": "^5",
     "framer-motion": "^10.16.4",
+    "lokijs": "^1.5.12",
     "lucide-react": "^0.279.0",
     "next": "^13.5.2",
+    "pino-pretty": "^10.2.3",
     "react": "^18.2.0",
     "react-confetti": "^6.1.0",
     "react-dom": "^18.2.0",

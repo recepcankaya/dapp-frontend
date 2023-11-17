@@ -35,7 +35,7 @@ export default function NavBar() {
       if (loggedEmail === email || loggedAddress === wallet) {
         router.push(`/${username}`);
       } else {
-        // router.push("/login");
+        router.push("/register");
       }
     });
     setLoading(false);
