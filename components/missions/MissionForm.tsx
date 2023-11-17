@@ -37,8 +37,8 @@ export default function MissionForm({
       return;
     }
     const latestId = await getUserLatestMissionId();
-    const newId = latestId ? latestId + 1 : 1;
-    await addMission({ id: newId, text, isCompleted: false });
+    console.log(latestId);
+    await addMission({ id: latestId, text, isCompleted: false });
     setText("");
     toastSuccess("The mission is added");
     displayMissions();
@@ -52,7 +52,13 @@ export default function MissionForm({
     try {
       const res = await fetch(`/api/users/${user}`);
       const data = await res.json();
-      return data.user.missions[data.user.missions.length - 1].id;
+      console.log(data);
+      if (!data.user.missions || data.user.missions.length === 0) {
+        console.log("User has no missions");
+        return 0;
+      } else {
+        return data.user.missions[data.user.missions.length - 1].id + 1;
+      }
     } catch (error) {
       console.error(error);
     }
@@ -100,11 +106,7 @@ export default function MissionForm({
     }
   }, [user, setMissions]);
 
-  useEffect(() => {
-    displayMissions();
-  }, [displayMissions]);
-
-  const handleAnimation = async () => {
+  const handleAnimation = useCallback(async () => {
     await animate(
       "path",
       { opacity: [0, 1], pathLength: [0, 1] },
@@ -125,11 +127,12 @@ export default function MissionForm({
       { opacity: 1, y: [100, 0] },
       { duration: 1, ease: "easeInOut" }
     );
-  };
+  }, [animate]);
 
   useEffect(() => {
+    displayMissions();
     handleAnimation();
-  }, []);
+  }, [displayMissions, handleAnimation]);
 
   return (
     <section ref={scope} className="h-auto w-full pt-12">
