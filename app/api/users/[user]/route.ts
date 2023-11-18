@@ -5,8 +5,12 @@ export async function GET(
   req: Request,
   { params }: { params: { user: string } }
 ) {
-  const user = users.find((u) => u.username === params.user);
-  return NextResponse.json({ user });
+  const res = await fetch(
+    "https://akikoko.pythonanywhere.com/api/user/user_detail/"
+  );
+  const user = await res.json();
+  console.log("user: ", user);
+  return NextResponse.json(user);
 }
 
 export async function POST(

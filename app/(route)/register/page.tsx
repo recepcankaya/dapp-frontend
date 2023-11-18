@@ -36,10 +36,11 @@ export default function Register() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ username, timezone, password }),
+      body: JSON.stringify({ username, email: timezone, password }),
     });
-    await response.json();
-    router.push(`/${username}`);
+    const user = await response.json();
+    console.log(user);
+    router.push(`/${username}}`);
   };
 
   return (

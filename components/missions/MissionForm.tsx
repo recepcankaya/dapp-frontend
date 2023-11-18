@@ -38,21 +38,22 @@ export default function MissionForm({
     }
     const latestId = await getUserLatestMissionId();
     console.log(latestId);
-    await addMission({ id: latestId, text, isCompleted: false });
+    const res = await addMission({ id: latestId, text, isCompleted: false });
+    console.log(res);
     setText("");
     toastSuccess("The mission is added");
-    displayMissions();
+    await displayMissions();
   };
 
   /**
    * Retrieves the latest mission ID for a given user.
    * @returns {Promise<number>} The latest mission ID.
    */
-  const getUserLatestMissionId = async () => {
+  const getUserLatestMissionId = async (): Promise<number> => {
     try {
       const res = await fetch(`/api/users/${user}`);
       const data = await res.json();
-      console.log(data);
+      console.log("Data is", data);
       if (!data.user.missions || data.user.missions.length === 0) {
         console.log("User has no missions");
         return 0;
@@ -61,6 +62,7 @@ export default function MissionForm({
       }
     } catch (error) {
       console.error(error);
+      return 0;
     }
   };
 
@@ -69,7 +71,7 @@ export default function MissionForm({
    * @param {Mission} mission - The mission object to be added.
    * @returns {Promise<void>} - A promise that resolves when the mission is successfully added.
    */
-  const addMission = async (mission: Mission) => {
+  const addMission = async (mission: Mission): Promise<void> => {
     try {
       const { id, text, isCompleted } = mission;
       const res = await fetch(`/api/users/${user}`, {
@@ -79,8 +81,7 @@ export default function MissionForm({
           "Content-Type": "application/json",
         },
       });
-      const data = await res.json();
-      console.log(data);
+      await res.json();
     } catch (error) {
       console.error(error);
     }
@@ -100,6 +101,13 @@ export default function MissionForm({
           return { id, text, isCompleted };
         });
         setMissions(newMissions);
+      } else if (data.user && !data.user.missions) {
+        const newMission = {
+          id: data.user.missions.id,
+          text: data.user.missions.text,
+          isCompleted: data.user.missions.isCompleted,
+        };
+        setMissions([newMission]);
       }
     } catch (error) {
       console.log(error);
