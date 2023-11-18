@@ -1,38 +1,56 @@
 import { NextResponse } from "next/server";
 import { users } from "@/mock/user";
+import { cookies } from "next/headers";
 
-export async function GET(
-  req: Request,
-  { params }: { params: { user: string } }
-) {
-  const res = await fetch(
-    "https://akikoko.pythonanywhere.com/api/user/user_detail/"
-  );
-  const user = await res.json();
-  console.log("user: ", user);
-  return NextResponse.json(user);
+export async function GET(req: Request) {
+  const jwtCookie = cookies().get("jwt");
+  if (jwtCookie) {
+    const res = await fetch(
+      "https://akikoko.pythonanywhere.com/api/user/user_detail/",
+      {
+        headers: {
+          Authorization: `Bearer ${jwtCookie.value}`,
+        },
+      }
+    );
+    const user = await res.json();
+    console.log("user: ", user);
+    return NextResponse.json(user);
+  }
 }
 
-export async function POST(
-  req: Request,
-  { params }: { params: { user: string } }
-) {
+export async function POST(req: Request) {
   const body = await req.json();
-  const { id, text, isCompleted, type } = body;
-  const user = users.find((u) => u.username === params.user);
+  const { text, type } = body;
+  const jwtCookie = cookies().get("jwt");
 
-  if (type === "add") {
-    const data = { id, text, isCompleted };
-    user?.missions.push(data);
-    console.log("mission is added: ", data);
-    return NextResponse.json(data);
-  } else if (type === "finish") {
-    const mission = user?.missions.find((m) => m.id === id);
-    if (mission) {
-      mission.isCompleted = !mission.isCompleted;
+  if (jwtCookie) {
+    if (type === "add") {
+      const res = await fetch(
+        "https://akikoko.pythonanywhere.com/api/mission/create/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${jwtCookie.value}`,
+          },
+          body: JSON.stringify({
+            title: text,
+          }),
+        }
+      );
+      const data = await res.json();
+      console.log("mission is added: ", data);
+      const { id, user, title } = data;
+      return NextResponse.json({ id, user, title });
+    } else if (type === "finish") {
+      // const mission = user?.missions.find((m) => m.id === id);
+      // if (mission) {
+      //   mission.isCompleted = !mission.isCompleted;
+      // }
+      // console.log("completed mission: ", mission?.text, mission?.isCompleted);
+      // return NextResponse.json(mission);
     }
-    console.log("completed mission: ", mission?.text, mission?.isCompleted);
-    return NextResponse.json(mission);
   }
 }
 

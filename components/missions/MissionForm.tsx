@@ -3,7 +3,7 @@ import { useAnimate } from "framer-motion";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { FormPropsTypes, Mission } from "@/types/MissionType.types";
+import { FormPropsTypes } from "@/types/MissionType.types";
 import { toastError, toastSuccess } from "@/lib/toast/toast";
 
 import { Input } from "../ui/input";
@@ -12,7 +12,7 @@ import { Button } from "../ui/Button";
 export default function MissionForm({
   setMissions,
   missions,
-  user,
+  username,
 }: FormPropsTypes) {
   // Input value for the mission
   const [text, setText] = useState("");
@@ -36,9 +36,7 @@ export default function MissionForm({
       toastError("The mission should be at least 3 characters");
       return;
     }
-    const latestId = await getUserLatestMissionId();
-    console.log(latestId);
-    const res = await addMission({ id: latestId, text, isCompleted: false });
+    const res = await addMission();
     console.log(res);
     setText("");
     toastSuccess("The mission is added");
@@ -46,42 +44,32 @@ export default function MissionForm({
   };
 
   /**
-   * Retrieves the latest mission ID for a given user.
-   * @returns {Promise<number>} The latest mission ID.
+   * Adds a mission by making a POST request to the server.
+   * @returns A Promise that resolves to void.
    */
-  const getUserLatestMissionId = async (): Promise<number> => {
+  const addMission = async (): Promise<void> => {
     try {
-      const res = await fetch(`/api/users/${user}`);
-      const data = await res.json();
-      console.log("Data is", data);
-      if (!data.user.missions || data.user.missions.length === 0) {
-        console.log("User has no missions");
-        return 0;
-      } else {
-        return data.user.missions[data.user.missions.length - 1].id + 1;
-      }
-    } catch (error) {
-      console.error(error);
-      return 0;
-    }
-  };
-
-  /**
-   * Adds a new mission to the database.
-   * @param {Mission} mission - The mission object to be added.
-   * @returns {Promise<void>} - A promise that resolves when the mission is successfully added.
-   */
-  const addMission = async (mission: Mission): Promise<void> => {
-    try {
-      const { id, text, isCompleted } = mission;
-      const res = await fetch(`/api/users/${user}`, {
+      const res = await fetch(`/api/users/${username}`, {
         method: "POST",
-        body: JSON.stringify({ id, text, isCompleted, type: "add" }),
+        body: JSON.stringify({ text, type: "add" }),
         headers: {
           "Content-Type": "application/json",
         },
       });
-      await res.json();
+      const data = await res.json();
+      console.log(data);
+      // mission id, user id, mission
+      const { id, user, title } = data;
+      setMissions((prev) => [
+        ...prev,
+        {
+          id,
+          text: title,
+          isCompleted: false,
+          numberOfDays: 0,
+          prevDate: Date.now().toString(),
+        },
+      ]);
     } catch (error) {
       console.error(error);
     }
@@ -93,12 +81,12 @@ export default function MissionForm({
    */
   const displayMissions = useCallback(async () => {
     try {
-      const res = await fetch(`/api/users/${user}`);
+      const res = await fetch(`/api/users/${username}`);
       const data = await res.json();
       if (data.user && data.user.missions) {
         const newMissions = data.user.missions.map((missionData: any) => {
-          const { id, text, isCompleted } = missionData;
-          return { id, text, isCompleted };
+          const { id, text, numberOfDays, isCompleted, prevDate } = missionData;
+          return { id, text, numberOfDays, isCompleted, prevDate };
         });
         setMissions(newMissions);
       } else if (data.user && !data.user.missions) {
@@ -106,13 +94,15 @@ export default function MissionForm({
           id: data.user.missions.id,
           text: data.user.missions.text,
           isCompleted: data.user.missions.isCompleted,
+          numberOfDays: data.user.missions.numberOfDays,
+          prevDate: data.user.missions.prevDate,
         };
         setMissions([newMission]);
       }
     } catch (error) {
       console.log(error);
     }
-  }, [user, setMissions]);
+  }, [username, setMissions]);
 
   const handleAnimation = useCallback(async () => {
     await animate(

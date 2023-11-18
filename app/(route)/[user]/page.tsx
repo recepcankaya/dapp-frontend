@@ -34,12 +34,12 @@ const Missions = ({ params }: { params: { user: string } }) => {
       <MissionForm
         setMissions={setMissions}
         missions={missions}
-        user={params.user}
+        username={params.user}
       />
       <MissionList
         missions={missions}
         setMissions={setMissions}
-        user={params.user}
+        username={params.user}
       />
     </main>
   );
