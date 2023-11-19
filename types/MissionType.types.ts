@@ -1,6 +1,6 @@
 export type Mission = {
   id: number;
-  text: string;
+  title: string;
   numberOfDays: number;
   isCompleted: boolean;
   prevDate: string;

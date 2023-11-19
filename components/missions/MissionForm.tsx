@@ -51,20 +51,20 @@ export default function MissionForm({
     try {
       const res = await fetch(`/api/users/${username}`, {
         method: "POST",
-        body: JSON.stringify({ text, type: "add" }),
+        body: JSON.stringify({ text }),
         headers: {
           "Content-Type": "application/json",
         },
       });
       const data = await res.json();
       console.log(data);
-      // mission id, user id, mission
-      const { id, user, title } = data;
+      // mission id, mission
+      const { id, title } = data;
       setMissions((prev) => [
         ...prev,
         {
           id,
-          text: title,
+          title,
           isCompleted: false,
           numberOfDays: 0,
           prevDate: Date.now().toString(),
@@ -83,21 +83,9 @@ export default function MissionForm({
     try {
       const res = await fetch(`/api/users/${username}`);
       const data = await res.json();
-      if (data.user && data.user.missions) {
-        const newMissions = data.user.missions.map((missionData: any) => {
-          const { id, text, numberOfDays, isCompleted, prevDate } = missionData;
-          return { id, text, numberOfDays, isCompleted, prevDate };
-        });
-        setMissions(newMissions);
-      } else if (data.user && !data.user.missions) {
-        const newMission = {
-          id: data.user.missions.id,
-          text: data.user.missions.text,
-          isCompleted: data.user.missions.isCompleted,
-          numberOfDays: data.user.missions.numberOfDays,
-          prevDate: data.user.missions.prevDate,
-        };
-        setMissions([newMission]);
+      const goals = data.missions;
+      if (data) {
+        setMissions(goals);
       }
     } catch (error) {
       console.log(error);

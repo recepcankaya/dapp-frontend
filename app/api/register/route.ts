@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 export async function POST(req: Request) {
   const body = await req.json();
   console.log("Register body: ", body);
-  const { username, timezone, password } = body;
+  const { username, email, timezone, password } = body;
   const res = await fetch(
     "https://akikoko.pythonanywhere.com/api/user/register/",
     {
@@ -14,7 +14,8 @@ export async function POST(req: Request) {
       },
       body: JSON.stringify({
         username,
-        email: "abc@outlook.com",
+        email,
+        timeZone: "+3",
         password,
       }),
     }

@@ -19,7 +19,7 @@ import { FormPropsTypes, Mission } from "@/types/MissionType.types";
 export default function MissionList({
   missions,
   setMissions,
-  user,
+  username,
 }: FormPropsTypes) {
   /**
    * Marks the mission at the specified index as completed and updates the state and server accordingly.
@@ -27,26 +27,28 @@ export default function MissionList({
    */
   const handleCompleted = async (index: number) => {
     try {
-      const mission = missions.find((m) => m.id === index);
-      if (mission) {
-        mission.isCompleted = true;
-      }
-      const res = await fetch(`/api/users/${user}`, {
-        method: "POST",
-        body: JSON.stringify({ ...mission, type: "finish" }),
+      await fetch(`/api/users/${username}`, {
+        method: "PATCH",
+        body: JSON.stringify({ index }),
         headers: {
           "Content-Type": "application/json",
         },
       });
-      const data = await res.json();
-      console.log("Finished mission", data);
-      setMissions((prev) => {
-        const updatedMissions = [...prev]; // Create a copy of the missions array
-        updatedMissions[index] = {
-          ...updatedMissions[index],
+      const missionIndex = missions.findIndex(
+        (mission) => mission.id === index
+      );
+      setMissions((prevMissions) => {
+        const updatedMissions = [...prevMissions];
+        const missionToUpdate = updatedMissions[missionIndex];
+
+        updatedMissions[missionIndex] = {
+          ...missionToUpdate,
           isCompleted: true,
+          numberOfDays: missionToUpdate.numberOfDays + 1,
+          prevDate: Date.now().toString(),
         };
-        return updatedMissions; // Update the state with the modified array
+
+        return updatedMissions;
       });
     } catch (error) {
       console.error(error);
@@ -57,16 +59,19 @@ export default function MissionList({
    * Deletes a mission from the list of missions and sends a DELETE request to the server.
    * @param index - The index of the mission to be deleted.
    */
-  const handleDeleted = async (index: number) => {
+  const handleDeleted = async (id: number) => {
     try {
-      const mission = missions.find((m) => m.id === index);
-      const res = await fetch(`/api/users/${user}`, {
+      const res = await fetch(`/api/users/${username}`, {
         method: "DELETE",
-        body: JSON.stringify({ id: mission?.id }),
+        body: JSON.stringify({ id }),
       });
+      // You can check the response status to ensure the deletion was successful
+      if (!res.ok) {
+        throw new Error("Failed to delete the mission");
+      }
       const data = await res.json();
       console.log("Deleted mission", data);
-      setMissions(missions.filter((m) => m.id !== mission?.id));
+      setMissions(missions.filter((m) => m.id !== id));
     } catch (error) {
       console.error(error);
     }
@@ -82,7 +87,7 @@ export default function MissionList({
           <div className="mx-auto w-1/2 sm:w-auto h-16 md:h-20 mb-4 sm:mb-0 font-bold text-sm md:text-base sm:order-last">
             <p className="-mb-2">Completed days</p>
             <div className="bg-[url('/designs/sand-watch.svg')] bg-no-repeat w-full h-full bg-contain bg-center flex flex-col items-center justify-center gap-2">
-              <span>5</span>
+              <span>{mission.numberOfDays | 0}</span>
               <span>21</span>
             </div>
           </div>
@@ -123,7 +128,7 @@ export default function MissionList({
               </AlertDialogContent>
             </AlertDialog>
             <p className="text-center text-lg sm:text-xl md:text-2xl">
-              {mission.text}
+              {mission.title}
             </p>
             <AlertDialog>
               <AlertDialogTrigger>

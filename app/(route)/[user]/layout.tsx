@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/Button";
+import { useCallback, useEffect, useState } from "react";
 
 export default function UserLayout({
   children,
@@ -18,12 +19,31 @@ export default function UserLayout({
   children: React.ReactNode;
   params: { user: string };
 }) {
+  const [username, setUsername] = useState<string>("");
   const address = useAddress();
   const router = useRouter();
 
+  const displayUsername = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/users/${params.user}`);
+      const data = await res.json();
+      if (data) {
+        setUsername(data.username);
+      } else {
+        console.error("User is undefined");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }, [params.user]);
+
   const handleToProfile = () => {
-    router.push(`/${params.user}/profile`);
+    router.push(`/${username}/profile`);
   };
+
+  useEffect(() => {
+    displayUsername();
+  }, [displayUsername]);
 
   return (
     <>
@@ -39,7 +59,7 @@ export default function UserLayout({
                 <Button
                   onClick={handleToProfile}
                   className="text-sm lg:text-base bg-[#F5EA5AA6] border-2 border-missionBorder rounded-[90px] mt-1 px-6 lg:px-10 py-2 font-bold text-black hover:bg-[#EB596E]">
-                  {params.user}
+                  {username}
                 </Button>
               </TooltipTrigger>
               <TooltipContent>

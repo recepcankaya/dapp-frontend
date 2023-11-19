@@ -14,7 +14,7 @@ const Missions = ({ params }: { params: { user: string } }) => {
   return (
     <main className="bg-[#9376E0] min-h-screen w-full relative pb-10">
       {/* @note - A bug in confetti: Confetti displays behind alertdialog  */}
-      {missions.map((mission) =>
+      {/* {missions?.map((mission) =>
         mission.isCompleted === true ? (
           <Confetti
             key={mission.id}
@@ -30,7 +30,7 @@ const Missions = ({ params }: { params: { user: string } }) => {
             }}
           />
         ) : null
-      )}
+      )} */}
       <MissionForm
         setMissions={setMissions}
         missions={missions}

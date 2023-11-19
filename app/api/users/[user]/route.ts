@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { users } from "@/mock/user";
 import { cookies } from "next/headers";
 
 export async function GET(req: Request) {
@@ -21,80 +20,68 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const { text, type } = body;
+  const { text } = body;
   const jwtCookie = cookies().get("jwt");
 
   if (jwtCookie) {
-    if (type === "add") {
-      const res = await fetch(
-        "https://akikoko.pythonanywhere.com/api/mission/create/",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${jwtCookie.value}`,
-          },
-          body: JSON.stringify({
-            title: text,
-          }),
-        }
-      );
-      const data = await res.json();
-      console.log("mission is added: ", data);
-      const { id, user, title } = data;
-      return NextResponse.json({ id, user, title });
-    } else if (type === "finish") {
-      // const mission = user?.missions.find((m) => m.id === id);
-      // if (mission) {
-      //   mission.isCompleted = !mission.isCompleted;
-      // }
-      // console.log("completed mission: ", mission?.text, mission?.isCompleted);
-      // return NextResponse.json(mission);
-    }
+    const res = await fetch(
+      "https://akikoko.pythonanywhere.com/api/mission/create/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwtCookie.value}`,
+        },
+        body: JSON.stringify({
+          title: text,
+        }),
+      }
+    );
+    const data = await res.json();
+    console.log("mission is added: ", data);
+    const { id, user, title } = data;
+    return NextResponse.json({ id, title });
   }
 }
 
-export async function DELETE(
-  req: Request,
-  { params }: { params: { user: string } }
-) {
+export async function PATCH(req: Request) {
+  const jwtCookie = cookies().get("jwt");
+  const body = await req.json();
+  const { index } = body;
+  if (jwtCookie) {
+    const res = await fetch(
+      `https://akikoko.pythonanywhere.com/api/mission/complete/${index}/`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwtCookie.value}`,
+        },
+      }
+    );
+    await res.json();
+    console.log("Mission is completed");
+    return NextResponse.json({ message: "Mission is completed" });
+  }
+}
+
+export async function DELETE(req: Request) {
+  const jwtCookie = cookies().get("jwt");
   const body = await req.json();
   const { id } = body;
-  const user = users.find((u) => u.username === params.user);
-  let deletedMission;
-  if (user) {
-    deletedMission = user.missions.find((mission) => mission.id === id);
-    user.missions = user.missions.filter((mission) => mission.id !== id);
+  if (jwtCookie) {
+    const res = await fetch(
+      `https://akikoko.pythonanywhere.com/api/mission/delete/${id}/`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwtCookie.value}`,
+        },
+      }
+    );
+    await res.json();
+    console.log("Mission is deleted");
+    return NextResponse.json({ message: "Mission is deleted" });
   }
-  console.log("deleted: ", deletedMission);
-
-  return NextResponse.json(deletedMission);
 }
-
-// ---------- PRODUCTION ----------
-/* export async function GET() {
-//   const res = await fetch("https://jsonplaceholder.typicode.com/posts");
-//   const data = await res.json();
-//   return NextResponse.json(data);
- } 
-
-export async function POST(request: Request) {
-  const data = await request.json();
-  console.log("The title is: ", data);
-
-  const { title, userId } = data;
-
-  const res = await fetch("https://jsonplaceholder.typicode.com/posts", {
-    method: "POST",
-    body: JSON.stringify({
-      // title,
-      // body: "bar",
-      // userId,
-    }),
-    headers: {
-      "Content-type": "application/json; charset=UTF-8",
-    },
-  });
-
-  return NextResponse.json(await res.json());
-} */

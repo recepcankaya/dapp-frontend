@@ -28,19 +28,20 @@ export default function Register() {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const username = formData.get("username")?.valueOf();
+    const email = formData.get("email")?.valueOf();
     const timezone = formData.get("timezone")?.valueOf();
     const password = formData.get("password")?.valueOf();
-    console.log({ username, timezone, password });
+    console.log({ username, email, timezone, password });
     const response = await fetch("/api/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ username, email: timezone, password }),
+      body: JSON.stringify({ username, email, tz: "+2", password }),
     });
     const user = await response.json();
     console.log(user);
-    router.push(`/${username}}`);
+    router.push(`/${username}`);
   };
 
   return (
@@ -61,6 +62,17 @@ export default function Register() {
                 name="username"
                 placeholder="The Warrior"
                 required
+                className="bg-[#EB596E] border border-[#EB596E] pl-2 placeholder:text-black w-full placeholder:italic"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                name="email"
+                placeholder="thewarrior@gmail.com"
+                required
+                type="email"
                 className="bg-[#EB596E] border border-[#EB596E] pl-2 placeholder:text-black w-full placeholder:italic"
               />
             </div>

@@ -1,24 +1,14 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/Button";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 
 type UserInfo = {
   username: string;
-  timezone: string;
   email: string;
   wallet: string;
 };
@@ -26,18 +16,14 @@ type UserInfo = {
 const UserProfile = ({ params }: { params: { user: string } }) => {
   const [userInfo, setUserInfo] = useState<UserInfo>({
     username: "",
-    timezone: "",
     email: "",
     wallet: "",
   });
-
-  const router = useRouter();
 
   const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const username = formData.get("username")?.valueOf();
-    const timezone = formData.get("timezone")?.valueOf();
     const email = formData.get("email")?.valueOf();
 
     const response = await fetch(`/api/users/${params.user}/profile`, {
@@ -45,24 +31,26 @@ const UserProfile = ({ params }: { params: { user: string } }) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ username, timezone, email }),
+      body: JSON.stringify({ username, email }),
     });
-
-    await response.json();
-    router.push(`/${username}`);
+    const data = await response.json();
+    console.log("profile data is ", data);
+    const { u, em } = data;
+    setUserInfo({ ...userInfo, username: u, email: em });
   };
 
   /**
    * Fetches user information from the server and updates the state with the retrieved data.
    * @returns {Promise<void>}
    */
+  // @todo - akiften bilgiler için get endpointi oluştumasını iste
   const displayUserInfo = useCallback(async () => {
     try {
       const res = await fetch(`/api/users/${params.user}/profile`);
       const data = await res.json();
       console.log("Fetched data is ", data);
       const { username, timezone, email, wallet } = data.user;
-      setUserInfo({ username, timezone, email, wallet });
+      setUserInfo({ username, email, wallet });
     } catch (error) {
       console.error("Failed to fetch user info:", error);
     }
@@ -99,49 +87,6 @@ const UserProfile = ({ params }: { params: { user: string } }) => {
                     stroke="black"
                     strokeWidth="2"
                   />
-                </svg>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="timezone">Timezone</Label>
-              <div className="relative">
-                <Select name="timezone">
-                  <SelectTrigger className="bg-[#EB596E] border border-[#EB596E] rounded-[3.75rem] pl-14 placeholder:text-black w-full">
-                    <SelectValue
-                      id="timezone"
-                      placeholder={userInfo.timezone}
-                    />
-                  </SelectTrigger>
-                  <SelectContent className="bg-[#9376E0] text-black">
-                    <SelectGroup>
-                      <SelectLabel>Timezones</SelectLabel>
-                      <SelectItem value="utc-1">(UTC-1)</SelectItem>
-                      <SelectItem value="utc">(UTC) - London</SelectItem>
-                      <SelectItem value="utc+1">(UTC+1)</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-                <svg
-                  width="42"
-                  height="51"
-                  viewBox="0 0 42 51"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="absolute left-4 top-1/2 -translate-y-1/2 w-7 h-7">
-                  <g id="Group 2">
-                    <path
-                      id="Vector"
-                      d="M1 20.2C1 39.4 21 49 21 49C21 49 41 39.4 41 20.2C41 9.6 32.05 1 21 1C9.95 1 1 9.6 1 20.2Z"
-                      stroke="black"
-                      strokeWidth="2"
-                    />
-                    <path
-                      id="Vector_2"
-                      d="M21 26.76C24.7997 26.76 27.88 23.6797 27.88 19.88C27.88 16.0803 24.7997 13 21 13C17.2003 13 14.12 16.0803 14.12 19.88C14.12 23.6797 17.2003 26.76 21 26.76Z"
-                      stroke="black"
-                      strokeWidth="2"
-                    />
-                  </g>
                 </svg>
               </div>
             </div>

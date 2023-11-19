@@ -13,7 +13,7 @@ export default function NavBar() {
     const response = await fetch("/api");
     const data = await response.json();
     if (data.username) {
-      router.push(`/${data.username}}`);
+      router.push(`/${data.username}`);
     } else {
       router.push("/register");
     }
