@@ -38,6 +38,9 @@
     --ring: 216 34% 17%;
 
     --radius: 0.5rem;
+
+    --mission-bg: 45 46% 68%;
+    --mission-border: 351 78% 64%;
   }
 
   .light {
@@ -75,8 +78,7 @@
 
   html,
   body {
-    @apply p-0 m-0;
-    scroll-behavior: smooth;
+    @apply p-0 m-0 overflow-x-hidden scroll-smooth;
   }
 
   a {
@@ -85,10 +87,6 @@
 
   * {
     @apply box-border;
-  }
-
-  body {
-    @apply text-foreground bg-black;
   }
 }
 

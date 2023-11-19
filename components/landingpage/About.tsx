@@ -42,12 +42,7 @@ export default function About() {
   return (
     <section
       ref={scrollRef}
-      className="relative lg:min-h-[50rem] 2xl:min-h-[75rem] w-full pb-8 sm:pb-20 2xl:pb-24">
-      <Image
-        src={aboutBg}
-        alt="bubbles"
-        className="absolute top-0 left-0 w-full h-full opacity-10 object-cover"
-      />
+      className="relative lg:min-h-[50rem] 2xl:min-h-[75rem] w-full pb-8 sm:pb-20 2xl:pb-24 text-foreground bg-background">
       <h2 className="text-2xl md:text-4xl lg:text-5xl 2xl:text-8xl text-center font-semibold pt-12 italic">
         ABOUT OUR PROJECT
       </h2>
