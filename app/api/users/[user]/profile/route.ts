@@ -1,5 +1,4 @@
 import { users } from "@/mock/user";
-import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -8,7 +7,7 @@ export async function GET(
   { params }: { params: { user: string } }
 ) {
   const user = users.find((u) => u.username === params.user);
-  return NextResponse.json({ user });
+  return new Response(JSON.stringify({ user }));
 }
 
 export async function POST(req: Request) {

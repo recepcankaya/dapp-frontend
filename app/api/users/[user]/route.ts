@@ -1,4 +1,3 @@
-import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
 export async function GET(req: Request) {
@@ -14,7 +13,7 @@ export async function GET(req: Request) {
     );
     const user = await res.json();
     console.log("user: ", user);
-    return NextResponse.json(user);
+    return new Response(JSON.stringify(user));
   }
 }
 
@@ -40,7 +39,7 @@ export async function POST(req: Request) {
     const data = await res.json();
     console.log("mission is added: ", data);
     const { id, user, title } = data;
-    return NextResponse.json({ id, title });
+    return new Response(JSON.stringify({ id, title }));
   }
 }
 
@@ -61,7 +60,7 @@ export async function PATCH(req: Request) {
     );
     await res.json();
     console.log("Mission is completed");
-    return NextResponse.json({ message: "Mission is completed" });
+    return new Response(JSON.stringify({ message: "Mission is completed" }));
   }
 }
 
@@ -82,6 +81,6 @@ export async function DELETE(req: Request) {
     );
     await res.json();
     console.log("Mission is deleted");
-    return NextResponse.json({ message: "Mission is deleted" });
+    return new Response(JSON.stringify({ message: "Mission is deleted" }));
   }
 }

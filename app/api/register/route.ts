@@ -1,4 +1,3 @@
-import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
 export async function POST(req: Request) {
@@ -47,5 +46,5 @@ export async function POST(req: Request) {
     expires: new Date(Date.now() + 60 * 60 * 24 * 30 * 1000),
   });
 
-  return NextResponse.json(user);
+  return new Response(JSON.stringify(user));
 }

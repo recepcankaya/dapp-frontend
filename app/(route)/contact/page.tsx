@@ -41,7 +41,7 @@ import { CardContent, Card } from "@/components/ui/card";
 //   }
 // }
 
-const ContactUs: NextPage = () => {
+export default function Contact() {
   return (
     <>
       <div className="fixed inset-0 z-50 bg-black/75 transition-opacity">
@@ -142,4 +142,4 @@ const ContactUs: NextPage = () => {
       </form>
     </>
   );
-};
+}
