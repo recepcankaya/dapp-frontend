@@ -1,5 +1,6 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/Button";
@@ -19,6 +20,7 @@ const UserProfile = ({ params }: { params: { user: string } }) => {
     email: "",
     wallet: "",
   });
+  const router = useRouter();
 
   const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -37,6 +39,7 @@ const UserProfile = ({ params }: { params: { user: string } }) => {
     console.log("profile data is ", data);
     const { u, em } = data;
     setUserInfo({ ...userInfo, username: u, email: em });
+    router.push(`/${u}`);
   };
 
   /**

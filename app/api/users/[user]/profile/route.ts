@@ -1,6 +1,5 @@
 import { users } from "@/mock/user";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 export async function GET(
   req: Request,
@@ -10,7 +9,7 @@ export async function GET(
   return new Response(JSON.stringify({ user }));
 }
 
-export async function POST(req: Request) {
+export async function POST(req: Request): Promise<Response> {
   const jwtCookie = cookies().get("jwt");
   const body = await req.json();
   const { username, email } = body;
@@ -33,6 +32,7 @@ export async function POST(req: Request) {
     const data = await res.json();
     console.log("profile data: ", data);
     const { username: u } = data;
-    redirect(`/${u}`);
+    return new Response(JSON.stringify({ u }));
   }
+  return new Response(JSON.stringify({ error: "No JWT token found" }));
 }

@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 
-export async function GET(req: Request) {
+export async function GET(req: Request): Promise<Response> {
   const jwtCookie = cookies().get("jwt");
   if (jwtCookie) {
     const res = await fetch(
@@ -15,9 +15,10 @@ export async function GET(req: Request) {
     console.log("user: ", user);
     return new Response(JSON.stringify(user));
   }
+  return new Response(JSON.stringify({ error: "No JWT token found" }));
 }
 
-export async function POST(req: Request) {
+export async function POST(req: Request): Promise<Response> {
   const body = await req.json();
   const { text } = body;
   const jwtCookie = cookies().get("jwt");
@@ -41,9 +42,10 @@ export async function POST(req: Request) {
     const { id, user, title } = data;
     return new Response(JSON.stringify({ id, title }));
   }
+  return new Response(JSON.stringify({ error: "No JWT token found" }));
 }
 
-export async function PATCH(req: Request) {
+export async function PATCH(req: Request): Promise<Response> {
   const jwtCookie = cookies().get("jwt");
   const body = await req.json();
   const { index } = body;
@@ -62,9 +64,10 @@ export async function PATCH(req: Request) {
     console.log("Mission is completed");
     return new Response(JSON.stringify({ message: "Mission is completed" }));
   }
+  return new Response(JSON.stringify({ error: "No JWT token found" }));
 }
 
-export async function DELETE(req: Request) {
+export async function DELETE(req: Request): Promise<Response> {
   const jwtCookie = cookies().get("jwt");
   const body = await req.json();
   const { id } = body;
@@ -83,4 +86,5 @@ export async function DELETE(req: Request) {
     console.log("Mission is deleted");
     return new Response(JSON.stringify({ message: "Mission is deleted" }));
   }
+  return new Response(JSON.stringify({ error: "No JWT token found" }));
 }

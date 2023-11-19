@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 
-export async function POST(req: Request) {
+export async function POST(req: Request): Promise<Response> {
   const body = await req.json();
   console.log("Register body: ", body);
   const { username, email, timezone, password } = body;
@@ -46,5 +46,8 @@ export async function POST(req: Request) {
     expires: new Date(Date.now() + 60 * 60 * 24 * 30 * 1000),
   });
 
-  return new Response(JSON.stringify(user));
+  if (user && accessToken) {
+    return new Response(JSON.stringify(user));
+  }
+  return new Response(JSON.stringify({ error: "Registration failed" }));
 }
