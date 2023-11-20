@@ -13,8 +13,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alertdialog";
 import styles from "@/styles/MissionList.module.css";
-import { useCallback, useEffect } from "react";
-import { FormPropsTypes, Mission } from "@/types/MissionType.types";
+import { FormPropsTypes } from "@/types/MissionType.types";
 
 export default function MissionList({
   missions,
@@ -78,15 +77,15 @@ export default function MissionList({
   };
 
   return (
-    <section className="pt-12 w-full">
+    <section className="pt-12 w-screen">
       {missions.map((mission) => (
         <ul
           className="mx-auto mb-16 w-[90%] h-auto sm:flex sm:items-center sm:justify-around sm:gap-1.5"
           key={mission.id}>
           {/* @todo - work with border here. add it to divs */}
-          <div className="mx-auto w-1/2 sm:w-auto h-16 md:h-20 mb-4 sm:mb-0 font-bold text-sm md:text-base sm:order-last">
-            <p className="-mb-2">Completed days</p>
-            <div className="bg-[url('/designs/sand-watch.svg')] bg-no-repeat w-full h-full bg-contain bg-center flex flex-col items-center justify-center gap-2">
+          <div className="mx-auto w-1/2 sm:w-auto h-[5.5rem] md:h-[6.5rem] mb-4 sm:mb-0 font-bold text-sm md:text-base sm:order-last flex flex-col items-center">
+            <p className="mx-auto">Completed days</p>
+            <div className="bg-[url('/designs/sand-watch.svg')] bg-no-repeat w-full h-full bg-contain bg-center flex flex-col items-center justify-center gap-2.5">
               <span>{mission.numberOfDays | 0}</span>
               <span>21</span>
             </div>
@@ -94,7 +93,7 @@ export default function MissionList({
           <li
             className={`${
               mission?.isCompleted ? styles.cardChanged : styles.card
-            } w-full sm:w-3/4 xl:7/12 h-16 md:h-20 rounded-3xl flex items-center justify-between mx-auto`}>
+            } w-full sm:w-3/4 xl:w-7/12 h-16 md:h-20 rounded-3xl flex items-center justify-between mx-auto`}>
             <AlertDialog>
               <AlertDialogTrigger>
                 <Button
@@ -105,7 +104,7 @@ export default function MissionList({
                   // @todo - does not work
                   className={`${
                     mission?.isCompleted ? "cursor-not-allowed" : ""
-                  } bg-[url('/designs/button-shield.svg')] bg-no-repeat bg-transparent h-full hover:bg-[url('/designs/button-shield-finish-hover.svg')] hover:bg-transparent text-sm lg:text-base`}
+                  } bg-[url('/designs/button-shield.svg')] bg-no-repeat bg-transparent w-full h-14 sm:h-full hover:bg-[url('/designs/button-shield-finish-hover.svg')] hover:bg-transparent text-sm lg:text-base`}
                   style={{
                     backgroundSize: "100% 100%",
                   }}>
@@ -133,7 +132,7 @@ export default function MissionList({
             <AlertDialog>
               <AlertDialogTrigger>
                 <Button
-                  className="bg-[url('/designs/button-shield.svg')] bg-no-repeat bg-transparent h-full hover:bg-[url('/designs/button-shield-delete-hover.svg')] hover:bg-transparent text-sm lg:text-base"
+                  className="bg-[url('/designs/button-shield.svg')] bg-no-repeat bg-transparent w-full h-14 sm:h-full hover:bg-[url('/designs/button-shield-delete-hover.svg')] hover:bg-transparent text-sm lg:text-base"
                   style={{
                     backgroundSize: "100% 100%",
                   }}>
