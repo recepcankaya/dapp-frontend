@@ -43,7 +43,7 @@ export async function POST(req: Request): Promise<Response> {
     name: "jwt",
     value: accessToken,
     httpOnly: true,
-    expires: new Date(Date.now() + 60 * 60 * 24 * 30 * 1000),
+    expires: new Date(Date.now() + 60 * 60 * 24 * 30 * 1000 * 30),
   });
 
   if (user && accessToken) {
