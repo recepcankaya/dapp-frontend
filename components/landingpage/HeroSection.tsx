@@ -50,7 +50,7 @@ export default function HeroSection() {
         variants={secondHeadingVariants}
         initial="hidden"
         whileInView="visible">
-        YOU CAN GATHER IT
+        YOU GATHER IT
       </motion.h2>
     </header>
   );

@@ -11,6 +11,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/Button";
 import { useCallback, useEffect, useState } from "react";
+import Link from "next/link";
 
 export default function UserLayout({
   children,
@@ -21,7 +22,6 @@ export default function UserLayout({
 }) {
   const [username, setUsername] = useState<string>("");
   const address = useAddress();
-  const router = useRouter();
 
   const displayUsername = useCallback(async () => {
     try {
@@ -36,10 +36,6 @@ export default function UserLayout({
       console.error(error);
     }
   }, [params.user]);
-
-  const handleToProfile = () => {
-    router.push(`/${username}/profile`);
-  };
 
   useEffect(() => {
     displayUsername();
@@ -56,11 +52,11 @@ export default function UserLayout({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button
-                  onClick={handleToProfile}
-                  className="text-sm lg:text-base bg-[#F5EA5AA6] border-2 border-missionBorder rounded-[90px] mt-1 px-6 lg:px-10 py-2 font-bold text-black hover:bg-[#EB596E]">
+                <Link
+                  href={`/${params.user}/profile`}
+                  className="text-sm lg:text-base bg-[#F5EA5AA6] border-2 border-missionBorder rounded-[90px] mt-1 px-4 lg:px-10 py-3 sm:py-4 font-bold text-black hover:bg-[#EB596E]">
                   {username}
-                </Button>
+                </Link>
               </TooltipTrigger>
               <TooltipContent>
                 <p>Go to profile</p>

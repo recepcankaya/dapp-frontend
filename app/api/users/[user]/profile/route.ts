@@ -1,13 +1,12 @@
-import { users } from "@/mock/user";
 import { cookies } from "next/headers";
 
-export async function GET(
-  req: Request,
-  { params }: { params: { user: string } }
-) {
-  const user = users.find((u) => u.username === params.user);
-  return new Response(JSON.stringify({ user }));
-}
+// export async function GET(
+//   req: Request,
+//   { params }: { params: { user: string } }
+// ) {
+//   const user = users.find((u) => u.username === params.user);
+//   return new Response(JSON.stringify({ user }));
+// }
 
 export async function POST(req: Request): Promise<Response> {
   const jwtCookie = cookies().get("jwt");
