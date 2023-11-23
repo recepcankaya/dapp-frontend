@@ -3,7 +3,7 @@ export type Mission = {
   title: string;
   numberOfDays: number;
   isCompleted: boolean;
-  prevDate: string;
+  prevDate: Date;
 };
 
 export type FormPropsTypes = {

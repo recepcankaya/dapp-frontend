@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/alertdialog";
 import styles from "@/styles/MissionList.module.css";
 import { FormPropsTypes } from "@/types/MissionType.types";
+import { useEffect } from "react";
 
 export default function MissionList({
   missions,
@@ -44,7 +45,7 @@ export default function MissionList({
           ...missionToUpdate,
           isCompleted: true,
           numberOfDays: missionToUpdate.numberOfDays + 1,
-          prevDate: Date.now().toString(),
+          prevDate: new Date(),
         };
 
         return updatedMissions;
@@ -76,6 +77,38 @@ export default function MissionList({
     }
   };
 
+  /**
+   * Before the user clicks the finish button, request to access to user's camera or gallery depend on what device they are using.
+   * Then, the user can take a picture or choose a picture from their gallery.
+   * After that, the picture will be sent to the server and the server will return the result of the picture.
+   */
+
+  /**
+   * If the time which has passed since the last completed mission is greater than 1 minute, the mission is marked as incomplete.
+   */
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date();
+      const updatedMissions = [...missions];
+      missions.forEach((mission, index) => {
+        const prevDate = new Date(mission.prevDate); // Convert to Date object
+        if (
+          mission.isCompleted &&
+          (now.getDate() !== prevDate.getDate() ||
+            now.getMonth() !== prevDate.getMonth() ||
+            now.getFullYear() !== prevDate.getFullYear())
+        ) {
+          updatedMissions[index] = {
+            ...mission,
+            isCompleted: false,
+          };
+        }
+      });
+      setMissions(updatedMissions);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [missions, setMissions]);
+
   return (
     <section className="pt-12 w-screen">
       {missions.map((mission) => (
@@ -96,35 +129,55 @@ export default function MissionList({
             } w-full sm:w-3/4 xl:w-7/12 h-16 md:h-20 rounded-3xl flex items-center justify-between mx-auto`}>
             <AlertDialog>
               <AlertDialogTrigger>
-                <Button
-                  disabled={mission?.isCompleted}
-                  onClick={() => {
-                    handleCompleted(mission.id);
-                  }}
-                  // @todo - does not work
+                <div
                   className={`${
                     mission?.isCompleted ? "cursor-not-allowed" : ""
-                  } bg-[url('/designs/button-shield.svg')] bg-no-repeat bg-transparent w-full h-14 sm:h-full hover:bg-[url('/designs/button-shield-finish-hover.svg')] hover:bg-transparent text-sm lg:text-base`}
-                  style={{
-                    backgroundSize: "100% 100%",
-                  }}>
-                  Finish
-                </Button>
+                  }`}>
+                  <Button
+                    disabled={mission?.isCompleted}
+                    onClick={() => {
+                      handleCompleted(mission.id);
+                    }}
+                    className="bg-[url('/designs/button-shield.svg')] bg-no-repeat bg-transparent w-full h-14 sm:h-full hover:bg-[url('/designs/button-shield-finish-hover.svg')] hover:bg-transparent text-sm lg:text-base"
+                    style={{
+                      backgroundSize: "100% 100%",
+                    }}>
+                    Finish
+                  </Button>
+                </div>
               </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle className="text-foreground">
-                    You are rocking!
-                  </AlertDialogTitle>
-                  <AlertDialogDescription>
-                    You completed today&apos;s mission. Keep up the good work!
-                    As your reward, we sent LDT token to your account🥳🎉
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogAction>Back to page</AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
+              {mission?.isCompleted ? (
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle className="text-foreground">
+                      You finished today&apos;s mission!
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      You completed today&apos;s mission. This is good news, but
+                      you can&apos;t finish it again today. Come back for
+                      tomorrow. We will be waiting for you! 🏆🕒
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogAction>Back to page</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              ) : (
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle className="text-foreground">
+                      You are rocking!
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      You completed today&apos;s mission. Keep up the good work!
+                      As your reward, we sent LDT token to your account🥳🎉
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogAction>Back to page</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              )}
             </AlertDialog>
             <p className="text-center text-lg sm:text-xl md:text-2xl">
               {mission.title}

@@ -3,7 +3,7 @@ import { useAnimate } from "framer-motion";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { FormPropsTypes } from "@/types/MissionType.types";
+import { FormPropsTypes, Mission } from "@/types/MissionType.types";
 import { toastError, toastSuccess } from "@/lib/toast/toast";
 
 import { Input } from "../ui/input";
@@ -67,7 +67,7 @@ export default function MissionForm({
           title,
           isCompleted: false,
           numberOfDays: 0,
-          prevDate: Date.now().toString(),
+          prevDate: new Date(),
         },
       ]);
     } catch (error) {
@@ -83,9 +83,14 @@ export default function MissionForm({
     try {
       const res = await fetch(`/api/users/${username}`);
       const data = await res.json();
-      const goals = data.missions;
+      console.log(data);
       if (data) {
-        setMissions(goals);
+        setMissions((prev) => {
+          const newData = data.filter(
+            (d: any) => !prev.some((p: any) => p.id === d.id)
+          );
+          return [...prev, ...newData];
+        });
       }
     } catch (error) {
       console.log(error);

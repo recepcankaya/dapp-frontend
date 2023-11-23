@@ -4,16 +4,16 @@ export async function GET(req: Request): Promise<Response> {
   const jwtCookie = cookies().get("jwt");
   if (jwtCookie) {
     const res = await fetch(
-      "https://akikoko.pythonanywhere.com/api/user/user_detail/",
+      "https://akikoko.pythonanywhere.com/api/user/mission_list/",
       {
         headers: {
           Authorization: `Bearer ${jwtCookie.value}`,
         },
       }
     );
-    const user = await res.json();
-    console.log("user: ", user);
-    return new Response(JSON.stringify(user));
+    const missions = await res.json();
+    console.log("missions: ", missions);
+    return new Response(JSON.stringify(missions));
   }
   return new Response(JSON.stringify({ error: "No JWT token found" }));
 }
