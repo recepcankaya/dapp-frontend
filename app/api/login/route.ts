@@ -3,24 +3,8 @@ import { cookies } from "next/headers";
 export async function POST(req: Request): Promise<Response> {
   const body = await req.json();
   console.log("Register body: ", body);
-  const { username, email, timezone, password } = body;
-  const res = await fetch(
-    "https://akikoko.pythonanywhere.com/api/user/register/",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username,
-        email,
-        timeZone: "+3",
-        password,
-      }),
-    }
-  );
-  const user = await res.json();
-  console.log("User registered: ", user);
+  const { username, password } = body;
+
   const jwtRes = await fetch(
     "https://akikoko.pythonanywhere.com/api/auth/get_token/",
     {
@@ -44,12 +28,11 @@ export async function POST(req: Request): Promise<Response> {
     name: "jwt",
     value: accessToken,
     httpOnly: true,
-    // expires: new Date(Date.now() + 60 * 60 * 24 * 30 * 1000 * 30),
     expires: new Date(Date.now() + ninetyDays),
   });
 
-  if (user && accessToken) {
-    return new Response(JSON.stringify(user));
+  if (accessToken) {
+    return new Response(JSON.stringify(username));
   }
-  return new Response(JSON.stringify({ error: "Registration failed" }));
+  return new Response(JSON.stringify({ error: "Login failed" }));
 }

@@ -2,20 +2,11 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import {
-  SelectValue,
-  SelectTrigger,
-  SelectLabel,
-  SelectItem,
-  SelectGroup,
-  SelectContent,
-  Select,
-} from "@/components/ui/select";
 import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
-export default function Register() {
+export default function Login() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const router = useRouter();
 
@@ -27,16 +18,14 @@ export default function Register() {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const username = formData.get("username")?.valueOf();
-    const email = formData.get("email")?.valueOf();
-    const timezone = formData.get("timezone")?.valueOf();
     const password = formData.get("password")?.valueOf();
-    console.log({ username, email, timezone, password });
-    const response = await fetch("/api/register", {
+    console.log({ username, password });
+    const response = await fetch("/api/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ username, email, tz: "+2", password }),
+      body: JSON.stringify({ username, password }),
     });
     const user = await response.json();
     console.log(user);
@@ -50,8 +39,8 @@ export default function Register() {
           onSubmit={handleFormSubmit}
           className="w-2/3 lg:w-1/2 absolute inset-1/2 -translate-x-1/2 -translate-y-1/2">
           <div className="space-y-2 text-center">
-            <h1 className="text-3xl font-bold">Register</h1>
-            <p className="text-zinc-800">Create your account</p>
+            <h1 className="text-3xl font-bold">Login</h1>
+            <p className="text-zinc-800">Log in to your account</p>
           </div>
           <div className="space-y-4">
             <div className="space-y-2">
@@ -64,38 +53,7 @@ export default function Register() {
                 className="bg-[#EB596E] border border-[#EB596E] pl-2 placeholder:text-black w-full placeholder:italic"
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                name="email"
-                placeholder="thewarrior@gmail.com"
-                required
-                type="email"
-                className="bg-[#EB596E] border border-[#EB596E] pl-2 placeholder:text-black w-full placeholder:italic"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="timezone">Timezone</Label>
-              <Select name="timezone">
-                <SelectTrigger className="bg-[#EB596E] border border-[#EB596E] placeholder:text-black w-full">
-                  <SelectValue
-                    id="timezone"
-                    placeholder="Select your timezone"
-                  />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Timezones</SelectLabel>
-                    <SelectItem value="utc">UTC</SelectItem>
-                    <SelectItem value="est">Eastern Standard Time</SelectItem>
-                    <SelectItem value="cst">Central Standard Time</SelectItem>
-                    <SelectItem value="mst">Mountain Standard Time</SelectItem>
-                    <SelectItem value="pst">Pacific Standard Time</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
+
             <div className="space-y-2 relative">
               <Label htmlFor="password">Password</Label>
               <Input
@@ -127,7 +85,7 @@ export default function Register() {
               </div>
             </div>
             <Button className="w-full" type="submit">
-              Register
+              Login
             </Button>
           </div>
         </form>
