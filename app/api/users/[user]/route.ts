@@ -38,9 +38,13 @@ export async function POST(req: Request): Promise<Response> {
       }
     );
     const data = await res.json();
-    console.log("mission is added: ", data);
-    const { id, user, title } = data;
-    return new Response(JSON.stringify({ id, title }));
+    if (data.message) {
+      return new Response(JSON.stringify({ message: data.message }));
+    } else {
+      console.log("mission is added: ", data);
+      const { id, title } = data;
+      return new Response(JSON.stringify({ id, title }));
+    }
   }
   return new Response(JSON.stringify({ error: "No JWT token found" }));
 }
