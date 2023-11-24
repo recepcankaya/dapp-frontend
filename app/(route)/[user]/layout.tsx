@@ -1,5 +1,5 @@
 "use client";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { ConnectWallet, darkTheme, useAddress } from "@thirdweb-dev/react";
 
 import {
@@ -10,8 +10,6 @@ import {
 } from "@/components/ui/tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/Button";
-import { useCallback, useEffect, useState } from "react";
-import Link from "next/link";
 
 export default function UserLayout({
   children,
@@ -20,26 +18,7 @@ export default function UserLayout({
   children: React.ReactNode;
   params: { user: string };
 }) {
-  const [username, setUsername] = useState<string>("");
   const address = useAddress();
-
-  const displayUsername = useCallback(async () => {
-    try {
-      const res = await fetch(`/api/users/${params.user}`);
-      const data = await res.json();
-      if (data) {
-        setUsername(data.username);
-      } else {
-        console.error("User is undefined");
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }, [params.user]);
-
-  useEffect(() => {
-    displayUsername();
-  }, [displayUsername]);
 
   return (
     <>
@@ -55,7 +34,7 @@ export default function UserLayout({
                 <Link
                   href={`/${params.user}/profile`}
                   className="text-sm lg:text-base bg-[#F5EA5AA6] border-2 border-missionBorder rounded-[90px] mt-1 px-4 lg:px-10 py-3 sm:py-4 font-bold text-black hover:bg-[#EB596E]">
-                  {username}
+                  {params.user}
                 </Link>
               </TooltipTrigger>
               <TooltipContent>
