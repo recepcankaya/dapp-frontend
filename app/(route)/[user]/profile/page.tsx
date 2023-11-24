@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { useAddress } from "@thirdweb-dev/react";
+import { toastInfo } from "@/lib/toast/toast";
 
 type UserInfoProps = {
   u: string;
@@ -42,6 +43,7 @@ const UserProfile = ({ params }: { params: { user: string } }) => {
     console.log("profile data is ", data);
     const { u } = data;
     setUserInfo((prev) => ({ ...prev, u }));
+    toastInfo("Profile updated successfully");
     router.push(`/${u}`);
   };
 

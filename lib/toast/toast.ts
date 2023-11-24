@@ -26,3 +26,16 @@ export const toastSuccess = (message: string) => {
     theme: "light",
   });
 };
+
+export const toastInfo = (message: string) => {
+  toast.info(message, {
+    position: "bottom-right",
+    autoClose: 2000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: false,
+    draggable: false,
+    progress: undefined,
+    theme: "light",
+  });
+};

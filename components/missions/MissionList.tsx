@@ -12,6 +12,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alertdialog";
+import { toastInfo } from "@/lib/toast/toast";
 import styles from "@/styles/MissionList.module.css";
 import { FormPropsTypes } from "@/types/MissionType.types";
 import { useEffect } from "react";
@@ -72,6 +73,7 @@ export default function MissionList({
       const data = await res.json();
       console.log("Deleted mission", data);
       setMissions(missions.filter((m) => m.id !== id));
+      toastInfo(data.message);
     } catch (error) {
       console.error(error);
     }

@@ -88,7 +88,9 @@ export async function DELETE(req: Request): Promise<Response> {
     );
     await res.json();
     console.log("Mission is deleted");
-    return new Response(JSON.stringify({ message: "Mission is deleted" }));
+    return new Response(
+      JSON.stringify({ message: "Mission deleted successfully" })
+    );
   }
   return new Response(JSON.stringify({ error: "No JWT token found" }));
 }
