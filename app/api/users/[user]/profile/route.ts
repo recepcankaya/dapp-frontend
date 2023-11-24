@@ -1,17 +1,29 @@
 import { cookies } from "next/headers";
 
-// export async function GET(
-//   req: Request,
-//   { params }: { params: { user: string } }
-// ) {
-//   const user = users.find((u) => u.username === params.user);
-//   return new Response(JSON.stringify({ user }));
-// }
+export async function GET(req: Request) {
+  const jwtCookie = cookies().get("jwt");
+
+  if (jwtCookie) {
+    const res = await fetch(
+      "https://akikoko.pythonanywhere.com/api/user/user_detail/",
+      {
+        headers: {
+          Authorization: `Bearer ${jwtCookie.value}`,
+        },
+      }
+    );
+    const data = await res.json();
+    console.log("profile data: ", data);
+    const { username, email, timeZone } = data;
+    return new Response(JSON.stringify({ username, email, timeZone }));
+  }
+  return new Response(JSON.stringify({ error: "No JWT token found" }));
+}
 
 export async function POST(req: Request): Promise<Response> {
   const jwtCookie = cookies().get("jwt");
   const body = await req.json();
-  const { username, email } = body;
+  const { username } = body;
 
   if (jwtCookie) {
     const res = await fetch(
@@ -24,7 +36,6 @@ export async function POST(req: Request): Promise<Response> {
         },
         body: JSON.stringify({
           username,
-          email,
         }),
       }
     );

@@ -3,7 +3,7 @@ import { useAnimate } from "framer-motion";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { FormPropsTypes } from "@/types/MissionType.types";
+import { FormPropsTypes, Mission } from "@/types/MissionType.types";
 import { toastError, toastSuccess } from "@/lib/toast/toast";
 
 import { Input } from "../ui/input";
@@ -36,10 +36,8 @@ export default function MissionForm({
       toastError("The mission should be at least 3 characters");
       return;
     }
-    const res = await addMission();
-    console.log(res);
+    await addMission();
     setText("");
-    toastSuccess("The mission is added");
     await displayMissions();
   };
 
@@ -58,18 +56,23 @@ export default function MissionForm({
       });
       const data = await res.json();
       console.log(data);
-      // mission id, mission
-      const { id, title } = data;
-      setMissions((prev) => [
-        ...prev,
-        {
-          id,
-          title,
-          isCompleted: false,
-          numberOfDays: 0,
-          prevDate: Date.now().toString(),
-        },
-      ]);
+      if (data.message) {
+        toastError(data.message);
+      } else {
+        // mission id, mission
+        const { id, title } = data;
+        setMissions((prev) => [
+          ...prev,
+          {
+            id,
+            title,
+            isCompleted: false,
+            numberOfDays: 0,
+            prevDate: new Date(),
+          },
+        ]);
+        toastSuccess("The mission is added");
+      }
     } catch (error) {
       console.error(error);
     }
@@ -83,9 +86,14 @@ export default function MissionForm({
     try {
       const res = await fetch(`/api/users/${username}`);
       const data = await res.json();
-      const goals = data.missions;
+      console.log(data);
       if (data) {
-        setMissions(goals);
+        setMissions((prev) => {
+          const newData = data.filter(
+            (d: any) => !prev.some((p: any) => p.id === d.id)
+          );
+          return [...prev, ...newData];
+        });
       }
     } catch (error) {
       console.log(error);
@@ -143,10 +151,6 @@ export default function MissionForm({
           <h2 className="text-xl md:text-2xl lg:text-3xl font-semibold text-center opacity-0">
             Add Mission
           </h2>
-          {/* make this label responsive */}
-          {/* <Label htmlFor="mission" className="lg:text-lg -mb-10 float-left">
-        Mission
-      </Label> */}
           <Input
             placeholder="Run 3 miles"
             className="mt-5 py-3 md:py-4 lg:py-6 lg:text-lg bg-white border-2 border-[#EB596E] placeholder:italic opacity-0"

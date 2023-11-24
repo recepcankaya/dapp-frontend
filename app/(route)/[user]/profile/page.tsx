@@ -7,38 +7,43 @@ import { Button } from "@/components/ui/Button";
 
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { useAddress } from "@thirdweb-dev/react";
+import { toastInfo } from "@/lib/toast/toast";
 
-type UserInfo = {
-  username: string;
-  email: string;
-  wallet: string;
+type UserInfoProps = {
+  u: string;
+  t: string;
+  e: string;
+  w: string;
 };
 
 const UserProfile = ({ params }: { params: { user: string } }) => {
-  const [userInfo, setUserInfo] = useState<UserInfo>({
-    username: "",
-    email: "",
-    wallet: "",
+  const [userInfo, setUserInfo] = useState<UserInfoProps>({
+    u: "",
+    t: "",
+    e: "",
+    w: "",
   });
   const router = useRouter();
+  const address = useAddress();
 
   const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const username = formData.get("username")?.valueOf();
-    const email = formData.get("email")?.valueOf();
 
     const response = await fetch(`/api/users/${params.user}/profile`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ username, email }),
+      body: JSON.stringify({ username }),
     });
     const data = await response.json();
     console.log("profile data is ", data);
-    const { u, em } = data;
-    setUserInfo({ ...userInfo, username: u, email: em });
+    const { u } = data;
+    setUserInfo((prev) => ({ ...prev, u }));
+    toastInfo("Profile updated successfully");
     router.push(`/${u}`);
   };
 
@@ -52,12 +57,21 @@ const UserProfile = ({ params }: { params: { user: string } }) => {
       const res = await fetch(`/api/users/${params.user}/profile`);
       const data = await res.json();
       console.log("Fetched data is ", data);
-      const { username, timezone, email, wallet } = data.user;
-      setUserInfo({ username, email, wallet });
+      const { username, timeZone, email } = data;
+      if (address !== undefined) {
+        setUserInfo({ u: username, e: email, t: timeZone, w: address });
+      } else {
+        setUserInfo({
+          u: username,
+          e: email,
+          t: timeZone,
+          w: "There is no connected wallet",
+        });
+      }
     } catch (error) {
       console.error("Failed to fetch user info:", error);
     }
-  }, [params.user]);
+  }, [params.user, address]);
 
   useEffect(() => {
     displayUserInfo();
@@ -74,7 +88,7 @@ const UserProfile = ({ params }: { params: { user: string } }) => {
                 <Input
                   id="username"
                   name="username"
-                  placeholder={userInfo.username}
+                  placeholder={userInfo.u}
                   className="bg-[#EB596E] border border-[#EB596E] rounded-[3.75rem] pl-14 placeholder:text-black w-full"
                 />
                 <svg
@@ -97,9 +111,10 @@ const UserProfile = ({ params }: { params: { user: string } }) => {
               <Label htmlFor="email">Email</Label>
               <div className="relative">
                 <Input
+                  disabled
                   id="email"
                   name="email"
-                  placeholder={userInfo.email}
+                  placeholder={userInfo.e}
                   className="bg-[#EB596E] border border-[#EB596E] rounded-[3.75rem] pl-14 placeholder:text-black w-full"
                 />
                 <svg
@@ -113,6 +128,7 @@ const UserProfile = ({ params }: { params: { user: string } }) => {
                     <path
                       id="Vector"
                       d="M24.4141 31.9355L25.2141 32.4399L26.0141 31.9355L48.0342 18.0523V44.5H2.39404V18.0523L24.4141 31.9355ZM25.2141 21.2268L2.39404 6.83915V1.5H48.0342V6.83915L25.2141 21.2268Z"
+                      fillOpacity="50%"
                       fill="#EB596E"
                       stroke="black"
                       strokeWidth="2"
@@ -122,11 +138,49 @@ const UserProfile = ({ params }: { params: { user: string } }) => {
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="wallet">Wallet</Label>
+              <Label htmlFor="timezone">Timezone</Label>
               <div className="relative">
                 <Input
                   disabled
-                  placeholder={userInfo.wallet}
+                  id="timezone"
+                  name="timezone"
+                  placeholder={userInfo.t}
+                  className="bg-[#EB596E] border border-[#EB596E] rounded-[3.75rem] pl-14 placeholder:text-black w-full"
+                />
+                <svg
+                  width="50"
+                  height="46"
+                  viewBox="0 0 50 46"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="absolute left-4 top-1/2 -translate-y-1/2 w-7 h-7">
+                  <g id="Group 2">
+                    <path
+                      id="Vector"
+                      d="M1 20.2C1 39.4 21 49 21 49C21 49 41 39.4 41 20.2C41 9.6 32.05 1 21 1C9.95 1 1 9.6 1 20.2Z"
+                      fillOpacity="50%"
+                      fill="#EB596E"
+                      stroke="black"
+                      strokeWidth="2"
+                    />
+                    <path
+                      id="Vector_2"
+                      d="M21 26.76C24.7997 26.76 27.88 23.6797 27.88 19.88C27.88 16.0803 24.7997 13 21 13C17.2003 13 14.12 16.0803 14.12 19.88C14.12 23.6797 17.2003 26.76 21 26.76Z"
+                      fillOpacity="50%"
+                      fill="#EB596E"
+                      stroke="black"
+                      strokeWidth="2"
+                    />
+                  </g>
+                </svg>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="wallet">Wallet Address</Label>
+              <div className="relative">
+                <Input
+                  disabled
+                  placeholder={userInfo.w}
                   className="bg-[#EB596E] border border-[#EB596E] rounded-[3.75rem] pl-14 placeholder:text-black w-full"
                 />
                 <svg

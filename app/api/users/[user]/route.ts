@@ -4,16 +4,16 @@ export async function GET(req: Request): Promise<Response> {
   const jwtCookie = cookies().get("jwt");
   if (jwtCookie) {
     const res = await fetch(
-      "https://akikoko.pythonanywhere.com/api/user/user_detail/",
+      "https://akikoko.pythonanywhere.com/api/user/mission_list/",
       {
         headers: {
           Authorization: `Bearer ${jwtCookie.value}`,
         },
       }
     );
-    const user = await res.json();
-    console.log("user: ", user);
-    return new Response(JSON.stringify(user));
+    const missions = await res.json();
+    console.log("missions: ", missions);
+    return new Response(JSON.stringify(missions));
   }
   return new Response(JSON.stringify({ error: "No JWT token found" }));
 }
@@ -38,9 +38,13 @@ export async function POST(req: Request): Promise<Response> {
       }
     );
     const data = await res.json();
-    console.log("mission is added: ", data);
-    const { id, user, title } = data;
-    return new Response(JSON.stringify({ id, title }));
+    if (data.message) {
+      return new Response(JSON.stringify({ message: data.message }));
+    } else {
+      console.log("mission is added: ", data);
+      const { id, title } = data;
+      return new Response(JSON.stringify({ id, title }));
+    }
   }
   return new Response(JSON.stringify({ error: "No JWT token found" }));
 }
@@ -84,7 +88,9 @@ export async function DELETE(req: Request): Promise<Response> {
     );
     await res.json();
     console.log("Mission is deleted");
-    return new Response(JSON.stringify({ message: "Mission is deleted" }));
+    return new Response(
+      JSON.stringify({ message: "Mission deleted successfully" })
+    );
   }
   return new Response(JSON.stringify({ error: "No JWT token found" }));
 }

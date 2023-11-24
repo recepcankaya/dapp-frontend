@@ -12,10 +12,10 @@ export default function NavBar() {
   const handleLogin = async () => {
     const response = await fetch("/api");
     const data = await response.json();
-    if (data.username) {
-      router.push(`/${data.username}`);
+    if (data.error) {
+      router.push("/login");
     } else {
-      router.push("/register");
+      router.push(`/${data.username}`);
     }
   };
 
@@ -45,20 +45,22 @@ export default function NavBar() {
                 transition: { duration: 0.2 },
               }}
               whileTap={{ scale: 0.9 }}>
-              <Button onClick={handleLogin}>Login</Button>
-              {/* <ConnectWallet
-                onConnect={handleLogin}
-                btnTitle="Login"
-                modalTitle="Select an option"
-                modalTitleIconUrl=""
-                welcomeScreen={{
-                  title: "Welcome to Ladder It",
-                  subtitle:
-                    "The app that superpowers your habits and rewards you in exchange",
-                }}
-                className="!h-8 !min-w-[auto] !px-4 !py-1 md:!px-5 md:!py-3 lg:!px-7 lg:!py-5 
-              2xl:!px-9 2xl:!py-7 2xl:!rounded-lg !text-sm md:!text-base lg:!text-lg 2xl:!text-2xl !bg-foreground !text-bgColor hover:bg-gradient-to-r from-btnNotifyColor to-purpleColor hover:!text-foreground"
-              /> */}
+              <Button
+                variant="outline"
+                onClick={handleLogin}
+                className="bg-transparent border-2 border-[#EB596E] hover:bg-[#D3C189] hover:text-black">
+                Login
+              </Button>
+            </motion.li>
+            <motion.li
+              whileHover={{
+                scale: 1.1,
+                transition: { duration: 0.2 },
+              }}
+              whileTap={{ scale: 0.9 }}>
+              <Button asChild>
+                <Link href="/register">Register</Link>
+              </Button>
             </motion.li>
           </ul>
         </div>
