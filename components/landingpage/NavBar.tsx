@@ -12,7 +12,7 @@ export default function NavBar() {
           alt="logo"
           className="w-16 h-16 md:w-20 md:h-20 lg:h-24 lg:w-24 2xl:h-32 2xl:w-32 object-cover rounded-xl"
         />
-        <ul className=" text-sm md:text-base lg:text-2xl 2xl:text-3xl hover:underline hover:underline-offset-2">
+        <ul className=" text-sm md:text-base lg:text-2xl 2xl:text-3xl hover:underline hover:underline-offset-2 flex gap-8">
           <li>
             <Link href="/contact" className="opacity-0 md:opacity-100">
               Contact us

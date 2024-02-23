@@ -82,6 +82,7 @@
   body {
     @apply p-0 m-0;
     scroll-behavior: smooth;
+    background-color: black;
   }
 
   a {

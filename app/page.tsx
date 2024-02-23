@@ -4,8 +4,7 @@ import { NextPage } from "next";
 import NavBar from "@/components/landingpage/NavBar";
 import HeroSection from "@/components/landingpage/HeroSection";
 import About from "@/components/landingpage/About";
-import HowItWorks from "@/components/landingpage/HowItWorks";
-import Footer from "@/components/landingpage/Footer";
+import Space from "@/components/landingpage/Space";
 
 const Home: NextPage = () => {
   return (
@@ -15,10 +14,11 @@ const Home: NextPage = () => {
       <HeroSection />
       <main>
         <About />
-        <HowItWorks />
+        <Space />
       </main>
       <footer>
-        <Footer />
+        {/* <Footer /> */}
+
       </footer>
     </>
   );
