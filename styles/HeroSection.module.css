@@ -1,0 +1,14 @@
+.compImg {
+  @apply text-[120px] text-center;
+}
+
+.compImg::before {
+  content: "";
+  background: linear-gradient(90deg, #3f35cb6f, #b80dca6f);
+  position: absolute;
+  height: 25%;
+  width: 50%;
+  z-index: -1;
+  filter: blur(20px);
+  border-radius: 25px;
+}

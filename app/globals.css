@@ -3,6 +3,11 @@
 @tailwind utilities;
 @import url("https://fonts.googleapis.com/css2?family=Holtwood+One+SC&display=swap");
 
+@font-face {
+  font-family: "Rubik Glitch";
+  src: url(../public/fonts/RubikGlitch-Regular.ttf);
+}
+
 @layer base {
   :root {
     --background: 244, 51%, 16%;

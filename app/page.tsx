@@ -11,6 +11,7 @@ const Home: NextPage = () => {
   return (
     <>
       <NavBar />
+      <div className="w-full h-0.5 bg-[#1E1E1E]"></div>
       <HeroSection />
       <main>
         <About />

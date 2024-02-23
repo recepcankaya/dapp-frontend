@@ -1,7 +1,6 @@
 import Image from "next/image";
+import styles from "@/styles/HeroSection.module.css";
 import { motion } from "framer-motion";
-
-import bubbleBg from "@/public/images/hero-bg.png";
 
 const firstHeadingVariants = {
   hidden: {
@@ -37,13 +36,26 @@ const secondHeadingVariants = {
 
 export default function HeroSection() {
   return (
-    <header className="relative h-[400px] lg:h-[30rem] 2xl:h-[60rem] font-bold flex flex-col justify-center items-center gap-16 lg:block">
-      <Image
-        src={bubbleBg}
-        alt="bubbles"
-        className="absolute top-0 left-0 w-full h-full opacity-10 object-cover"
-      />
-      <motion.h2
+    <header className="relative h-auto gap-16 lg:block">
+      <div className="font-rubikGlitch ">
+        <h2 className="text-[95px] text-[#1E1E1E]">When You</h2>
+        <h2 className={styles.compImg}>Ladder It</h2>
+        <h2 className="text-[95px] text-[#1E1E1E] text-right">You Gather It</h2>
+      </div>
+      <div className="flex items-center">
+        <Image
+          src="/images/hero-image.svg"
+          alt="hero-image"
+          width={200}
+          height={200}
+        />
+        <p className="font-normal text-center text-[25px]">
+          Start the transformation with your habits. We offer an extraordinary
+          way to connect with people. <br />
+          Are you ready to explore?
+        </p>
+      </div>
+      {/* <motion.h2
         className="text-2xl sm:text-4xl lg:text-5xl 2xl:text-8xl font-holtwood text-center lg:absolute lg:top-24 lg:left-28 2xl:left-36 2xl:top-48"
         variants={firstHeadingVariants}
         initial="hidden"
@@ -56,7 +68,7 @@ export default function HeroSection() {
         initial="hidden"
         whileInView="visible">
         YOU CAN GATHER IT
-      </motion.h2>
+      </motion.h2> */}
     </header>
   );
 }

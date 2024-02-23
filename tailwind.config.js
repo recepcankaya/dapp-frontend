@@ -6,6 +6,9 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    fontFamily: {
+      rubikGlitch: ["Rubik Glitch", "sans-serif"],
+    },
     extend: {
       colors: {
         bgColor: "#17143D",
