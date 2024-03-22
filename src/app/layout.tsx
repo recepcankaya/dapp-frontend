@@ -1,12 +1,6 @@
 "use client";
 import { Metadata } from "next";
-import {
-  ThirdwebProvider,
-  magicLink,
-  metamaskWallet,
-  coinbaseWallet,
-  walletConnect,
-} from "@thirdweb-dev/react";
+import { ThirdwebProvider, embeddedWallet } from "@thirdweb-dev/react";
 
 import "./globals.css";
 
@@ -28,17 +22,8 @@ export default function RootLayout({
   return (
     <ThirdwebProvider
       activeChain={activeChain}
-      supportedWallets={[
-        metamaskWallet(),
-        coinbaseWallet(),
-        walletConnect(),
-        magicLink({
-          apiKey: "YOUR_MAGIC_API_KEY",
-          oauthOptions: {
-            providers: ["google", "facebook", "twitter", "apple"],
-          },
-        }),
-      ]}>
+      clientId="9cf2156f9e78bdaaecbcef17707d78ad"
+      supportedWallets={[embeddedWallet({})]}>
       <html lang="en">
         <body>{children}</body>
       </html>
