@@ -10,20 +10,16 @@ import useAdminStore from "../../store/adminStore";
 import supabase from "@/src/utils/supabase";
 import { useAddress } from "@thirdweb-dev/react";
 import logo from "@/src/public/LadderLogo.png";
-
-const positions = [
-  { position: "absolute", top: -60, left: -60 },
-  { position: "absolute", top: -60, right: -60 },
-  { position: "absolute", bottom: -60, left: -60 },
-  { position: "absolute", bottom: -60, right: -60 },
-];
+import { useRouter } from "next/navigation";
 
 const CustomerHome = () => {
   const [userOrderNumber, setUserOrderNumber] = useState<number>(0);
   const userID = useUserStore((state) => state.user.id);
   const admin = useAdminStore((state) => state.admin);
   const brandLogo = useAdminStore((state) => state.admin.brandLogo);
+  const username = useUserStore((state) => state.user.username);
   const ticketCircles = new Array(admin.numberForReward).fill(0);
+  const router = useRouter();
 
   const customerAddress = useAddress();
 
@@ -68,6 +64,11 @@ const CustomerHome = () => {
         <Image src={logo} alt="Logo" width={80} height={80} />
       </div>
       <div className="pt-12 h-1/3">
+        <h2
+          onClick={() => router.push(`/${username}/profile`)}
+          className="text-right text-lg mr-8 underline decoration-2 underline-offset-2">
+          Profil
+        </h2>
         <p className="text-white mb-4 ml-8">Süreciniz</p>
         <div className="bg-white h-full w-full grid grid-cols-4 justify-items-center items-center">
           {ticketCircles.map((item, index) => (

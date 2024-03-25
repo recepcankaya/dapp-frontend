@@ -10,7 +10,7 @@ export const metatada: Metadata = {
   keywords: "blockchain, decentralized social media, socialfi, ladder, habit",
 };
 
-const activeChain = "mumbai";
+const activeChain = "polygon";
 
 export default function RootLayout({
   // Layouts must accept a children prop.
