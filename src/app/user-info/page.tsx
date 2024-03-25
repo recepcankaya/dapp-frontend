@@ -1,11 +1,10 @@
-"use client"
+"use client";
 import supabase from "@/src/utils/supabase";
 import { useAddress } from "@thirdweb-dev/react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
 
 import useUserStore from "@/src/store/userStore";
 import { Input } from "@/src/components/ui/input";
@@ -65,35 +64,44 @@ export default function UserInfo() {
 
   return (
     <div className="grid items-center h-[100]">
-    <section className="min-h-screen w-screen flex flex-col  items-center">
-      <Form {...form}>
-        <div className="bg-lad-black w-5/6 min-h-screen flex flex-row justify-evenly items-center">
-        <form
-          onSubmit={form.handleSubmit(submitForm)}
-          
-          className="h-[80vh] grow px-2 pt-[10vh] pb-[16vh] rounded-2xl space-y-6 border-2 bg-black border-lad-pink">
-          <FormField
-            control={form.control}
-            name="username"
-            render={({ field }) => (
-              <FormItem className="flex flex-col justify-evenly mt-12 space-y-[5vh] mx-2 items-ceter ">
-                <FormLabel className=" content-start font-rosarivo text-xl mb-6 mr-[16vh] text-lad-white">Kullanıcı adınız</FormLabel>
-                <FormControl>
-                  <Input className="rounded-full border-2 border-lad-pink bg-black" placeholder="" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <div className="flex">
-            <div></div>
-          <Button className="mt-[10vh] mx-4 grow text-lg font-bold font-rosarivo rounded-3xl bg-lad-pink text-lad-black" type="submit">Kaydet</Button>
-              <div></div>
+      <section className="min-h-screen w-screen flex flex-col  items-center">
+        <Form {...form}>
+          <div className="bg-lad-black w-5/6 min-h-screen flex flex-row justify-evenly items-center">
+            <form
+              onSubmit={form.handleSubmit(submitForm)}
+              className="h-[80vh] grow px-2 pt-[10vh] pb-[16vh] rounded-2xl space-y-6 border-2 bg-black border-lad-pink">
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col justify-evenly mt-12 space-y-[5vh] mx-2 items-ceter ">
+                    <FormLabel className=" content-start font-rosarivo text-xl mb-6 mr-[16vh] text-lad-white">
+                      Kullanıcı adınız
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        className="rounded-full border-2 border-lad-pink bg-black"
+                        placeholder=""
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="flex">
+                <div></div>
+                <Button
+                  className="mt-[10vh] mx-4 grow text-lg font-bold font-rosarivo rounded-3xl bg-lad-pink text-lad-black"
+                  type="submit">
+                  Kaydet
+                </Button>
+                <div></div>
+              </div>
+            </form>
           </div>
-        </form>
-        </div>
-      </Form>
-    </section>
+        </Form>
+      </section>
     </div>
   );
 }

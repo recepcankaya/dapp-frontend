@@ -148,7 +148,7 @@ const Home: NextPage = () => {
       ) : (
         <ConnectEmbed style={{ width: "75%" }} />
       )}
-      <p className="text-lg">
+      <p className="text-lg" onClick={() => router.push("/admin-login")}>
         İşletmeyseniz Lütfen Giriş Yapmak için {"\n"}Tıklayınız
       </p>
     </section>
