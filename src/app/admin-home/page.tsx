@@ -1,160 +1,133 @@
-"use client"
+"use client";
 import supabase from "@/src/utils/supabase";
-import { useAddress } from "@thirdweb-dev/react";
-import { useRouter } from "next/navigation";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 
-
-import useUserStore from "@/src/store/userStore";
-import { Input } from "@/src/components/ui/input";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/src/components/ui/form";
 import { toast } from "@/src/components/ui/use-toast";
-import { Button } from "@/src/components/ui/button";
-
-const FormSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-});
+import useAdminForAdminStore from "@/src/store/adminStoreForAdmin";
+import { Toaster } from "@/src/components/ui/toaster";
+import { useEffect } from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function UserInfo() {
-  const updateUser = useUserStore((state) => state.setUser);
-  const walletAddr = useAddress();
+  const updateAdmin = useAdminForAdminStore((state) => state.updateAdmin);
+  const adminID = useAdminForAdminStore((state) => state.admin.adminId);
+  const brandName = useAdminForAdminStore((state) => state.admin.brandName);
+  const brandBranch = useAdminForAdminStore((state) => state.admin.brandBranch);
+  const numberOfOrdersSoFar = useAdminForAdminStore(
+    (state) => state.admin.numberOfOrdersSoFar
+  );
+  const usedNFTs = useAdminForAdminStore((state) => state.admin.usedNFTs);
+  const notUsedNFTs = useAdminForAdminStore((state) => state.admin.notUsedNFTs);
+  const numberForReward = useAdminForAdminStore(
+    (state) => state.admin.numberForReward
+  );
   const router = useRouter();
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      username: "",
-    },
-  });
 
-  const submitForm = async (data: z.infer<typeof FormSchema>) => {
+  const fetchAdminDashboard = async () => {
     try {
-      const { username } = data;
-      const { data: user, error } = await supabase
-        .from("users")
-        .update({ username, last_login: new Date() })
-        .eq("walletAddr", walletAddr)
-        .select("id, username");
-      if (error) {
-        toast({
-          title: "Bunu biz de beklemiyorduk 🤔",
-          description: "Lütfen tekrar dener misiniz 👉👈",
+      const { data: adminData, error: adminError } = await supabase
+        .from("admins")
+        .select(
+          "brand_name, brand_branch, used_nfts, not_used_nfts, number_for_reward, number_of_orders_so_far, contract_address, nft_src, not_used_nft_src, not_used_contract_address"
+        )
+        .eq("id", adminID);
+      if (adminData) {
+        updateAdmin({
+          adminId: adminID,
+          brandName: adminData[0].brand_name,
+          brandBranch: adminData[0].brand_branch,
+          numberOfOrdersSoFar: adminData[0].number_of_orders_so_far,
+          usedNFTs: adminData[0].used_nfts,
+          notUsedNFTs: adminData[0].not_used_nfts,
+          numberForReward: adminData[0].number_for_reward,
+          contractAddress: adminData[0].contract_address,
+          NFTSrc: adminData[0].nft_src,
+          notUsedContractAddress: adminData[0].not_used_contract_address,
+          notUsedNFTSrc: adminData[0].not_used_nft_src,
         });
       } else {
-        updateUser({
-          id: user[0].id,
-          username: user[0].username,
-        });
-        router.push("brands");
-        toast({ title: "Uygulamamıza hoşgeldin 🤗🥳" });
+        console.error(adminError);
       }
     } catch (error) {
-      console.error(error);
+      toast({ title: "Bir hata oluştu" });
     }
   };
+
+  useEffect(() => {
+    fetchAdminDashboard();
+  }, []);
+
   return (
-    <div className="grid items-center h-[100]">
-      <div className="h-[10vh]">
-        
-      </div>
-    <section className="w-screen flex flex-col items-center">
-      <Form {...form}>
-        <div className="bg-lad-black w-5/6 flex flex-col items-center">
-        <form
-          onSubmit={form.handleSubmit(submitForm)}
-          
-          className="h-[80vh] px-2 pb-4 space-y-6 border-2 items-center rounded-2xl bg-black border-black">
-          
-          <div className=" h-[80vh] grid grid-cols-3 gap-1 mb-6">
-            <div className="h-[80vh] flex flex-col space-y-[2.6vh] items-center">
-          <FormItem className="h-[80vh] my-[3vh] flex flex-col space-y-[2.6vh] items-center justify-around">
-                
-                <FormControl>
-                <FormLabel className="items-center text-center flex  rounded-full border-2 border-lad-purple border-input bg-background w-[8vh] h-[8vh] text-2xl ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 bg-black text-white">
-                
-                </FormLabel>
-                </FormControl>
-
-                <FormControl>
-                <FormLabel className="items-center flex rounded-full border-2 border-lad-purple border-input bg-background w-[8vh] h-[8vh] text-2xl ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 bg-black text-white"></FormLabel>
-                </FormControl>
-
-                <FormControl>
-                <FormLabel className="items-center  flex  rounded-full border-2 border-lad-purple border-input bg-background w-[8vh] h-[8vh] text-2xl ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 bg-black text-white"></FormLabel>
-                </FormControl>
-
-              
-
-                <FormControl>
-                <FormLabel className="items-center flex   rounded-full border-2 border-lad-purple border-input bg-background w-[8vh] h-[8vh] text-2xl ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 bg-black text-white"></FormLabel>
-                </FormControl>
-
-                <FormControl>
-                <FormLabel className="items-center  flex  rounded-full border-2 border-lad-purple border-input bg-background w-[8vh] h-[8vh] text-2xl ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 bg-black text-white"></FormLabel>
-                </FormControl>
-
-                <FormControl>
-                <FormLabel className=" items-center  flex  rounded-full border-2 border-lad-purple border-input bg-background w-[8vh] h-[8vh] text-2xl ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 bg-black text-white"></FormLabel>
-                </FormControl>
-
-                <FormMessage />
-              </FormItem>
-              </div>
-              <div className="flex flex-col items-center col-span-2 justify-around text-center">
-              <FormItem className="space-y-[6vh] my-[4vh] justify-around text-center">
-                
-                <FormControl >
-                <FormLabel className="font-rosarivo font-black text-center flex h-10 w-full rounded-full border-2 border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 bg-lad-pink text-black">Brand Name</FormLabel>
-                </FormControl>
-
-                <FormControl>
-                <FormLabel className="font-rosarivo font-black text-center flex h-10 w-full rounded-full border-2 border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 bg-lad-pink text-black">Brand Branch</FormLabel>
-                </FormControl>
-
-                <FormControl>
-                <FormLabel className="font-rosarivo font-black text-center flex h-10 w-full rounded-full border-2 border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 bg-lad-pink text-black">Number of Orders</FormLabel>
-                </FormControl>
-
-              
-
-                <FormControl>
-                <FormLabel className=" font-rosarivo font-black text-center flex h-10 w-full rounded-full border-2 border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 bg-lad-pink text-black">Number of Pending NFT</FormLabel>
-                </FormControl>
-
-                <FormControl>
-                <FormLabel className="font-rosarivo font-black text-center flex h-10 w-full rounded-full border-2 border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 bg-lad-pink text-black">Number of the NFT given</FormLabel>
-                </FormControl>
-
-                <FormControl>
-                <FormLabel className="font-rosarivo font-black text-center flex h-10 w-full rounded-full border-2 border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 bg-lad-pink text-black">Pending Rewards</FormLabel>
-                </FormControl>
-
-                <FormMessage />
-              </FormItem>
-              </div>
-              </div>
-        </form>
-     
-      </div>
-      </Form>
-    </section>
-
-    
-    <div className="h-[10vh]">
-        
+    <div className="flex flex-col items-center justify-center h-screen bg-black text-white">
+      <Toaster />
+      <div className="w-11/12 h-[650px] flex flex-col justify-between">
+        <div className="flex items-center justify-around">
+          <div className="w-24 h-24 rounded-full border-2 border-pink-500 flex items-center justify-center">
+            <p className="text-lg"></p>
+          </div>
+          <div className="w-3/5 h-16 bg-pink-500 rounded-lg pl-5 flex items-center">
+            <p className="text-lg font-bold text-black">{brandName}</p>
+          </div>
         </div>
+        <div className="flex items-center justify-around">
+          <div className="w-24 h-24 rounded-full border-2 border-pink-500 flex items-center justify-center">
+            <p className="text-lg"></p>
+          </div>
+          <div className="w-3/5 h-16 bg-pink-500 rounded-lg pl-5 flex items-center">
+            <p className="text-lg font-bold text-black">{brandBranch}</p>
+          </div>
+        </div>
+        <div className="flex items-center justify-around">
+          <div className="w-24 h-24 rounded-full border-2 border-pink-500 flex items-center justify-center">
+            <p className="text-lg">{numberOfOrdersSoFar}</p>
+          </div>
+          <div className="w-3/5 h-16 bg-pink-500 rounded-lg pl-5 flex items-center">
+            <p className="text-lg font-bold text-black">
+              Bugüne Kadar Kaç Ürün Satıldığı
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center justify-around">
+          <div className="w-24 h-24 rounded-full border-2 border-pink-500 flex items-center justify-center">
+            <p className="text-lg">{notUsedNFTs}</p>
+          </div>
+          <div className="w-3/5 h-16 bg-pink-500 rounded-lg pl-5 flex items-center">
+            <p className="text-lg font-bold text-black">
+              Bekleyen Ödüllerin Sayısı
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center justify-around">
+          <div className="w-24 h-24 rounded-full border-2 border-pink-500 flex items-center justify-center">
+            <p className="text-lg">{usedNFTs}</p>
+          </div>
+          <div className="w-3/5 h-16 bg-pink-500 rounded-lg pl-5 flex items-center">
+            <p className="text-lg font-bold text-black">
+              Verilen Ödüllerin Sayısı
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center justify-around">
+          <div className="w-24 h-24 rounded-full border-2 border-pink-500 flex items-center justify-center">
+            <p className="text-lg">{numberForReward}</p>
+          </div>
+          <div className="w-3/5 h-16 bg-pink-500 rounded-lg pl-5 flex items-center">
+            <p className="text-lg font-bold text-black">
+              Kaç Alışverişte Ödül Verileceği
+            </p>
+          </div>
+        </div>
+      </div>
+      <button
+        onClick={() => router.push("/admin-camera")}
+        className="absolute bottom-4 w-12 h-12">
+        <Image
+          src="/path/to/qr-code.png"
+          alt="QR Code"
+          width={48}
+          height={48}
+        />
+      </button>
     </div>
   );
-  
-
 }
