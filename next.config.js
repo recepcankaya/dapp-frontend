@@ -2,6 +2,16 @@
 const nextConfig = {
   reactStrictMode: true,
   basePath: "",
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "ipfs.io",
+        port: "",
+        pathname: "/**",
+      },
+    ],
+  },
 };
 
 module.exports = nextConfig;
