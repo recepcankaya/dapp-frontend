@@ -18,7 +18,15 @@ const config = {
       },
     },
     extend: {
+      fontFamily:{
+        'rosarivo': ['Rosarivo', 'cursive']
+      },
       colors: {
+        'lad-black':"#0C0C0C",
+        'lad-purple': "#B80DCA",
+        'lad-white': "#D9D9D9",
+        'lad-pink' : "#C8AFD6",
+        'lad-green': "#87A922",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
