@@ -92,18 +92,19 @@ export default function Profile() {
         <div className="flex flex-wrap justify-center mt-16">
           {numberOfFreeRights.length > 0 ? (
             numberOfFreeRights.map((item, index) => (
-              <div key={index.toString()}>
-                <div onClick={() => setQrCodeModalVisible(true)}>
-                  <Image
-                    src={notUsedNFTSrc.replace(
-                      "ipfs://",
-                      "https://ipfs.io/ipfs/"
-                    )}
-                    alt="nft"
-                    width={375}
-                    height={375}
-                  />
-                </div>
+              <div
+                key={index.toString()}
+                onClick={() => setQrCodeModalVisible(true)}
+                className="mb-4">
+                <Image
+                  src={notUsedNFTSrc.replace(
+                    "ipfs://",
+                    "https://ipfs.io/ipfs/"
+                  )}
+                  alt="nft"
+                  width={375}
+                  height={375}
+                />
               </div>
             ))
           ) : (
@@ -113,9 +114,9 @@ export default function Profile() {
       )}
       {selectedTab === "Your Collection" && (
         <div className="flex flex-wrap justify-center mt-16">
-          {nftData?.length > 0 ? (
+          {nftData && nftData.length > 0 ? (
             nftData?.map((item) => (
-              <div key={item.metadata.id} className="m-4">
+              <div key={item.metadata.id} className="mb-4">
                 <Image
                   src={NFTSrc.replace("ipfs://", "https://ipfs.io/ipfs/")}
                   width={375}

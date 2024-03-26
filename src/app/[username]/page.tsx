@@ -52,7 +52,7 @@ const CustomerHome = () => {
 
   return (
     <section className="h-screen w-screen">
-      <div className="p-2 flex justify-around items-center gap-36 border-b-2 border-pink-500">
+      <div className="p-2 flex justify-around items-center gap-36 border-b-2 border-lad-pink">
         <Image
           loading="lazy"
           src={brandLogo.replace("ipfs://", "https://ipfs.io/ipfs/")}

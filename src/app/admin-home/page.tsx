@@ -62,7 +62,7 @@ export default function UserInfo() {
       <Toaster />
       <div className="w-11/12 h-[650px] flex flex-col justify-between">
         <div className="flex items-center justify-around">
-          <div className="w-24 h-24 rounded-full border-2 border-pink-500 flex items-center justify-center">
+          <div className="w-24 h-24 rounded-full border-2 border-lad-pink flex items-center justify-center">
             <p className="text-lg"></p>
           </div>
           <div className="w-3/5 h-16 bg-pink-500 rounded-lg pl-5 flex items-center">
@@ -70,7 +70,7 @@ export default function UserInfo() {
           </div>
         </div>
         <div className="flex items-center justify-around">
-          <div className="w-24 h-24 rounded-full border-2 border-pink-500 flex items-center justify-center">
+          <div className="w-24 h-24 rounded-full border-2 border-lad-pink flex items-center justify-center">
             <p className="text-lg"></p>
           </div>
           <div className="w-3/5 h-16 bg-pink-500 rounded-lg pl-5 flex items-center">
@@ -78,7 +78,7 @@ export default function UserInfo() {
           </div>
         </div>
         <div className="flex items-center justify-around">
-          <div className="w-24 h-24 rounded-full border-2 border-pink-500 flex items-center justify-center">
+          <div className="w-24 h-24 rounded-full border-2 border-lad-pink flex items-center justify-center">
             <p className="text-lg">{numberOfOrdersSoFar}</p>
           </div>
           <div className="w-3/5 h-16 bg-pink-500 rounded-lg pl-5 flex items-center">
@@ -88,7 +88,7 @@ export default function UserInfo() {
           </div>
         </div>
         <div className="flex items-center justify-around">
-          <div className="w-24 h-24 rounded-full border-2 border-pink-500 flex items-center justify-center">
+          <div className="w-24 h-24 rounded-full border-2 border-lad-pink flex items-center justify-center">
             <p className="text-lg">{notUsedNFTs}</p>
           </div>
           <div className="w-3/5 h-16 bg-pink-500 rounded-lg pl-5 flex items-center">
@@ -98,7 +98,7 @@ export default function UserInfo() {
           </div>
         </div>
         <div className="flex items-center justify-around">
-          <div className="w-24 h-24 rounded-full border-2 border-pink-500 flex items-center justify-center">
+          <div className="w-24 h-24 rounded-full border-2 border-lad-pink flex items-center justify-center">
             <p className="text-lg">{usedNFTs}</p>
           </div>
           <div className="w-3/5 h-16 bg-pink-500 rounded-lg pl-5 flex items-center">
@@ -108,7 +108,7 @@ export default function UserInfo() {
           </div>
         </div>
         <div className="flex items-center justify-around">
-          <div className="w-24 h-24 rounded-full border-2 border-pink-500 flex items-center justify-center">
+          <div className="w-24 h-24 rounded-full border-2 border-lad-pink flex items-center justify-center">
             <p className="text-lg">{numberForReward}</p>
           </div>
           <div className="w-3/5 h-16 bg-pink-500 rounded-lg pl-5 flex items-center">
@@ -122,7 +122,7 @@ export default function UserInfo() {
         onClick={() => router.push("/admin-camera")}
         className="absolute bottom-4 w-12 h-12">
         <Image
-          src="/path/to/qr-code.png"
+          src="/src/public/qr-code.png"
           alt="QR Code"
           width={48}
           height={48}
