@@ -6,11 +6,11 @@ import {
   useWallet,
 } from "@thirdweb-dev/react";
 import { NextPage } from "next";
-import supabase from "../utils/supabase";
 import { v4 as uuidv4 } from "uuid";
 import { utils } from "ethers";
 import { sha512 } from "js-sha512";
 import { useRouter } from "next/navigation";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Button } from "../components/ui/button";
 
 import useUserStore from "@/src/store/userStore";
@@ -21,6 +21,7 @@ const Home: NextPage = () => {
   const signer = useSigner();
   const embeddedWallet = useWallet("embeddedWallet");
   const updateUser = useUserStore((state) => state.setUser);
+  const supabase = createClientComponentClient();
 
   const checkIfEmbeddedWallet = async () => {
     const email = await embeddedWallet?.getEmail();
@@ -54,7 +55,7 @@ const Home: NextPage = () => {
 
       if (error) {
         isNewUser = true;
-        const { data, error } = await supabase.auth.signUp({
+        const { data } = await supabase.auth.signUp({
           email: `${walletAddr}@ladderuser.com`,
           password: passwordHash,
         });
@@ -121,10 +122,6 @@ const Home: NextPage = () => {
         router.push("/brands");
       }
     } catch (error) {
-      // Alert.alert(
-      //   "Bunu biz de beklemiyorduk 🤔",
-      //   "Lütfen tekrar dener misiniz 👉👈"
-      // );
       console.error(error);
     }
   };
