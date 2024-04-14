@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import QRCode from "react-qr-code";
 import Image from "next/image";
 
-import useUserStore from "../../store/userStore";
+import useUserStore from "../../../store/userStore";
 
-import useAdminStore from "../../store/adminStore";
+import useAdminStore from "../../../store/adminStore";
 import supabase from "@/src/utils/supabase";
 import { useAddress } from "@thirdweb-dev/react";
 import logo from "@/src/public/LadderLogo.png";
