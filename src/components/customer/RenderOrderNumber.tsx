@@ -17,11 +17,6 @@ export default function RenderOrderNumber({
 
   return (
     <div className="pt-12 h-1/3">
-      <h2
-        onClick={() => router.push(`/${username}/profile`)}
-        className="text-right text-lg mr-8 underline decoration-2 underline-offset-2">
-        Profil
-      </h2>
       <p className="text-white mb-4 ml-8">Süreciniz</p>
       <div className="bg-white h-full w-full grid grid-cols-4 justify-items-center items-center">
         {ticketCircles.map((item, index) => (

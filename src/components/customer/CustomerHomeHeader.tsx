@@ -8,7 +8,7 @@ export default function CustomerHomeHeader() {
   const brandLogo = useAdminStore((state) => state.admin.brandLogo);
 
   return (
-    <div className="p-2 flex justify-around items-center gap-36 border-b-2 border-lad-pink">
+    <div className="p-2 flex justify-around items-center gap-36">
       <Image
         loading="lazy"
         src={brandLogo.replace("ipfs://", "https://ipfs.io/ipfs/")}
