@@ -3,13 +3,13 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 
 export default async function Brands() {
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = createServerComponentClient<Database>({ cookies });
 
   // @todo - auth yapmak için users ile adminsi bağlayalım
   const { data: brands, error } = await supabase
     .from("admins")
     .select(
-      "id, brand_name, brand_logo_ipfs_url, number_for_reward, nft_src, contract_address, not_used_nft_src, not_used_contract_address"
+      "id, brand_name, brand_logo_ipfs_url, number_for_reward, nft_src, contract_address, not_used_nft_src, not_used_contract_address, coords"
     );
 
   if (error) {
@@ -17,7 +17,7 @@ export default async function Brands() {
   }
 
   return (
-    <section className="flex justify-center pt-24">
+    <section className="flex justify-center pt-16">
       <RenderBrands brands={brands} />
     </section>
   );

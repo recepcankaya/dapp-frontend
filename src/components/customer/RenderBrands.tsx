@@ -1,19 +1,47 @@
 "use client";
 
-import { haversine } from "@/src/lib/haveresine";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+
 import useAdminStore, { Admin } from "@/src/store/adminStore";
 import useUserStore from "@/src/store/userStore";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { haversine } from "@/src/lib/haveresine";
+import { Json } from "@/src/lib/database.types";
 import { Input } from "../ui/input";
 
-export default function RenderBrands({ brands }: { brands: any }) {
+type RenderBrandsProps = {
+  brands: {
+    id: string;
+    brand_name: string | null;
+    brand_logo_ipfs_url: string | null;
+    number_for_reward: number | null;
+    nft_src: string | null;
+    contract_address: string | null;
+    not_used_nft_src: string | null;
+    not_used_contract_address: string | null;
+    coords: Json | null;
+  }[];
+};
+
+export default function RenderBrands(brands: RenderBrandsProps) {
   const [customerLocation, setCustomerLocation] = useState<{
     lat: number;
     long: number;
   } | null>(null);
-  const [sortedAdmins, setSortedAdmins] = useState<Admin[]>([]);
+  const [sortedAdmins, setSortedAdmins] = useState<
+    {
+      id: string;
+      brand_name: string | null;
+      brand_logo_ipfs_url: string | null;
+      number_for_reward: number | null;
+      nft_src: string | null;
+      contract_address: string | null;
+      not_used_nft_src: string | null;
+      not_used_contract_address: string | null;
+      coords: Json;
+    }[]
+  >([]);
   const [searchedAdmin, setSearchedAdmin] = useState<string>("");
   const updateAdmin = useAdminStore((state) => state.updateAdmin);
   const username = useUserStore((state) => state.user.username);
@@ -49,14 +77,18 @@ export default function RenderBrands({ brands }: { brands: any }) {
 
   useEffect(() => {
     if (!customerLocation || !brands) return;
-    const sorted: Admin[] = [...brands].sort((a, b): any => {
+    const sorted = [...brands.brands].sort((a, b): any => {
+      const coordsA =
+        typeof a.coords === "string" ? JSON.parse(a.coords) : a.coords;
+      const coordsB =
+        typeof b.coords === "string" ? JSON.parse(b.coords) : b.coords;
       const distanceA = haversine(
         { lat: customerLocation?.lat, lng: customerLocation?.long },
-        { lat: a.coords?.lat, lng: a.coords?.long }
+        { lat: coordsA?.lat, lng: coordsA?.long }
       );
       const distanceB = haversine(
         { lat: customerLocation.lat, lng: customerLocation.long },
-        { lat: b.coords?.lat, lng: b.coords?.long }
+        { lat: coordsB?.lat, lng: coordsB?.long }
       );
       return distanceA - distanceB;
     });
@@ -72,44 +104,64 @@ export default function RenderBrands({ brands }: { brands: any }) {
         onChange={(e) => setSearchedAdmin(e.target.value)}
         placeholder="Kafeni ara..."
       />
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-2 gap-10">
         {customerLocation
-          ? sortedAdmins.map((item: any, index: number) => (
-              <div key={index} className="flex flex-col items-center gap-6">
-                <Image
-                  src={item.brand_logo_ipfs_url.replace(
-                    "ipfs://",
-                    "https://ipfs.io/ipfs/"
-                  )}
-                  alt="brand logo"
-                  width={150}
-                  height={100}
-                  className="rounded-2xl cursor-pointer"
-                  onClick={() => selectBrand(item)}
-                  key={index}
-                  priority
-                />
-                <p>Sorted {item.brand_name}</p>
-              </div>
-            ))
-          : brands.map((item: any, index: number) => (
-              <div key={index} className="flex flex-col items-center gap-6">
-                <Image
-                  src={item.brand_logo_ipfs_url.replace(
-                    "ipfs://",
-                    "https://ipfs.io/ipfs/"
-                  )}
-                  alt="brand logo"
-                  width={150}
-                  height={100}
-                  className="rounded-2xl cursor-pointer"
-                  onClick={() => selectBrand(item)}
-                  key={index}
-                  priority
-                />
-                <p>{item.brand_name}</p>
-              </div>
-            ))}
+          ? sortedAdmins
+              .filter((item) =>
+                item.brand_name
+                  ? item.brand_name
+                      .toLowerCase()
+                      .includes(searchedAdmin.toLowerCase())
+                  : true
+              )
+              .map((item: any, index: number) => (
+                <div key={index} className="flex flex-col items-center gap-6">
+                  <div className="relative w-36 h-36">
+                    <Image
+                      src={item.brand_logo_ipfs_url.replace(
+                        "ipfs://",
+                        "https://ipfs.io/ipfs/"
+                      )}
+                      alt="brand logo"
+                      className="rounded-2xl cursor-pointer object-cover border-2 border-lad-pink"
+                      onClick={() => selectBrand(item)}
+                      layout="fill"
+                      sizes="10vw"
+                      key={index}
+                      priority
+                    />
+                  </div>
+                  <p>{item.brand_name}</p>
+                </div>
+              ))
+          : brands.brands
+              .filter((item) =>
+                item.brand_name
+                  ? item.brand_name
+                      .toLowerCase()
+                      .includes(searchedAdmin.toLowerCase())
+                  : true
+              )
+              .map((item: any, index: number) => (
+                <div key={index} className="flex flex-col items-center gap-6">
+                  <div className="relative w-36 h-36">
+                    <Image
+                      src={item.brand_logo_ipfs_url.replace(
+                        "ipfs://",
+                        "https://ipfs.io/ipfs/"
+                      )}
+                      alt="brand logo"
+                      className="rounded-2xl cursor-pointer object-cover border-2 border-lad-pink"
+                      onClick={() => selectBrand(item)}
+                      layout="fill"
+                      sizes="10vw"
+                      key={index}
+                      priority
+                    />
+                  </div>
+                  <p>{item.brand_name}</p>
+                </div>
+              ))}
       </div>
     </div>
   );
