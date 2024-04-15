@@ -27,6 +27,9 @@ export default function Profile() {
     isLoading,
     error,
   } = useOwnedNFTs(usedNFTContract, address);
+  const nftDataArray = nftData
+    ? new Array(Number(nftData[0]?.quantityOwned)).fill(0)
+    : [];
 
   const renderImages = async () => {
     const { data, error } = await supabase
@@ -119,8 +122,8 @@ export default function Profile() {
       {selectedTab === "Your Collection" && (
         <div className="flex flex-wrap justify-center mt-16">
           {nftData && nftData.length > 0 ? (
-            nftData?.map((item) => (
-              <div key={item.metadata.id} className="mb-4">
+            nftDataArray?.map((item, index) => (
+              <div key={index} className="mb-4">
                 <Image
                   src={NFTSrc.replace("ipfs://", "https://ipfs.io/ipfs/")}
                   width={375}
