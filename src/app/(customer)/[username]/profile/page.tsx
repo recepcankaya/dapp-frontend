@@ -35,7 +35,6 @@ export default function Profile() {
       .eq("user_id", userID)
       .eq("admin_id", adminId);
     if (data && data[0].number_of_free_rights !== null) {
-      console.log("data", data);
       setNumberOfFreeRights(new Array(data[0].number_of_free_rights).fill(0));
     } else {
       console.log("error", error);
@@ -105,6 +104,10 @@ export default function Profile() {
                   alt="nft"
                   width={375}
                   height={375}
+                  style={{
+                    maxWidth: "100%",
+                    height: "auto",
+                  }}
                 />
               </div>
             ))
@@ -123,6 +126,10 @@ export default function Profile() {
                   width={375}
                   height={375}
                   alt="nfts"
+                  style={{
+                    maxWidth: "100%",
+                    height: "auto",
+                  }}
                 />
               </div>
             ))

@@ -13,20 +13,13 @@ export default function CustomerHomeHeader() {
         <Image
           src={brandLogo.replace("ipfs://", "https://ipfs.io/ipfs/")}
           alt="brand logo"
-          layout="fill"
-          sizes="10vw"
           className="rounded-md cursor-pointer"
           priority
-        />
+          fill
+          sizes="10vw" />
       </div>
       <div className="relative w-24 h-24">
-        <Image
-          src={logo}
-          alt="Logo"
-          layout="fill"
-          sizes="10vw"
-          loading="lazy"
-        />
+        <Image src={logo} alt="Logo" loading="lazy" fill sizes="10vw" />
       </div>
     </div>
   );

@@ -125,11 +125,10 @@ export default function RenderBrands(brands: RenderBrandsProps) {
                       alt="brand logo"
                       className="rounded-2xl cursor-pointer object-cover border-2 border-lad-pink"
                       onClick={() => selectBrand(item)}
-                      layout="fill"
-                      sizes="10vw"
                       key={index}
                       priority
-                    />
+                      fill
+                      sizes="10vw" />
                   </div>
                   <p>{item.brand_name}</p>
                 </div>
@@ -153,11 +152,10 @@ export default function RenderBrands(brands: RenderBrandsProps) {
                       alt="brand logo"
                       className="rounded-2xl cursor-pointer object-cover border-2 border-lad-pink"
                       onClick={() => selectBrand(item)}
-                      layout="fill"
-                      sizes="10vw"
                       key={index}
                       priority
-                    />
+                      fill
+                      sizes="10vw" />
                   </div>
                   <p>{item.brand_name}</p>
                 </div>
