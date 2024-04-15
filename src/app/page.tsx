@@ -14,6 +14,7 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Button } from "../components/ui/button";
 
 import useUserStore from "@/src/store/userStore";
+import Link from "next/link";
 
 const Home: NextPage = () => {
   const router = useRouter();
@@ -145,9 +146,11 @@ const Home: NextPage = () => {
       ) : (
         <ConnectEmbed style={{ width: "75%" }} />
       )}
-      <p className="text-lg" onClick={() => router.push("/admin-login")}>
-        İşletmeyseniz Lütfen Giriş Yapmak için {"\n"}Tıklayınız
-      </p>
+      <Button asChild>
+        <Link href="/admin-login" className="text-lg">
+          İşletmeyseniz Lütfen Giriş Yapmak için {"\n"}Tıklayınız
+        </Link>
+      </Button>
     </section>
   );
 };

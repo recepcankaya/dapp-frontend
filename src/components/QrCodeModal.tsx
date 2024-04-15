@@ -16,7 +16,7 @@ const QrCodeModal: FC<QrCodeModalProps> = ({ isVisible, onClose, value }) => {
         className="fixed inset-0 w-full h-full cursor-default"
       />
       <div className="p-4 bg-white rounded-lg">
-        <QRCode value={value} size={280} />
+        <QRCode value={value} size={256} />
       </div>
     </div>
   );

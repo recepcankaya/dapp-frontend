@@ -6,7 +6,7 @@ import useUserStore from "@/src/store/userStore";
 import useAdminStore from "@/src/store/adminStore";
 import QrCodeModal from "@/src/components/QrCodeModal";
 import { useAddress, useContract, useOwnedNFTs } from "@thirdweb-dev/react";
-import supabase from "@/src/utils/supabase";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 export default function Profile() {
   const [selectedTab, setSelectedTab] = useState("Waiting");
@@ -17,6 +17,7 @@ export default function Profile() {
   const adminId = useAdminStore((state) => state.admin.id);
   const contractAddress = useAdminStore((state) => state.admin.contractAddress);
   const NFTSrc = useAdminStore((state) => state.admin.NFTSrc);
+  const supabase = createClientComponentClient();
 
   const notUsedNFTSrc = useAdminStore((state) => state.admin.notUsedNFTSrc);
   const address = useAddress();
@@ -33,9 +34,9 @@ export default function Profile() {
       .select("number_of_free_rights")
       .eq("user_id", userID)
       .eq("admin_id", adminId);
-    if (data) {
+    if (data && data[0].number_of_free_rights !== null) {
+      console.log("data", data);
       setNumberOfFreeRights(new Array(data[0].number_of_free_rights).fill(0));
-      console.log("username", username);
     } else {
       console.log("error", error);
     }

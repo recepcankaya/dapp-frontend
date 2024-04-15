@@ -1,9 +1,5 @@
 "use client";
-
-import useUserStore from "@/src/store/userStore";
-
 import useAdminStore from "@/src/store/adminStore";
-import { useRouter } from "next/navigation";
 
 export default function RenderOrderNumber({
   userOrderNumber,
@@ -11,9 +7,7 @@ export default function RenderOrderNumber({
   userOrderNumber: number;
 }) {
   const admin = useAdminStore((state) => state.admin);
-  const username = useUserStore((state) => state.user.username);
   const ticketCircles = new Array(admin.numberForReward).fill(0);
-  const router = useRouter();
 
   return (
     <div className="pt-12 h-1/3">

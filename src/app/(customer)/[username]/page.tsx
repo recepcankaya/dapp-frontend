@@ -1,5 +1,6 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
+
 import RenderOrderNumber from "@/src/components/customer/RenderOrderNumber";
 import CustomerHomeHeader from "@/src/components/customer/CustomerHomeHeader";
 import CustomerHomeLinks from "@/src/components/customer/CustomerHomeLinks";
@@ -19,13 +20,19 @@ export default async function CustomerHome() {
     .select("number_of_orders")
     .eq("user_id", user.id);
 
+  if (error) {
+    console.error(error);
+  }
+
   return (
     <section className="h-screen w-screen">
       <CustomerHomeHeader />
       <CustomerHomeLinks />
       <RenderOrderNumber
         userOrderNumber={
-          userOrderNumber ? userOrderNumber[0].number_of_orders : 0
+          userOrderNumber && userOrderNumber[0]
+            ? userOrderNumber[0].number_of_orders
+            : 0
         }
       />
     </section>

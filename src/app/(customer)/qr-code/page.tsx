@@ -13,7 +13,7 @@ export default function QrCode() {
     address: customerAddress,
   };
   return (
-    <div className=" w-screen h-screen flex justify-center items-center">
+    <div className=" w-screen h-screen flex justify-center items-center bg-lad-white">
       <QRCode
         value={JSON.stringify(qrCodeValue)}
         size={256}
