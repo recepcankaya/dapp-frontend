@@ -8,16 +8,26 @@ export default function CustomerHomeHeader() {
   const brandLogo = useAdminStore((state) => state.admin.brandLogo);
 
   return (
-    <div className="p-2 flex justify-around items-center gap-36">
-      <Image
-        loading="lazy"
-        src={brandLogo.replace("ipfs://", "https://ipfs.io/ipfs/")}
-        alt="brand logo"
-        width={70}
-        height={70}
-        className="rounded-2xl cursor-pointer"
-      />
-      <Image src={logo} alt="Logo" width={80} height={80} />
+    <div className="p-2 flex justify-around items-center gap-36 mb-8">
+      <div className="relative w-16 h-16">
+        <Image
+          src={brandLogo.replace("ipfs://", "https://ipfs.io/ipfs/")}
+          alt="brand logo"
+          layout="fill"
+          sizes="10vw"
+          className="rounded-md cursor-pointer"
+          priority
+        />
+      </div>
+      <div className="relative w-24 h-24">
+        <Image
+          src={logo}
+          alt="Logo"
+          layout="fill"
+          sizes="10vw"
+          loading="lazy"
+        />
+      </div>
     </div>
   );
 }
