@@ -1,16 +1,22 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import QrScanner from "qr-scanner";
 
 import useAdminForAdminStore from "@/src/store/adminStoreForAdmin";
-import supabase, { secretSupabase } from "@/src/utils/supabase";
 import { toast } from "@/src/components/ui/use-toast";
 import { Toaster } from "@/src/components/ui/toaster";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClient } from "@supabase/supabase-js";
 
 const AdminCamera = () => {
   const [qrOn, setQrOn] = useState<boolean>(true);
   const [scannedResult, setScannedResult] = useState<string | undefined>("");
+  const supabase = createClientComponentClient();
+  const secretSupabase = createClient(
+    String(process.env.NEXT_PUBLIC_SUPABASE_URL),
+    String(process.env.NEXT_PUBLIC_SUPABASE_SERVICE_KEY)
+  );
 
   const adminID = useAdminForAdminStore((state) => state.admin.adminId);
   const scanner = useRef<QrScanner>();
@@ -25,10 +31,9 @@ const AdminCamera = () => {
   const handleScan = async () => {
     if (!scannedResult) return;
     const { userID, forNFT, address } = JSON.parse(scannedResult);
-    console.log("data", userID, forNFT, address);
     const { data: userMissionInfo } = await supabase
       .from("user_missions")
-      .select("number_of_orders, id")
+      .select("number_of_orders, id, customer_number_of_orders_so_far")
       .eq("user_id", userID)
       .eq("admin_id", adminID);
     // get number_for_reward from admin table
@@ -36,6 +41,13 @@ const AdminCamera = () => {
       .from("admins")
       .select("number_for_reward")
       .eq("id", adminID);
+
+    const { data: username } = await secretSupabase
+      .from("users")
+      .select("username")
+      .eq("id", userID)
+      .single();
+
     if (forNFT === true && userMissionInfo) {
       const result = await fetch(
         "https://mint-nft-js.vercel.app/collectionNFT",
@@ -52,15 +64,23 @@ const AdminCamera = () => {
       );
       const { success } = await result.json();
       if (success === true) {
-        let { data, error } = await supabase.rpc(
-          "decrement_user_missions_number_of_free_rights",
+        await supabase.rpc("decrement_user_missions_number_of_free_rights", {
+          mission_id: userMissionInfo[0].id,
+        });
+        await supabase.rpc(
+          "increment_user_missions_customer_number_of_orders_so_far",
           {
             mission_id: userMissionInfo[0].id,
           }
         );
-        toast({ title: "Müşteriniz ödülünüzü kullandı." });
+        toast({
+          title: `${username} adlı müşteriniz ödülünüzü kullandı.`,
+          description: `Müşteri detayları: Bugüne kadar sipariş edilen kahve sayısı: ${userMissionInfo[0].customer_number_of_orders_so_far}`,
+        });
       } else {
         toast({
+          variant: "destructive",
+
           title: "Müşteri ödülünü kullanamadı.",
           description: "Lütfen tekrar deneyiniz.",
         });
@@ -70,14 +90,21 @@ const AdminCamera = () => {
     else {
       if (userMissionInfo?.length === 0) {
         // If the user does not have a record in the user_missions table, add a new record
-        const { data, error } = await secretSupabase
-          .from("user_missions")
-          .insert({
-            number_of_orders: 1,
-            user_id: userID,
-            admin_id: adminID,
-          });
-        toast({ title: "İşlem başarıyla gerçekleşti." });
+        await secretSupabase.from("user_missions").insert({
+          number_of_orders: 1,
+          user_id: userID,
+          admin_id: adminID,
+        });
+        await supabase.rpc(
+          "increment_user_missions_customer_number_of_orders_so_far",
+          {
+            mission_id: userMissionInfo[0].id,
+          }
+        );
+        toast({
+          title: `${username?.username} adlı müşterinin işlemi başarıyla gerçekleştirildi.`,
+          description: `Müşteri detayları: ${"\n"} Bugüne kadar sipariş edilen kahve sayısı: 1`,
+        });
       } else if (
         numberForReward &&
         userMissionInfo &&
@@ -85,15 +112,23 @@ const AdminCamera = () => {
           numberForReward[0].number_for_reward - 1
       ) {
         // If the user has a record in the user_missions table and the number of orders is less than the number_for_reward, increase the number of orders by one
-        let { data, error } = await supabase.rpc(
-          "increment_user_missions_number_of_orders",
+        await supabase.rpc("increment_user_missions_number_of_orders", {
+          mission_id: userMissionInfo[0].id,
+        });
+
+        await supabase.rpc(
+          "increment_user_missions_customer_number_of_orders_so_far",
           {
             mission_id: userMissionInfo[0].id,
           }
         );
-        if (error) console.error(error);
-        else console.log(data);
-        toast({ title: "İşlem başarıyla gerçekleşti." });
+
+        toast({
+          title: `${username?.username} adlı müşterinin işlemi başarıyla gerçekleştirildi.`,
+          description: `Müşteri detayları: ${"\n"} Bugüne kadar sipariş edilen kahve sayısı: ${
+            userMissionInfo[0].customer_number_of_orders_so_far + 1
+          }`,
+        });
       } else if (
         numberForReward &&
         userMissionInfo &&
@@ -102,8 +137,11 @@ const AdminCamera = () => {
       ) {
         // If the user has a record in the user_missions table and the number of orders is equal to the number_for_reward, make request
         try {
-          const { data, error: incrementError } = await supabase.rpc(
-            "increment_user_missions_number_of_free_rights",
+          await supabase.rpc("increment_user_missions_number_of_free_rights", {
+            mission_id: userMissionInfo[0].id,
+          });
+          await supabase.rpc(
+            "increment_user_missions_customer_number_of_orders_so_far",
             {
               mission_id: userMissionInfo[0].id,
             }
@@ -115,29 +153,30 @@ const AdminCamera = () => {
             })
             .eq("user_id", userID)
             .eq("admin_id", adminID);
-          console.log("here", data, zeroError);
           if (zeroError) {
             toast({
+              variant: "destructive",
+
               title: "Bir şeyler yanlış gitti.",
               description: "Lütfen tekrar deneyiniz.",
             });
           } else {
-            toast({ title: "Müşteriniz ödülünüzü kazandı." });
+            toast({
+              title: `${username} adlı müşteriniz ödülünüzü kazandı.`,
+              description: `Müşteri detayları: Bugüne kadar sipariş edilen kahve sayısı: ${userMissionInfo[0].customer_number_of_orders_so_far}`,
+            });
           }
         } catch (error) {
           console.log("error", error);
           toast({
+            variant: "destructive",
+
             title: "Müşteriye ödülü verilemedi.",
             description: "Lütfen tekrar deneyiniz.",
           });
         }
       }
     }
-  };
-
-  const onScanFail = (err: string | Error) => {
-    // 🖨 Print the "err" to browser console.
-    console.log(err);
   };
 
   useEffect(() => {
@@ -183,30 +222,17 @@ const AdminCamera = () => {
   useEffect(() => {
     if (!qrOn)
       alert(
-        "Camera is blocked or not accessible. Please allow camera in your browser permissions and Reload."
+        "Kamera engellendi veya erişilemiyor. Lütfen tarayıcı izinlerinizde kameraya izin verin ve sayfayı yenileyin."
       );
   }, [qrOn]);
 
   return (
-    <div className="qr-reader">
-      {/* QR */}
+    <div className="w-screen h-screen">
       <Toaster />
-      <video ref={videoEl}></video>
-      <div ref={qrBoxEl} className="qr-box"></div>
-
-      {/* Show Data Result if scan is success */}
-      {scannedResult && (
-        <p
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            zIndex: 99999,
-            color: "white",
-          }}>
-          Scanned Result: {scannedResult}
-        </p>
-      )}
+      <div className="bg-[#4b4a4a5d] p-36">
+        <video ref={videoEl} className="border-2 border-lad-purple"></video>
+      </div>
+      <div ref={qrBoxEl}></div>
     </div>
   );
 };

@@ -1,6 +1,5 @@
 "use client";
-import supabase from "@/src/utils/supabase";
-import { useAddress } from "@thirdweb-dev/react";
+
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -19,6 +18,7 @@ import { toast } from "@/src/components/ui/use-toast";
 import { Button } from "@/src/components/ui/button";
 import useAdminForAdminStore from "@/src/store/adminStoreForAdmin";
 import { Toaster } from "@/src/components/ui/toaster";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 const FormSchema = z.object({
   email: z.string().email({
@@ -40,6 +40,7 @@ export default function UserInfo() {
       password: "",
     },
   });
+  const supabase = createClientComponentClient();
 
   const { email, password } = form.watch();
 

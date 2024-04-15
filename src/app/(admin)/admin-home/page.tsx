@@ -1,12 +1,10 @@
 "use client";
-import supabase from "@/src/utils/supabase";
-
 import { toast } from "@/src/components/ui/use-toast";
 import useAdminForAdminStore from "@/src/store/adminStoreForAdmin";
 import { Toaster } from "@/src/components/ui/toaster";
 import { useEffect } from "react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import Link from "next/link";
 
 export default function UserInfo() {
   const updateAdmin = useAdminForAdminStore((state) => state.updateAdmin);
@@ -21,7 +19,7 @@ export default function UserInfo() {
   const numberForReward = useAdminForAdminStore(
     (state) => state.admin.numberForReward
   );
-  const router = useRouter();
+  const supabase = createClientComponentClient();
 
   const fetchAdminDashboard = async () => {
     try {
@@ -57,9 +55,12 @@ export default function UserInfo() {
     fetchAdminDashboard();
   }, []);
 
+  useEffect(() => {});
+
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-black text-white">
       <Toaster />
+      <Link href="/admin-camera">Qr Kodu Okut</Link>
       <div className="w-11/12 h-[650px] flex flex-col justify-between">
         <div className="flex items-center justify-around">
           <div className="w-24 h-24 rounded-full border-2 border-lad-pink flex items-center justify-center">
@@ -118,16 +119,6 @@ export default function UserInfo() {
           </div>
         </div>
       </div>
-      <button
-        onClick={() => router.push("/admin-camera")}
-        className="absolute bottom-4 w-12 h-12">
-        <Image
-          src="/src/public/qr-code.png"
-          alt="QR Code"
-          width={48}
-          height={48}
-        />
-      </button>
     </div>
   );
 }
