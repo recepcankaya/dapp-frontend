@@ -33,9 +33,12 @@ const AdminCamera = () => {
     const { userID, forNFT, address } = JSON.parse(scannedResult);
     const { data: userMissionInfo } = await supabase
       .from("user_missions")
-      .select("number_of_orders, id, customer_number_of_orders_so_far")
+      .select(
+        "number_of_orders, id, customer_number_of_orders_so_far, number_of_free_rights"
+      )
       .eq("user_id", userID)
       .eq("admin_id", adminID);
+
     // get number_for_reward from admin table
     const { data: numberForReward } = await supabase
       .from("admins")
@@ -67,15 +70,25 @@ const AdminCamera = () => {
         await supabase.rpc("decrement_user_missions_number_of_free_rights", {
           mission_id: userMissionInfo[0].id,
         });
+
         await supabase.rpc(
           "increment_user_missions_customer_number_of_orders_so_far",
           {
             mission_id: userMissionInfo[0].id,
           }
         );
+
+        await supabase.rpc("increment_admins_number_of_orders_so_far", {
+          id: adminID,
+        });
+
         toast({
           title: `${username} adlı müşteriniz ödülünüzü kullandı.`,
-          description: `Müşteri detayları: Bugüne kadar sipariş edilen kahve sayısı: ${userMissionInfo[0].customer_number_of_orders_so_far}`,
+          description: `Bugüne kadar verilen sipariş sayısı: ${
+            userMissionInfo[0].customer_number_of_orders_so_far + 1
+          } ${"\n"} Kalan ödül hakkı: ${
+            userMissionInfo[0].number_of_free_rights - 1
+          }`,
         });
       } else {
         toast({
@@ -95,15 +108,21 @@ const AdminCamera = () => {
           user_id: userID,
           admin_id: adminID,
         });
+
         await supabase.rpc(
           "increment_user_missions_customer_number_of_orders_so_far",
           {
             mission_id: userMissionInfo[0].id,
           }
         );
+
+        await supabase.rpc("increment_admins_number_of_orders_so_far", {
+          id: adminID,
+        });
+
         toast({
-          title: `${username?.username} adlı müşterinin işlemi başarıyla gerçekleştirildi.`,
-          description: `Müşteri detayları: ${"\n"} Bugüne kadar sipariş edilen kahve sayısı: 1`,
+          title: `${username?.username} adlı müşterinizin işlemi başarıyla gerçekleştirildi.`,
+          description: `İlk sipariş!`,
         });
       } else if (
         numberForReward &&
@@ -123,10 +142,18 @@ const AdminCamera = () => {
           }
         );
 
+        await supabase.rpc("increment_admins_number_of_orders_so_far", {
+          id: adminID,
+        });
+
         toast({
           title: `${username?.username} adlı müşterinin işlemi başarıyla gerçekleştirildi.`,
-          description: `Müşteri detayları: ${"\n"} Bugüne kadar sipariş edilen kahve sayısı: ${
+          description: `Bugüne kadar sipariş edilen kahve sayısı: ${
             userMissionInfo[0].customer_number_of_orders_so_far + 1
+          } ${"\n"} Müşterinin ödül hakkı: ${
+            userMissionInfo[0].number_of_free_rights === null
+              ? 0
+              : userMissionInfo[0].number_of_free_rights
           }`,
         });
       } else if (
@@ -140,12 +167,18 @@ const AdminCamera = () => {
           await supabase.rpc("increment_user_missions_number_of_free_rights", {
             mission_id: userMissionInfo[0].id,
           });
+
           await supabase.rpc(
             "increment_user_missions_customer_number_of_orders_so_far",
             {
               mission_id: userMissionInfo[0].id,
             }
           );
+
+          await supabase.rpc("increment_admins_number_of_orders_so_far", {
+            id: adminID,
+          });
+
           const { error: zeroError } = await secretSupabase
             .from("user_missions")
             .update({
@@ -153,17 +186,23 @@ const AdminCamera = () => {
             })
             .eq("user_id", userID)
             .eq("admin_id", adminID);
+
           if (zeroError) {
             toast({
               variant: "destructive",
-
               title: "Bir şeyler yanlış gitti.",
               description: "Lütfen tekrar deneyiniz.",
             });
           } else {
             toast({
               title: `${username} adlı müşteriniz ödülünüzü kazandı.`,
-              description: `Müşteri detayları: Bugüne kadar sipariş edilen kahve sayısı: ${userMissionInfo[0].customer_number_of_orders_so_far}`,
+              description: `Bugüne kadar sipariş edilen kahve sayısı: ${
+                userMissionInfo[0].customer_number_of_orders_so_far + 1
+              } ${"\n"} Müşterinin ödül hakkı: ${
+                userMissionInfo[0].number_of_free_rights === null
+                  ? 1
+                  : userMissionInfo[0].number_of_free_rights + 1
+              }`,
             });
           }
         } catch (error) {
