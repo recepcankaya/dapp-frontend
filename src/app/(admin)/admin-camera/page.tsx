@@ -67,24 +67,22 @@ const AdminCamera = () => {
       );
       const { success } = await result.json();
       if (success === true) {
-        await supabase.rpc("decrement_user_missions_number_of_free_rights", {
-          mission_id: userMissionInfo[0].id,
-        });
-
-        await supabase.rpc("decrement_admins_not_used_nfts", {
-          id: adminID,
-        });
-
+        // Decrement not_used_nfts from admins table and number_of_free_rights from user_missions table
         await supabase.rpc(
-          "increment_user_missions_customer_number_of_orders_so_far",
+          "decrement_admins&user_missions_number_of_free_rigths",
           {
+            id: adminID,
             mission_id: userMissionInfo[0].id,
           }
         );
 
-        await supabase.rpc("increment_admins_number_of_orders_so_far", {
-          id: adminID,
-        });
+        await supabase.rpc(
+          "increment_admins&user_missions_number_of_ordes_so_far",
+          {
+            id: adminID,
+            mission_id: userMissionInfo[0].id,
+          }
+        );
 
         toast({
           title: `${username} adlı müşteriniz ödülünüzü kullandı.`,
@@ -97,7 +95,6 @@ const AdminCamera = () => {
       } else {
         toast({
           variant: "destructive",
-
           title: "Müşteri ödülünü kullanamadı.",
           description: "Lütfen tekrar deneyiniz.",
         });
@@ -107,22 +104,19 @@ const AdminCamera = () => {
     else {
       if (userMissionInfo?.length === 0) {
         // If the user does not have a record in the user_missions table, add a new record
-        await secretSupabase.from("user_missions").insert({
+        await supabase.from("user_missions").insert({
           number_of_orders: 1,
           user_id: userID,
           admin_id: adminID,
         });
 
         await supabase.rpc(
-          "increment_user_missions_customer_number_of_orders_so_far",
+          "increment_admins&user_missions_number_of_ordes_so_far",
           {
+            id: adminID,
             mission_id: userMissionInfo[0].id,
           }
         );
-
-        await supabase.rpc("increment_admins_number_of_orders_so_far", {
-          id: adminID,
-        });
 
         toast({
           title: `${username?.username} adlı müşterinizin işlemi başarıyla gerçekleştirildi.`,
@@ -140,15 +134,12 @@ const AdminCamera = () => {
         });
 
         await supabase.rpc(
-          "increment_user_missions_customer_number_of_orders_so_far",
+          "increment_admins&user_missions_number_of_ordes_so_far",
           {
+            id: adminID,
             mission_id: userMissionInfo[0].id,
           }
         );
-
-        await supabase.rpc("increment_admins_number_of_orders_so_far", {
-          id: adminID,
-        });
 
         toast({
           title: `${username?.username} adlı müşterinin işlemi başarıyla gerçekleştirildi.`,
@@ -168,24 +159,22 @@ const AdminCamera = () => {
       ) {
         // If the user has a record in the user_missions table and the number of orders is equal to the number_for_reward, make request
         try {
-          await supabase.rpc("increment_user_missions_number_of_free_rights", {
-            mission_id: userMissionInfo[0].id,
-          });
-
-          await supabase.rpc("increment_admins_not_used_nfts", {
-            id: adminID,
-          });
-
+          // Increment not_used_nfts from admins table and number_of_free_rights from user_missions table
           await supabase.rpc(
-            "increment_user_missions_customer_number_of_orders_so_far",
+            "increment_admins&user_missions_number_of_free_rights",
             {
+              id: adminID,
               mission_id: userMissionInfo[0].id,
             }
           );
 
-          await supabase.rpc("increment_admins_number_of_orders_so_far", {
-            id: adminID,
-          });
+          await supabase.rpc(
+            "increment_admins&user_missions_number_of_ordes_so_far",
+            {
+              id: adminID,
+              mission_id: userMissionInfo[0].id,
+            }
+          );
 
           const { error: zeroError } = await secretSupabase
             .from("user_missions")

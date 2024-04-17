@@ -5,7 +5,7 @@ import { Toaster } from "@/src/components/ui/toaster";
 import { useEffect } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Link from "next/link";
-import { useTotalCirculatingSupply, useContract, useTotalCount } from "@thirdweb-dev/react";
+import { useContract, useTotalCount } from "@thirdweb-dev/react";
 
 export default function UserInfo() {
   const updateAdmin = useAdminForAdminStore((state) => state.updateAdmin);
