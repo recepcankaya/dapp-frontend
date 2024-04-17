@@ -5,6 +5,7 @@ import { Toaster } from "@/src/components/ui/toaster";
 import { useEffect } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Link from "next/link";
+import { useTotalCirculatingSupply, useContract, useTotalCount } from "@thirdweb-dev/react";
 
 export default function UserInfo() {
   const updateAdmin = useAdminForAdminStore((state) => state.updateAdmin);
@@ -14,11 +15,16 @@ export default function UserInfo() {
   const numberOfOrdersSoFar = useAdminForAdminStore(
     (state) => state.admin.numberOfOrdersSoFar
   );
-  const usedNFTs = useAdminForAdminStore((state) => state.admin.usedNFTs);
   const notUsedNFTs = useAdminForAdminStore((state) => state.admin.notUsedNFTs);
   const numberForReward = useAdminForAdminStore(
     (state) => state.admin.numberForReward
   );
+  const contractAddress = useAdminForAdminStore(
+    (state) => state.admin.contractAddress
+  );
+  const { contract } = useContract(contractAddress);
+  const { data: usedNFts, isLoading, error } = useTotalCount(contract);
+
   const supabase = createClientComponentClient();
 
   const fetchAdminDashboard = async () => {
@@ -26,7 +32,7 @@ export default function UserInfo() {
       const { data: adminData, error: adminError } = await supabase
         .from("admins")
         .select(
-          "brand_name, brand_branch, used_nfts, not_used_nfts, number_for_reward, number_of_orders_so_far, contract_address, nft_src, not_used_nft_src, not_used_contract_address"
+          "brand_name, brand_branch, not_used_nfts, number_for_reward, number_of_orders_so_far, contract_address"
         )
         .eq("id", adminID);
       if (adminData) {
@@ -35,13 +41,9 @@ export default function UserInfo() {
           brandName: adminData[0].brand_name,
           brandBranch: adminData[0].brand_branch,
           numberOfOrdersSoFar: adminData[0].number_of_orders_so_far,
-          usedNFTs: adminData[0].used_nfts,
           notUsedNFTs: adminData[0].not_used_nfts,
           numberForReward: adminData[0].number_for_reward,
           contractAddress: adminData[0].contract_address,
-          NFTSrc: adminData[0].nft_src,
-          notUsedContractAddress: adminData[0].not_used_contract_address,
-          notUsedNFTSrc: adminData[0].not_used_nft_src,
         });
       } else {
         console.error(adminError);
@@ -54,8 +56,6 @@ export default function UserInfo() {
   useEffect(() => {
     fetchAdminDashboard();
   }, []);
-
-  useEffect(() => {});
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-black text-white">
@@ -100,7 +100,7 @@ export default function UserInfo() {
         </div>
         <div className="flex items-center justify-around">
           <div className="w-24 h-24 rounded-full border-2 border-lad-pink flex items-center justify-center">
-            <p className="text-lg">{usedNFTs}</p>
+            <p className="text-lg">{Number(usedNFts)}</p>
           </div>
           <div className="w-3/5 h-16 bg-pink-500 rounded-lg pl-5 flex items-center">
             <p className="text-lg font-bold text-black">

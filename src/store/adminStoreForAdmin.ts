@@ -5,13 +5,9 @@ type Admin = {
   brandName: string;
   brandBranch: string;
   numberOfOrdersSoFar: number;
-  usedNFTs: number;
   notUsedNFTs: number;
   numberForReward: number;
   contractAddress: string;
-  NFTSrc: string;
-  notUsedNFTSrc: string;
-  notUsedContractAddress: string;
 };
 
 type State = {
@@ -28,13 +24,9 @@ const useAdminForAdminStore = create<State & Action>((set) => ({
     brandName: "",
     brandBranch: "",
     numberOfOrdersSoFar: 0,
-    usedNFTs: 0,
     notUsedNFTs: 0,
     numberForReward: 0,
     contractAddress: "",
-    NFTSrc: "",
-    notUsedNFTSrc: "",
-    notUsedContractAddress: "",
   },
   updateAdmin: (admin) => set(() => ({ admin: admin })),
 }));

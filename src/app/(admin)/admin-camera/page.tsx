@@ -71,6 +71,10 @@ const AdminCamera = () => {
           mission_id: userMissionInfo[0].id,
         });
 
+        await supabase.rpc("decrement_admins_not_used_nfts", {
+          id: adminID,
+        });
+
         await supabase.rpc(
           "increment_user_missions_customer_number_of_orders_so_far",
           {
@@ -166,6 +170,10 @@ const AdminCamera = () => {
         try {
           await supabase.rpc("increment_user_missions_number_of_free_rights", {
             mission_id: userMissionInfo[0].id,
+          });
+
+          await supabase.rpc("increment_admins_not_used_nfts", {
+            id: adminID,
           });
 
           await supabase.rpc(
