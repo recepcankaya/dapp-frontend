@@ -7,8 +7,6 @@ export type Admin = {
   numberForReward: number;
   NFTSrc: string;
   contractAddress: string;
-  notUsedNFTSrc: string;
-  notUsedContractAddress: string;
   coords: {
     lat: number;
     long: number;
@@ -31,8 +29,6 @@ const useAdminStore = create<State & Action>((set) => ({
     numberForReward: 0,
     NFTSrc: "",
     contractAddress: "",
-    notUsedNFTSrc: "",
-    notUsedContractAddress: "",
     coords: {
       lat: 0,
       long: 0,

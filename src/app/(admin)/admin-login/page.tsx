@@ -67,6 +67,7 @@ export default function UserInfo() {
       toast({ title: "Böyle bir kullanıcı bulunamadı." });
       return;
     }
+    router.refresh();
   };
 
   return (

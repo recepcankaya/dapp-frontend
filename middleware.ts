@@ -1,24 +1,21 @@
 import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs";
-import { NextResponse, type NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+
+import type { NextRequest } from "next/server";
 
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next();
-  const supabase = createMiddlewareClient({ req, res });
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Create a Supabase client configured to use cookies
+  const supabase = createMiddlewareClient<Database>({ req, res });
 
-  if (user && req.nextUrl.pathname === "/") {
-    return NextResponse.redirect(new URL("/brands", req.url));
-  }
-
-  if (!user && req.nextUrl.pathname !== "/") {
-    return NextResponse.redirect(new URL("/", req.url));
-  }
+  // Refresh session if expired - required for Server Components
+  await supabase.auth.getSession();
 
   return res;
 }
+
+// Ensure the middleware is only called for relevant paths.
 export const config = {
   matcher: [
     /*
@@ -26,9 +23,7 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
-     * Feel free to modify this pattern to include more paths.
      */
-    "/",
-    "/brands",
+    "/((?!_next/static|_next/image|favicon.ico).*)",
   ],
 };

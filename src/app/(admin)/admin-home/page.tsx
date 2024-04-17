@@ -7,7 +7,7 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Link from "next/link";
 import { useContract, useTotalCount } from "@thirdweb-dev/react";
 
-export default function UserInfo() {
+export default function AdminHome() {
   const updateAdmin = useAdminForAdminStore((state) => state.updateAdmin);
   const adminID = useAdminForAdminStore((state) => state.admin.adminId);
   const brandName = useAdminForAdminStore((state) => state.admin.brandName);
@@ -100,7 +100,9 @@ export default function UserInfo() {
         </div>
         <div className="flex items-center justify-around">
           <div className="w-24 h-24 rounded-full border-2 border-lad-pink flex items-center justify-center">
-            <p className="text-lg">{Number(usedNFts)}</p>
+            <p className="text-lg">
+              {isLoading ? <p>...</p> : Number(usedNFts)}
+            </p>
           </div>
           <div className="w-3/5 h-16 bg-pink-500 rounded-lg pl-5 flex items-center">
             <p className="text-lg font-bold text-black">

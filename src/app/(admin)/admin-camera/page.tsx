@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import QrScanner from "qr-scanner";
 
 import useAdminForAdminStore from "@/src/store/adminStoreForAdmin";
@@ -11,7 +11,7 @@ import { createClient } from "@supabase/supabase-js";
 
 const AdminCamera = () => {
   const [qrOn, setQrOn] = useState<boolean>(true);
-  const [scannedResult, setScannedResult] = useState<string | undefined>("");
+  const [scannedResult, setScannedResult] = useState<string>("");
   const supabase = createClientComponentClient();
   const secretSupabase = createClient(
     String(process.env.NEXT_PUBLIC_SUPABASE_URL),
@@ -23,145 +23,50 @@ const AdminCamera = () => {
   const videoEl = useRef<HTMLVideoElement>(null);
   const qrBoxEl = useRef<HTMLDivElement>(null);
 
-  const onScanSuccess = async (result: QrScanner.ScanResult) => {
-    setScannedResult(result?.data);
-    await handleScan();
-  };
+  const handleScan = useCallback(
+    async (result: QrScanner.ScanResult) => {
+      if (!result?.data) return;
+      setScannedResult(result?.data);
+      const { userID, forNFT, address } = JSON.parse(scannedResult);
+      const { data: userMissionInfo } = await supabase
+        .from("user_missions")
+        .select(
+          "number_of_orders, id, customer_number_of_orders_so_far, number_of_free_rights"
+        )
+        .eq("user_id", userID)
+        .eq("admin_id", adminID);
 
-  const handleScan = async () => {
-    if (!scannedResult) return;
-    const { userID, forNFT, address } = JSON.parse(scannedResult);
-    const { data: userMissionInfo } = await supabase
-      .from("user_missions")
-      .select(
-        "number_of_orders, id, customer_number_of_orders_so_far, number_of_free_rights"
-      )
-      .eq("user_id", userID)
-      .eq("admin_id", adminID);
+      // get number_for_reward from admin table
+      const { data: numberForReward } = await supabase
+        .from("admins")
+        .select("number_for_reward")
+        .eq("id", adminID);
 
-    // get number_for_reward from admin table
-    const { data: numberForReward } = await supabase
-      .from("admins")
-      .select("number_for_reward")
-      .eq("id", adminID);
+      const { data: username } = await secretSupabase
+        .from("users")
+        .select("username")
+        .eq("id", userID)
+        .single();
 
-    const { data: username } = await secretSupabase
-      .from("users")
-      .select("username")
-      .eq("id", userID)
-      .single();
-
-    if (forNFT === true && userMissionInfo) {
-      const result = await fetch(
-        "https://mint-nft-js.vercel.app/collectionNFT",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            admin_id: adminID,
-            user_wallet: address,
-          }),
-        }
-      );
-      const { success } = await result.json();
-      if (success === true) {
-        // Decrement not_used_nfts from admins table and number_of_free_rights from user_missions table
-        await supabase.rpc(
-          "decrement_admins&user_missions_number_of_free_rigths",
+      if (forNFT === true && userMissionInfo) {
+        const result = await fetch(
+          "https://mint-nft-js.vercel.app/collectionNFT",
           {
-            id: adminID,
-            mission_id: userMissionInfo[0].id,
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              admin_id: adminID,
+              user_wallet: address,
+            }),
           }
         );
-
-        await supabase.rpc(
-          "increment_admins&user_missions_number_of_ordes_so_far",
-          {
-            id: adminID,
-            mission_id: userMissionInfo[0].id,
-          }
-        );
-
-        toast({
-          title: `${username} adlı müşteriniz ödülünüzü kullandı.`,
-          description: `Bugüne kadar verilen sipariş sayısı: ${
-            userMissionInfo[0].customer_number_of_orders_so_far + 1
-          } ${"\n"} Kalan ödül hakkı: ${
-            userMissionInfo[0].number_of_free_rights - 1
-          }`,
-        });
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Müşteri ödülünü kullanamadı.",
-          description: "Lütfen tekrar deneyiniz.",
-        });
-      }
-    }
-    // If the order is not for free, check the number of orders
-    else {
-      if (userMissionInfo?.length === 0) {
-        // If the user does not have a record in the user_missions table, add a new record
-        await supabase.from("user_missions").insert({
-          number_of_orders: 1,
-          user_id: userID,
-          admin_id: adminID,
-        });
-
-        await supabase.rpc(
-          "increment_admins&user_missions_number_of_ordes_so_far",
-          {
-            id: adminID,
-            mission_id: userMissionInfo[0].id,
-          }
-        );
-
-        toast({
-          title: `${username?.username} adlı müşterinizin işlemi başarıyla gerçekleştirildi.`,
-          description: `İlk sipariş!`,
-        });
-      } else if (
-        numberForReward &&
-        userMissionInfo &&
-        userMissionInfo[0].number_of_orders <
-          numberForReward[0].number_for_reward - 1
-      ) {
-        // If the user has a record in the user_missions table and the number of orders is less than the number_for_reward, increase the number of orders by one
-        await supabase.rpc("increment_user_missions_number_of_orders", {
-          mission_id: userMissionInfo[0].id,
-        });
-
-        await supabase.rpc(
-          "increment_admins&user_missions_number_of_ordes_so_far",
-          {
-            id: adminID,
-            mission_id: userMissionInfo[0].id,
-          }
-        );
-
-        toast({
-          title: `${username?.username} adlı müşterinin işlemi başarıyla gerçekleştirildi.`,
-          description: `Bugüne kadar sipariş edilen kahve sayısı: ${
-            userMissionInfo[0].customer_number_of_orders_so_far + 1
-          } ${"\n"} Müşterinin ödül hakkı: ${
-            userMissionInfo[0].number_of_free_rights === null
-              ? 0
-              : userMissionInfo[0].number_of_free_rights
-          }`,
-        });
-      } else if (
-        numberForReward &&
-        userMissionInfo &&
-        userMissionInfo[0].number_of_orders ===
-          numberForReward[0].number_for_reward - 1
-      ) {
-        // If the user has a record in the user_missions table and the number of orders is equal to the number_for_reward, make request
-        try {
-          // Increment not_used_nfts from admins table and number_of_free_rights from user_missions table
+        const { success } = await result.json();
+        if (success === true) {
+          // Decrement not_used_nfts from admins table and number_of_free_rights from user_missions table
           await supabase.rpc(
-            "increment_admins&user_missions_number_of_free_rights",
+            "decrement_admins&user_missions_number_of_free_rigths",
             {
               id: adminID,
               mission_id: userMissionInfo[0].id,
@@ -176,55 +81,143 @@ const AdminCamera = () => {
             }
           );
 
-          const { error: zeroError } = await secretSupabase
-            .from("user_missions")
-            .update({
-              number_of_orders: 0,
-            })
-            .eq("user_id", userID)
-            .eq("admin_id", adminID);
-
-          if (zeroError) {
-            toast({
-              variant: "destructive",
-              title: "Bir şeyler yanlış gitti.",
-              description: "Lütfen tekrar deneyiniz.",
-            });
-          } else {
-            toast({
-              title: `${username} adlı müşteriniz ödülünüzü kazandı.`,
-              description: `Bugüne kadar sipariş edilen kahve sayısı: ${
-                userMissionInfo[0].customer_number_of_orders_so_far + 1
-              } ${"\n"} Müşterinin ödül hakkı: ${
-                userMissionInfo[0].number_of_free_rights === null
-                  ? 1
-                  : userMissionInfo[0].number_of_free_rights + 1
-              }`,
-            });
-          }
-        } catch (error) {
-          console.log("error", error);
+          toast({
+            title: `${username} adlı müşteriniz ödülünüzü kullandı.`,
+            description: `Bugüne kadar verilen sipariş sayısı: ${
+              userMissionInfo[0].customer_number_of_orders_so_far + 1
+            } ${"\n"} Kalan ödül hakkı: ${
+              userMissionInfo[0].number_of_free_rights - 1
+            }`,
+          });
+        } else {
           toast({
             variant: "destructive",
-
-            title: "Müşteriye ödülü verilemedi.",
+            title: "Müşteri ödülünü kullanamadı.",
             description: "Lütfen tekrar deneyiniz.",
           });
         }
       }
-    }
-  };
+      // If the order is not for free, check the number of orders
+      else {
+        if (userMissionInfo?.length === 0) {
+          // If the user does not have a record in the user_missions table, add a new record
+          await supabase.from("user_missions").insert({
+            number_of_orders: 1,
+            user_id: userID,
+            admin_id: adminID,
+          });
 
-  useEffect(() => {
-    if (scannedResult) {
-      handleScan();
-    }
-  }, [scannedResult]);
+          await supabase.rpc(
+            "increment_admins&user_missions_number_of_ordes_so_far",
+            {
+              id: adminID,
+              mission_id: userMissionInfo[0].id,
+            }
+          );
+
+          toast({
+            title: `${username?.username} adlı müşterinizin işlemi başarıyla gerçekleştirildi.`,
+            description: `İlk sipariş!`,
+          });
+        } else if (
+          numberForReward &&
+          userMissionInfo &&
+          userMissionInfo[0].number_of_orders <
+            numberForReward[0].number_for_reward - 1
+        ) {
+          // If the user has a record in the user_missions table and the number of orders is less than the number_for_reward, increase the number of orders by one
+          await supabase.rpc("increment_user_missions_number_of_orders", {
+            mission_id: userMissionInfo[0].id,
+          });
+
+          await supabase.rpc(
+            "increment_admins&user_missions_number_of_ordes_so_far",
+            {
+              id: adminID,
+              mission_id: userMissionInfo[0].id,
+            }
+          );
+
+          toast({
+            title: `${username?.username} adlı müşterinin işlemi başarıyla gerçekleştirildi.`,
+            description: `Bugüne kadar sipariş edilen kahve sayısı: ${
+              userMissionInfo[0].customer_number_of_orders_so_far + 1
+            } ${"\n"} Müşterinin ödül hakkı: ${
+              userMissionInfo[0].number_of_free_rights === null
+                ? 0
+                : userMissionInfo[0].number_of_free_rights
+            }`,
+          });
+        } else if (
+          numberForReward &&
+          userMissionInfo &&
+          userMissionInfo[0].number_of_orders ===
+            numberForReward[0].number_for_reward - 1
+        ) {
+          // If the user has a record in the user_missions table and the number of orders is equal to the number_for_reward, make request
+          try {
+            // Increment not_used_nfts from admins table and number_of_free_rights from user_missions table
+            await supabase.rpc(
+              "increment_admins&user_missions_number_of_free_rights",
+              {
+                id: adminID,
+                mission_id: userMissionInfo[0].id,
+              }
+            );
+
+            await supabase.rpc(
+              "increment_admins&user_missions_number_of_ordes_so_far",
+              {
+                id: adminID,
+                mission_id: userMissionInfo[0].id,
+              }
+            );
+
+            const { error: zeroError } = await secretSupabase
+              .from("user_missions")
+              .update({
+                number_of_orders: 0,
+              })
+              .eq("user_id", userID)
+              .eq("admin_id", adminID);
+
+            if (zeroError) {
+              toast({
+                variant: "destructive",
+                title: "Bir şeyler yanlış gitti.",
+                description: "Lütfen tekrar deneyiniz.",
+              });
+            } else {
+              toast({
+                title: `${username} adlı müşteriniz ödülünüzü kazandı.`,
+                description: `Bugüne kadar sipariş edilen kahve sayısı: ${
+                  userMissionInfo[0].customer_number_of_orders_so_far + 1
+                } ${"\n"} Müşterinin ödül hakkı: ${
+                  userMissionInfo[0].number_of_free_rights === null
+                    ? 1
+                    : userMissionInfo[0].number_of_free_rights + 1
+                }`,
+              });
+            }
+          } catch (error) {
+            console.log("error", error);
+            toast({
+              variant: "destructive",
+
+              title: "Müşteriye ödülü verilemedi.",
+              description: "Lütfen tekrar deneyiniz.",
+            });
+          }
+        }
+      }
+    },
+    [scannedResult, adminID, supabase, secretSupabase]
+  );
 
   useEffect(() => {
     if (videoEl?.current && !scanner.current) {
       // 👉 Instantiate the QR Scanner
-      scanner.current = new QrScanner(videoEl?.current, onScanSuccess, {
+      scanner.current = new QrScanner(videoEl?.current, handleScan, {
         // onDecodeError: onScanFail,
         // 📷 This is the camera facing mode. In mobile devices, "environment" means back camera and "user" means front camera.
         preferredCamera: "environment",
@@ -252,7 +245,7 @@ const AdminCamera = () => {
         scanner?.current?.stop();
       }
     };
-  }, []);
+  }, [handleScan]);
 
   // ❌ If "camera" is not allowed in browser permissions, show an alert.
   useEffect(() => {
@@ -265,7 +258,7 @@ const AdminCamera = () => {
   return (
     <div className="w-screen h-screen">
       <Toaster />
-      <div className="bg-[#4b4a4a5d] p-36">
+      <div className="bg-[#4b4a4a5d] p-12">
         <video ref={videoEl} className="border-2 border-lad-purple"></video>
       </div>
       <div ref={qrBoxEl}></div>

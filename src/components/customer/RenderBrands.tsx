@@ -18,8 +18,6 @@ type RenderBrandsProps = {
     number_for_reward: number | null;
     nft_src: string | null;
     contract_address: string | null;
-    not_used_nft_src: string | null;
-    not_used_contract_address: string | null;
     coords: Json | null;
   }[];
 };
@@ -37,8 +35,7 @@ export default function RenderBrands(brands: RenderBrandsProps) {
       number_for_reward: number | null;
       nft_src: string | null;
       contract_address: string | null;
-      not_used_nft_src: string | null;
-      not_used_contract_address: string | null;
+
       coords: Json;
     }[]
   >([]);
@@ -55,8 +52,6 @@ export default function RenderBrands(brands: RenderBrandsProps) {
       numberForReward: item.number_for_reward,
       NFTSrc: item.nft_src,
       contractAddress: item.contract_address,
-      notUsedNFTSrc: item.not_used_nft_src,
-      notUsedContractAddress: item.not_used_contract_address,
       coords: {
         lat: item.coords?.lat,
         long: item.coords?.long,
@@ -128,7 +123,8 @@ export default function RenderBrands(brands: RenderBrandsProps) {
                       key={index}
                       priority
                       fill
-                      sizes="10vw" />
+                      sizes="10vw"
+                    />
                   </div>
                   <p>{item.brand_name}</p>
                 </div>
@@ -155,7 +151,8 @@ export default function RenderBrands(brands: RenderBrandsProps) {
                       key={index}
                       priority
                       fill
-                      sizes="10vw" />
+                      sizes="10vw"
+                    />
                   </div>
                   <p>{item.brand_name}</p>
                 </div>

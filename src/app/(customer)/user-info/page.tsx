@@ -1,5 +1,4 @@
 "use client";
-import supabase from "@/src/utils/supabase";
 import { useAddress } from "@thirdweb-dev/react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,6 +17,7 @@ import {
 } from "@/src/components/ui/form";
 import { toast } from "@/src/components/ui/use-toast";
 import { Button } from "@/src/components/ui/button";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 const FormSchema = z.object({
   username: z.string().min(2, {
@@ -35,6 +35,7 @@ export default function UserInfo() {
       username: "",
     },
   });
+  const supabase = createClientComponentClient();
 
   const submitForm = async (data: z.infer<typeof FormSchema>) => {
     try {
