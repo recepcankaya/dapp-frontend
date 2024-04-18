@@ -15,6 +15,7 @@ type RenderBrandsProps = {
     id: string;
     brand_name: string | null;
     brand_logo_ipfs_url: string | null;
+    ticket_ipfs_url: string | null;
     number_for_reward: number | null;
     nft_src: string | null;
     contract_address: string | null;
@@ -32,10 +33,10 @@ export default function RenderBrands(brands: RenderBrandsProps) {
       id: string;
       brand_name: string | null;
       brand_logo_ipfs_url: string | null;
+      ticket_ipfs_url: string | null;
       number_for_reward: number | null;
       nft_src: string | null;
       contract_address: string | null;
-
       coords: Json;
     }[]
   >([]);
@@ -49,6 +50,7 @@ export default function RenderBrands(brands: RenderBrandsProps) {
       id: item.id,
       brandName: item.brand_name,
       brandLogo: item.brand_logo_ipfs_url,
+      ticketImage: item.ticket_ipfs_url,
       numberForReward: item.number_for_reward,
       NFTSrc: item.nft_src,
       contractAddress: item.contract_address,

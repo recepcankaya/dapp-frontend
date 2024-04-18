@@ -10,6 +10,7 @@ import CustomerHomeHeader from "@/src/components/customer/CustomerHomeHeader";
 import CustomerHomeLinks from "@/src/components/customer/CustomerHomeLinks";
 import { createClient } from "@/src/lib/supabase/client";
 import useSession from "@/src/store/session";
+import Image from "next/image";
 
 const CustomerHome = () => {
   const [userOrderNumber, setUserOrderNumber] = useState<number>(0);
@@ -56,16 +57,34 @@ const CustomerHome = () => {
     <section className="h-screen w-screen">
       <CustomerHomeHeader />
       <CustomerHomeLinks />
-      <div className="pt-12 h-1/3">
+      <div className="pt-12 h-1/2 w-full">
         <p className="text-white mb-4 ml-8">Süreciniz</p>
-        <div className="bg-white h-full w-full grid grid-cols-4 justify-items-center items-center">
+        <div
+          className="w-full h-full grid grid-cols-4 gap-2 justify-items-start items-start bg-no-repeat bg-contain pt-4 pl-36"
+          style={{
+            backgroundImage: `url(${admin.ticketImage.replace(
+              "ipfs://",
+              "https://ipfs.io/ipfs/"
+            )})`,
+            gridTemplateColumns: "repeat(4, 1fr)",
+            gridTemplateRows: "repeat(auto-fill, minmax(50px, 1fr))",
+          }}>
           {ticketCircles.map((item, index) => (
             <div
               key={index}
-              className="w-20 h-20 rounded-full"
+              className={`w-12 h-12 rounded-full z-10 ${
+                index >= 4 ? "mt-10" : ""
+              }`}
               style={{
-                backgroundColor:
-                  index < userOrderNumber ? "#87A922" : "#C8AFD6",
+                background:
+                  index < userOrderNumber
+                    ? `url(${admin.brandLogo.replace(
+                        "ipfs://",
+                        "https://ipfs.io/ipfs/"
+                      )}) no-repeat center center`
+                    : "#7B3501",
+                backgroundSize: "cover",
+                transform: "rotate(-45deg)",
               }}></div>
           ))}
         </div>

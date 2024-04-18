@@ -8,7 +8,7 @@ export default async function Brands() {
   const { data: brands, error } = await supabase
     .from("admins")
     .select(
-      "id, brand_name, brand_logo_ipfs_url, number_for_reward, nft_src, contract_address, coords"
+      "id, brand_name, brand_logo_ipfs_url, ticket_ipfs_url, number_for_reward, nft_src, contract_address, coords"
     );
 
   if (error) {

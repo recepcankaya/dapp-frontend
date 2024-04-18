@@ -4,6 +4,7 @@ export type Admin = {
   id: string;
   brandName: string;
   brandLogo: string;
+  ticketImage: string;
   numberForReward: number;
   NFTSrc: string;
   contractAddress: string;
@@ -26,6 +27,7 @@ const useAdminStore = create<State & Action>((set) => ({
     id: "",
     brandName: "",
     brandLogo: "",
+    ticketImage: "",
     numberForReward: 0,
     NFTSrc: "",
     contractAddress: "",
