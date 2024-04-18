@@ -11,6 +11,7 @@ import CustomerHomeLinks from "@/src/components/customer/CustomerHomeLinks";
 import { createClient } from "@/src/lib/supabase/client";
 import useSession from "@/src/store/session";
 import Image from "next/image";
+import { Button } from "@/src/components/ui/button";
 
 const CustomerHome = () => {
   const [userOrderNumber, setUserOrderNumber] = useState<number>(0);
@@ -89,6 +90,11 @@ const CustomerHome = () => {
           ))}
         </div>
       </div>
+      <Button
+        className="px-16 py-6 mx-auto flex text-lg font-bold font-rosarivo rounded-xl border-2 border-lad-pink text-lad-white"
+        type="submit">
+        Menü
+      </Button>
     </section>
   );
 };
