@@ -55,6 +55,7 @@ export default function AdminHome() {
 
   useEffect(() => {
     fetchAdminDashboard();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

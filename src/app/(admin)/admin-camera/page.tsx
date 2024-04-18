@@ -215,9 +215,10 @@ const AdminCamera = () => {
   );
 
   useEffect(() => {
-    if (videoEl?.current && !scanner.current) {
+    let videoRef = videoEl.current;
+    if (videoRef && !scanner.current) {
       // 👉 Instantiate the QR Scanner
-      scanner.current = new QrScanner(videoEl?.current, handleScan, {
+      scanner.current = new QrScanner(videoRef, handleScan, {
         // onDecodeError: onScanFail,
         // 📷 This is the camera facing mode. In mobile devices, "environment" means back camera and "user" means front camera.
         preferredCamera: "environment",
@@ -241,7 +242,7 @@ const AdminCamera = () => {
     // 🧹 Clean up on unmount.
     // 🚨 This removes the QR Scanner from rendering and using camera when it is closed or removed from the UI.
     return () => {
-      if (!videoEl?.current) {
+      if (!videoRef) {
         scanner?.current?.stop();
       }
     };

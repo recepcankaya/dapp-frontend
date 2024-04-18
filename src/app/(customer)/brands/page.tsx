@@ -1,9 +1,8 @@
 import RenderBrands from "@/src/components/customer/RenderBrands";
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
+import { createClient } from "@/src/lib/supabase/server";
 
 export default async function Brands() {
-  const supabase = createServerComponentClient<Database>({ cookies });
+  const supabase = createClient();
 
   // @todo - auth yapmak için users ile adminsi bağlayalım
   const { data: brands, error } = await supabase

@@ -19,7 +19,6 @@ export default function Profile() {
   const NFTSrc = useAdminStore((state) => state.admin.NFTSrc);
   const supabase = createClientComponentClient();
 
-  const notUsedNFTSrc = useAdminStore((state) => state.admin.notUsedNFTSrc);
   const address = useAddress();
   const { contract: usedNFTContract } = useContract(contractAddress);
   const {
@@ -46,6 +45,7 @@ export default function Profile() {
 
   useEffect(() => {
     renderImages();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -70,7 +70,7 @@ export default function Profile() {
     return () => {
       supabase.removeChannel(numberOfFreeRights);
     };
-  }, [numberOfFreeRights, userID]);
+  }, [numberOfFreeRights, userID, supabase]);
 
   return (
     <div className="flex flex-col items-center pt-20 text-white">
@@ -100,10 +100,11 @@ export default function Profile() {
                 onClick={() => setQrCodeModalVisible(true)}
                 className="mb-4">
                 <Image
-                  src={notUsedNFTSrc.replace(
-                    "ipfs://",
-                    "https://ipfs.io/ipfs/"
-                  )}
+                  // src={notUsedNFTSrc.replace(
+                  //   "ipfs://",
+                  //   "https://ipfs.io/ipfs/"
+                  // )}
+                  src="https://ipfs.io/ipfs/QmRKw3Ah7qfzpSc1BHxR1hsq9P9J5aqGPG9iZaUm5KB1Bp"
                   alt="nft"
                   width={375}
                   height={375}

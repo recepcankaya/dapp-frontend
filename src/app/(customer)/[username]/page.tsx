@@ -3,19 +3,19 @@
 // @todo - turn into server component
 
 import { useEffect, useState } from "react";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 import useUserStore from "@/src/store/userStore";
 import useAdminStore from "@/src/store/adminStore";
 import CustomerHomeHeader from "@/src/components/customer/CustomerHomeHeader";
 import CustomerHomeLinks from "@/src/components/customer/CustomerHomeLinks";
+import { createClient } from "@/src/lib/supabase/client";
 
 const CustomerHome = () => {
   const [userOrderNumber, setUserOrderNumber] = useState<number>(0);
   const userID = useUserStore((state) => state.user.id);
   const admin = useAdminStore((state) => state.admin);
   const ticketCircles = new Array(admin.numberForReward).fill(0);
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   const fetchUserOrderNumber = async () => {
     try {
@@ -34,8 +34,11 @@ const CustomerHome = () => {
     }
   };
 
+  console.log();
+
   useEffect(() => {
     fetchUserOrderNumber();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

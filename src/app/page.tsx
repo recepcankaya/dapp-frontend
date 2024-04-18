@@ -1,52 +1,26 @@
 "use client";
-import {
-  ConnectEmbed,
-  useAddress,
-  useSigner,
-  useWallet,
-} from "@thirdweb-dev/react";
-import { NextPage } from "next";
-import { v4 as uuidv4 } from "uuid";
-import { utils } from "ethers";
+import { ConnectEmbed, useAddress } from "@thirdweb-dev/react";
 import { sha512 } from "js-sha512";
 import { useRouter } from "next/navigation";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Button } from "../components/ui/button";
 
 import useUserStore from "@/src/store/userStore";
 import Link from "next/link";
+import { createClient } from "../lib/supabase/client";
 
-const Home: NextPage = () => {
+export default function Home() {
   const router = useRouter();
   const walletAddr = useAddress();
-  const signer = useSigner();
-  const embeddedWallet = useWallet("embeddedWallet");
   const updateUser = useUserStore((state) => state.setUser);
-  const supabase = createClientComponentClient();
 
-  const checkIfEmbeddedWallet = async () => {
-    const email = await embeddedWallet?.getEmail();
-    if (email) {
-      return true;
-    } else {
-      return false;
-    }
-  };
-
-  /**
-   * Handles the login process with SIWE.
-   *
-   * @returns {Promise<void>} A promise that resolves when the login process is completed.
-   * @throws {Error} If the wallet address is undefined or if there is an error during the login process.
-   */
-  const handleLoginWithSIWE = async (): Promise<void> => {
+  const signIn = async (): Promise<void> => {
     try {
+      const supabase = createClient();
       let isNewUser = false;
       if (!walletAddr) {
         throw new Error("Wallet address is undefined");
       }
 
-      const nonce = uuidv4();
       const passwordHash = sha512(`${walletAddr}l4dder1t`).slice(0, 50);
 
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -62,48 +36,13 @@ const Home: NextPage = () => {
         });
         await supabase
           .from("users")
-          .update({ nonce, walletAddr })
+          .update({ walletAddr })
           .eq("id", data.user?.id);
       } else {
         await supabase
           .from("users")
-          .update({ nonce, last_login: new Date() })
+          .update({ last_login: new Date() })
           .eq("id", data.user?.id);
-      }
-
-      const siweMessage = {
-        domain: "Ladder It",
-        addres: walletAddr,
-        statement: "Onaylama tuşuna basarak uygulamaya giriş yapabilirsiniz.",
-        version: "1",
-        chainId: "137",
-        nonce,
-      };
-
-      const ifEmbeddedWallet = await checkIfEmbeddedWallet();
-      if (ifEmbeddedWallet) {
-        const signature = await embeddedWallet?.signMessage(
-          siweMessage.statement
-        );
-
-        if (!signature) {
-          throw new Error("Signature is undefined");
-        }
-        await embeddedWallet?.verifySignature(
-          siweMessage.statement,
-          signature,
-          walletAddr,
-          137
-        );
-      } else {
-        const signature = await signer?.signMessage(siweMessage.statement);
-        if (!signature) {
-          throw new Error("Signature is undefined");
-        }
-        const signerAddr = utils.verifyMessage(nonce, signature);
-        if (signerAddr !== walletAddr) {
-          throw new Error("Signature verification failed.");
-        }
       }
 
       const { data: user, error: userError } = await supabase
@@ -116,6 +55,14 @@ const Home: NextPage = () => {
         id: user.id.toString(),
         username: user.username,
       });
+
+      const { data: session, error: sessionError } =
+        await supabase.auth.getSession();
+
+      localStorage.setItem(
+        "sb-gittjeqpqcmmbterylkd-auth-token",
+        JSON.stringify(session.session)
+      );
 
       if (isNewUser) {
         router.push("/user-info");
@@ -137,7 +84,7 @@ const Home: NextPage = () => {
           </p>
           <div className="text-center">
             <Button
-              onClick={handleLoginWithSIWE}
+              onClick={signIn}
               className="border-2 border-solid border-[#C8AFD6] self-center text-xl rounded-3xl p-8 w-2/3">
               Devam Et
             </Button>
@@ -153,6 +100,4 @@ const Home: NextPage = () => {
       </Button>
     </section>
   );
-};
-
-export default Home;
+}
