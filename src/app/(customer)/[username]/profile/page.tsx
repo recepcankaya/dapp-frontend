@@ -7,6 +7,7 @@ import useAdminStore from "@/src/store/adminStore";
 import QrCodeModal from "@/src/components/QrCodeModal";
 import { useAddress, useContract, useOwnedNFTs } from "@thirdweb-dev/react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import useSession from "@/src/store/session";
 
 export default function Profile() {
   const [selectedTab, setSelectedTab] = useState("Waiting");
@@ -17,6 +18,7 @@ export default function Profile() {
   const adminId = useAdminStore((state) => state.admin.id);
   const contractAddress = useAdminStore((state) => state.admin.contractAddress);
   const NFTSrc = useAdminStore((state) => state.admin.NFTSrc);
+  const session = useSession((state) => state.session);
   const supabase = createClientComponentClient();
 
   const address = useAddress();
@@ -34,8 +36,8 @@ export default function Profile() {
     const { data, error } = await supabase
       .from("user_missions")
       .select("number_of_free_rights")
-      .eq("user_id", userID)
-      .eq("admin_id", adminId);
+      .eq("user_id", session?.user.id)
+      .eq("admin_id", localStorage.getItem("adminID"));
     if (data && data[0].number_of_free_rights !== null) {
       setNumberOfFreeRights(new Array(data[0].number_of_free_rights).fill(0));
     } else {
@@ -57,7 +59,7 @@ export default function Profile() {
           event: "*",
           schema: "public",
           table: "user_missions",
-          filter: `user_id=eq.${userID}`,
+          filter: `user_id=eq.${session?.user.id}`,
         },
         (payload: any) => {
           setNumberOfFreeRights(
@@ -70,7 +72,7 @@ export default function Profile() {
     return () => {
       supabase.removeChannel(numberOfFreeRights);
     };
-  }, [numberOfFreeRights, userID, supabase]);
+  }, [numberOfFreeRights, userID, supabase, session?.user.id]);
 
   return (
     <div className="flex flex-col items-center pt-20 text-white">

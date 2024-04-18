@@ -58,6 +58,7 @@ export default function RenderBrands(brands: RenderBrandsProps) {
       },
     };
     updateAdmin(admin);
+    localStorage.setItem("adminID", item.id);
     router.push(`/${username}`);
   };
 

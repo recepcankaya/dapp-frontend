@@ -7,15 +7,19 @@ import { Button } from "../components/ui/button";
 import useUserStore from "@/src/store/userStore";
 import Link from "next/link";
 import { createClient } from "../lib/supabase/client";
+import { useEffect } from "react";
+import useSession from "../store/session";
 
 export default function Home() {
-  const router = useRouter();
-  const walletAddr = useAddress();
+  const session = useSession((state) => state.session);
+  const updateSession = useSession((state) => state.updateSession);
   const updateUser = useUserStore((state) => state.setUser);
+  const supabase = createClient();
+  const walletAddr = useAddress();
+  const router = useRouter();
 
   const signIn = async (): Promise<void> => {
     try {
-      const supabase = createClient();
       let isNewUser = false;
       if (!walletAddr) {
         throw new Error("Wallet address is undefined");
@@ -56,14 +60,6 @@ export default function Home() {
         username: user.username,
       });
 
-      const { data: session, error: sessionError } =
-        await supabase.auth.getSession();
-
-      localStorage.setItem(
-        "sb-gittjeqpqcmmbterylkd-auth-token",
-        JSON.stringify(session.session)
-      );
-
       if (isNewUser) {
         router.push("/user-info");
       } else {
@@ -73,6 +69,25 @@ export default function Home() {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    localStorage.setItem("session", JSON.stringify(session));
+  }, [session]);
+
+  useEffect(() => {
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (event, _session) => {
+        if (event === "SIGNED_OUT") {
+          updateSession(null);
+        } else if (_session) {
+          updateSession(_session);
+        }
+      }
+    );
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, [session, supabase.auth, updateSession]);
 
   return (
     <section className="min-h-screen w-screen flex flex-col justify-evenly items-center">
