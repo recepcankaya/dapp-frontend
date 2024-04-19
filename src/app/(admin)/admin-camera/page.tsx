@@ -3,11 +3,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import QrScanner from "qr-scanner";
 
-import useAdminForAdminStore from "@/src/store/adminStoreForAdmin";
 import { toast } from "@/src/components/ui/use-toast";
 import { Toaster } from "@/src/components/ui/toaster";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { createClient } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
 
 const AdminCamera = () => {
   const [qrOn, setQrOn] = useState<boolean>(true);
@@ -18,29 +18,37 @@ const AdminCamera = () => {
     String(process.env.NEXT_PUBLIC_SUPABASE_SERVICE_KEY)
   );
 
-  const adminID = useAdminForAdminStore((state) => state.admin.adminId);
   const scanner = useRef<QrScanner>();
   const videoEl = useRef<HTMLVideoElement>(null);
   const qrBoxEl = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   const handleScan = useCallback(
     async (result: QrScanner.ScanResult) => {
       if (!result?.data) return;
       setScannedResult(result?.data);
       const { userID, forNFT, address } = JSON.parse(scannedResult);
+      const {
+        data: { user: admin },
+      } = await supabase.auth.getUser();
+
+      if (admin === null) {
+        router.push("/");
+      }
+
       const { data: userMissionInfo } = await supabase
         .from("user_missions")
         .select(
           "number_of_orders, id, customer_number_of_orders_so_far, number_of_free_rights"
         )
         .eq("user_id", userID)
-        .eq("admin_id", adminID);
+        .eq("admin_id", admin?.id);
 
       // get number_for_reward from admin table
       const { data: numberForReward } = await supabase
         .from("admins")
         .select("number_for_reward")
-        .eq("id", adminID);
+        .eq("id", admin?.id);
 
       const { data: username } = await secretSupabase
         .from("users")
@@ -57,7 +65,7 @@ const AdminCamera = () => {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              admin_id: adminID,
+              admin_id: admin?.id,
               user_wallet: address,
             }),
           }
@@ -68,7 +76,7 @@ const AdminCamera = () => {
           await supabase.rpc(
             "decrement_admins&user_missions_number_of_free_rigths",
             {
-              id: adminID,
+              id: admin?.id,
               mission_id: userMissionInfo[0].id,
             }
           );
@@ -76,7 +84,7 @@ const AdminCamera = () => {
           await supabase.rpc(
             "increment_admins&user_missions_number_of_ordes_so_far",
             {
-              id: adminID,
+              id: admin?.id,
               mission_id: userMissionInfo[0].id,
             }
           );
@@ -104,13 +112,13 @@ const AdminCamera = () => {
           await supabase.from("user_missions").insert({
             number_of_orders: 1,
             user_id: userID,
-            admin_id: adminID,
+            admin_id: admin?.id,
           });
 
           await supabase.rpc(
             "increment_admins&user_missions_number_of_ordes_so_far",
             {
-              id: adminID,
+              id: admin?.id,
               mission_id: userMissionInfo[0].id,
             }
           );
@@ -133,7 +141,7 @@ const AdminCamera = () => {
           await supabase.rpc(
             "increment_admins&user_missions_number_of_ordes_so_far",
             {
-              id: adminID,
+              id: admin?.id,
               mission_id: userMissionInfo[0].id,
             }
           );
@@ -160,7 +168,7 @@ const AdminCamera = () => {
             await supabase.rpc(
               "increment_admins&user_missions_number_of_free_rights",
               {
-                id: adminID,
+                id: admin?.id,
                 mission_id: userMissionInfo[0].id,
               }
             );
@@ -168,7 +176,7 @@ const AdminCamera = () => {
             await supabase.rpc(
               "increment_admins&user_missions_number_of_ordes_so_far",
               {
-                id: adminID,
+                id: admin?.id,
                 mission_id: userMissionInfo[0].id,
               }
             );
@@ -179,7 +187,7 @@ const AdminCamera = () => {
                 number_of_orders: 0,
               })
               .eq("user_id", userID)
-              .eq("admin_id", adminID);
+              .eq("admin_id", admin?.id);
 
             if (zeroError) {
               toast({
@@ -211,7 +219,7 @@ const AdminCamera = () => {
         }
       }
     },
-    [scannedResult, adminID, supabase, secretSupabase]
+    [scannedResult, supabase, secretSupabase, router]
   );
 
   useEffect(() => {

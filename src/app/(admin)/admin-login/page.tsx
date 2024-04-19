@@ -16,9 +16,8 @@ import {
 } from "@/src/components/ui/form";
 import { toast } from "@/src/components/ui/use-toast";
 import { Button } from "@/src/components/ui/button";
-import useAdminForAdminStore from "@/src/store/adminStoreForAdmin";
 import { Toaster } from "@/src/components/ui/toaster";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClient } from "@/src/lib/supabase/client";
 
 const FormSchema = z.object({
   email: z.string().email({
@@ -30,8 +29,6 @@ const FormSchema = z.object({
 });
 
 export default function UserInfo() {
-  const updateAdmin = useAdminForAdminStore((state) => state.updateAdmin);
-  const admin = useAdminForAdminStore((state) => state.admin);
   const router = useRouter();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -40,7 +37,7 @@ export default function UserInfo() {
       password: "",
     },
   });
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   const { email, password } = form.watch();
 
@@ -49,25 +46,18 @@ export default function UserInfo() {
       email,
       password,
     });
-    if (data) {
-      if (data.user) {
-        updateAdmin({
-          ...admin,
-          adminId: data.user.id,
-        });
-        // Check if it's the first login
-        if (data.user.last_sign_in_at === null) {
-          router.push("Admin New Password");
-        } else {
-          router.push("admin-home");
-        }
+    if (data && data.user) {
+      // Check if it's the first login
+      if (data.user.last_sign_in_at === null) {
+        router.push("Admin New Password");
+      } else {
+        router.push("/admin-home");
       }
     }
     if (error) {
-      toast({ title: "Böyle bir kullanıcı bulunamadı." });
+      toast({ title: "Böyle bir marka bulunamadı." });
       return;
     }
-    router.refresh();
   };
 
   return (
