@@ -5,18 +5,14 @@ import QrScanner from "qr-scanner";
 
 import { toast } from "@/src/components/ui/use-toast";
 import { Toaster } from "@/src/components/ui/toaster";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { createClient } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
+import { createClient, createServiceClient } from "@/src/lib/supabase/client";
 
 const AdminCamera = () => {
   const [qrOn, setQrOn] = useState<boolean>(true);
   const [scannedResult, setScannedResult] = useState<string>("");
-  const supabase = createClientComponentClient();
-  const secretSupabase = createClient(
-    "https://gittjeqpqcmmbterylkd.supabase.co",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpdHRqZXFwcWNtbWJ0ZXJ5bGtkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDkyMDQzNjQsImV4cCI6MjAyNDc4MDM2NH0.uDpqKiizzzJd8WFrOqPKmwrI9gpCiM08ZHdL2zjE1h8"
-  );
+  const supabase = createClient();
+  const secretSupabase = createServiceClient();
 
   const scanner = useRef<QrScanner>();
   const videoEl = useRef<HTMLVideoElement>(null);
