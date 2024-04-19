@@ -8,18 +8,22 @@ import QrCodeModal from "@/src/components/QrCodeModal";
 import { useAddress, useContract, useOwnedNFTs } from "@thirdweb-dev/react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import useSession from "@/src/store/session";
+import { useParams } from "next/navigation";
+import { createClient } from "@/src/lib/supabase/client";
+import { useSearchParams } from "next/navigation";
 
 export default function Profile() {
   const [selectedTab, setSelectedTab] = useState("Waiting");
   const [qrCodeModalVisible, setQrCodeModalVisible] = useState<boolean>(false);
   const [numberOfFreeRights, setNumberOfFreeRights] = useState<number[]>([]);
-  const username = useUserStore((state) => state.user.username);
   const userID = useUserStore((state) => state.user.id);
-  const adminId = useAdminStore((state) => state.admin.id);
   const contractAddress = useAdminStore((state) => state.admin.contractAddress);
   const NFTSrc = useAdminStore((state) => state.admin.NFTSrc);
   const session = useSession((state) => state.session);
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
+  const params = useParams<{ username: string }>();
+  const searchParams = useSearchParams();
+  const adminId = searchParams.get("admin");
 
   const address = useAddress();
   const { contract: usedNFTContract } = useContract(contractAddress);
@@ -37,7 +41,7 @@ export default function Profile() {
       .from("user_missions")
       .select("number_of_free_rights")
       .eq("user_id", session?.user.id)
-      .eq("admin_id", localStorage.getItem("adminID"));
+      .eq("admin_id", adminId);
     if (data && data[0].number_of_free_rights !== null) {
       setNumberOfFreeRights(new Array(data[0].number_of_free_rights).fill(0));
     } else {
@@ -76,7 +80,7 @@ export default function Profile() {
 
   return (
     <div className="flex flex-col items-center pt-20 text-white">
-      <h1 className="text-xl mb-16 text-white">{username}</h1>
+      <h1 className="text-xl mb-16 text-white">{params.username}</h1>
       <div className="flex justify-around w-full">
         <button
           onClick={() => setSelectedTab("Waiting")}

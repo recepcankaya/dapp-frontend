@@ -42,7 +42,10 @@ export default async function CustomerHome({
       <CustomerHomeHeader
         brandLogo={adminInfo && adminInfo[0].brand_logo_ipfs_url}
       />
-      <CustomerHomeLinks username={username && username.username} />
+      <CustomerHomeLinks
+        username={username && username.username}
+        adminId={searchParams.admin}
+      />
       <div className="pt-12 h-1/2 w-full">
         <p className="text-white mb-4 ml-8">Süreciniz</p>
         <div

@@ -2,8 +2,10 @@ import Link from "next/link";
 
 export default async function CustomerHomeLinks({
   username,
+  adminId,
 }: {
   username: string;
+  adminId: string;
 }) {
   return (
     <div className="flex justify-around">
@@ -18,7 +20,7 @@ export default async function CustomerHomeLinks({
         Qr Kodu Okut
       </Link>
       <Link
-        href={`/${username}/profile`}
+        href={`/${username}/profile?admin=${adminId}`}
         className="text-right text-lg mr-8 underline decoration-2 underline-offset-2">
         Profil
       </Link>
