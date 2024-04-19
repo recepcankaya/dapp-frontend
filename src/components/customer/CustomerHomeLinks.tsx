@@ -1,11 +1,10 @@
-"use client";
-
-import useUserStore from "@/src/store/userStore";
 import Link from "next/link";
 
-export default function CustomerHomeLinks() {
-  const username = useUserStore((state) => state.user.username);
-
+export default async function CustomerHomeLinks({
+  username,
+}: {
+  username: string;
+}) {
   return (
     <div className="flex justify-around">
       <Link

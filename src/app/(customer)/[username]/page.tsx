@@ -1,72 +1,60 @@
-"use client";
-
-// @todo - turn into server component
-
-import { useEffect, useState } from "react";
-
-import useUserStore from "@/src/store/userStore";
-import useAdminStore from "@/src/store/adminStore";
+import CampaignCarousel from "@/src/components/customer/CampaignCarousel";
 import CustomerHomeHeader from "@/src/components/customer/CustomerHomeHeader";
 import CustomerHomeLinks from "@/src/components/customer/CustomerHomeLinks";
-import { createClient } from "@/src/lib/supabase/client";
-import useSession from "@/src/store/session";
-import Image from "next/image";
 import { Button } from "@/src/components/ui/button";
+import { createClient } from "@/src/lib/supabase/server";
 
-const CustomerHome = () => {
-  const [userOrderNumber, setUserOrderNumber] = useState<number>(0);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const session = useSession((state) => state.session);
-  const userID = useUserStore((state) => state.user.id);
-  const admin = useAdminStore((state) => state.admin);
-  const ticketCircles = new Array(admin.numberForReward).fill(0);
+export default async function CustomerHome({
+  searchParams,
+}: {
+  searchParams: { admin: string };
+}) {
   const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  const fetchUserOrderNumber = async () => {
-    try {
-      setIsLoading(true);
-      const { data, error } = await supabase
-        .from("user_missions")
-        .select("number_of_orders")
-        .eq("user_id", session?.user?.id)
-        .eq("admin_id", localStorage.getItem("adminID"));
+  const { data: numberOfOrders, error } = await supabase
+    .from("user_missions")
+    .select("number_of_orders")
+    .eq("user_id", user?.id)
+    .eq("admin_id", searchParams.admin);
 
-      if (error) {
-        console.log(error);
-      } else {
-        setUserOrderNumber(data[0]?.number_of_orders ?? 0);
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { data: adminInfo, error: adminError } = await supabase
+    .from("admins")
+    .select(
+      "number_for_reward, number_for_reward, ticket_ipfs_url, brand_logo_ipfs_url, campaigns"
+    )
+    .eq("id", searchParams.admin);
 
-  useEffect(() => {
-    if (userID && admin.id) {
-      fetchUserOrderNumber();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userID, admin.id]);
+  const { data: username, error: usernameError } = await supabase
+    .from("users")
+    .select("username")
+    .eq("id", user?.id)
+    .single();
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  const ticketCircles = adminInfo
+    ? new Array(adminInfo[0].number_for_reward).fill(0)
+    : [];
 
   return (
     <section className="h-screen w-screen">
-      <CustomerHomeHeader />
-      <CustomerHomeLinks />
+      <CustomerHomeHeader
+        brandLogo={adminInfo && adminInfo[0].brand_logo_ipfs_url}
+      />
+      <CustomerHomeLinks username={username && username.username} />
       <div className="pt-12 h-1/2 w-full">
         <p className="text-white mb-4 ml-8">Süreciniz</p>
         <div
           className="w-full h-full grid grid-cols-4 gap-2 justify-items-start items-start bg-no-repeat bg-contain pt-4 pl-36"
           style={{
-            backgroundImage: `url(${admin.ticketImage.replace(
-              "ipfs://",
-              "https://ipfs.io/ipfs/"
-            )})`,
+            backgroundImage: `url(${
+              adminInfo &&
+              adminInfo[0]?.ticket_ipfs_url?.replace(
+                "ipfs://",
+                "https://ipfs.io/ipfs/"
+              )
+            })`,
             gridTemplateColumns: "repeat(4, 1fr)",
             gridTemplateRows: "repeat(auto-fill, minmax(50px, 1fr))",
           }}>
@@ -78,11 +66,14 @@ const CustomerHome = () => {
               }`}
               style={{
                 background:
-                  index < userOrderNumber
-                    ? `url(${admin.brandLogo.replace(
-                        "ipfs://",
-                        "https://ipfs.io/ipfs/"
-                      )}) no-repeat center center`
+                  numberOfOrders && index < numberOfOrders[0]?.number_of_orders
+                    ? `url(${
+                        adminInfo &&
+                        adminInfo[0].brand_logo_ipfs_url.replace(
+                          "ipfs://",
+                          "https://ipfs.io/ipfs/"
+                        )
+                      }) no-repeat center center`
                     : "#7B3501",
                 backgroundSize: "cover",
                 transform: "rotate(-45deg)",
@@ -91,12 +82,11 @@ const CustomerHome = () => {
         </div>
       </div>
       <Button
-        className="px-16 py-6 mx-auto flex text-lg font-bold font-rosarivo rounded-xl border-2 border-lad-pink text-lad-white"
+        className="px-16 py-6 mb-8 mx-auto flex text-lg font-bold font-rosarivo rounded-xl border-2 border-lad-pink text-lad-white"
         type="submit">
         Menü
       </Button>
+      <CampaignCarousel campaigns={adminInfo && adminInfo[0].campaigns} />
     </section>
   );
-};
-
-export default CustomerHome;
+}
