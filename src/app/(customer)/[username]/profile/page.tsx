@@ -6,8 +6,6 @@ import useUserStore from "@/src/store/userStore";
 import useAdminStore from "@/src/store/adminStore";
 import QrCodeModal from "@/src/components/QrCodeModal";
 import { useAddress, useContract, useOwnedNFTs } from "@thirdweb-dev/react";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import useSession from "@/src/store/session";
 import { useParams } from "next/navigation";
 import { createClient } from "@/src/lib/supabase/client";
 import { useSearchParams } from "next/navigation";
@@ -19,7 +17,6 @@ export default function Profile() {
   const userID = useUserStore((state) => state.user.id);
   const contractAddress = useAdminStore((state) => state.admin.contractAddress);
   const NFTSrc = useAdminStore((state) => state.admin.NFTSrc);
-  const session = useSession((state) => state.session);
   const supabase = createClient();
   const params = useParams<{ username: string }>();
   const searchParams = useSearchParams();
@@ -37,10 +34,13 @@ export default function Profile() {
     : [];
 
   const renderImages = async () => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     const { data, error } = await supabase
       .from("user_missions")
       .select("number_of_free_rights")
-      .eq("user_id", session?.user.id)
+      .eq("user_id", user?.id)
       .eq("admin_id", adminId);
     if (data && data[0].number_of_free_rights !== null) {
       setNumberOfFreeRights(new Array(data[0].number_of_free_rights).fill(0));
@@ -63,7 +63,7 @@ export default function Profile() {
           event: "*",
           schema: "public",
           table: "user_missions",
-          filter: `user_id=eq.${session?.user.id}`,
+          filter: `user_id=eq.${userID}`,
         },
         (payload: any) => {
           setNumberOfFreeRights(
@@ -76,7 +76,7 @@ export default function Profile() {
     return () => {
       supabase.removeChannel(numberOfFreeRights);
     };
-  }, [numberOfFreeRights, userID, supabase, session?.user.id]);
+  }, [numberOfFreeRights, userID, supabase]);
 
   return (
     <div className="flex flex-col items-center pt-20 text-white">

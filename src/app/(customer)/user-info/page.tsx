@@ -18,8 +18,6 @@ import {
 import { toast } from "@/src/components/ui/use-toast";
 import { Button } from "@/src/components/ui/button";
 import { createClient } from "@/src/lib/supabase/client";
-import { useEffect } from "react";
-import useSession from "@/src/store/session";
 
 const FormSchema = z.object({
   username: z.string().min(2, {
@@ -28,8 +26,6 @@ const FormSchema = z.object({
 });
 
 export default function UserInfo() {
-  const session = useSession((state) => state.session);
-  const updateSession = useSession((state) => state.updateSession);
   const updateUser = useUserStore((state) => state.setUser);
   const walletAddr = useAddress();
   const router = useRouter();
@@ -66,25 +62,6 @@ export default function UserInfo() {
       console.error(error);
     }
   };
-
-  useEffect(() => {
-    localStorage.setItem("session", JSON.stringify(session));
-  }, [session]);
-
-  useEffect(() => {
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      (event, _session) => {
-        if (event === "SIGNED_OUT") {
-          updateSession(null);
-        } else if (_session) {
-          updateSession(_session);
-        }
-      }
-    );
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
-  }, [session, supabase.auth, updateSession]);
 
   return (
     <div className="grid items-center h-[100]">

@@ -1,6 +1,7 @@
+"use client";
 import Link from "next/link";
 
-export default async function CustomerHomeLinks({
+export default function CustomerHomeLinks({
   username,
   adminId,
 }: {

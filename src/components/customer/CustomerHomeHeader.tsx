@@ -1,7 +1,8 @@
+"use client";
 import Image from "next/image";
 import logo from "@/src/public/LadderLogo.png";
 
-export default async function CustomerHomeHeader({
+export default function CustomerHomeHeader({
   brandLogo,
 }: {
   brandLogo: string;

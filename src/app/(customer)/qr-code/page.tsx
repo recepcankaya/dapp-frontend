@@ -1,16 +1,15 @@
 "use client";
 
-import useSession from "@/src/store/session";
 import useUserStore from "@/src/store/userStore";
 import { useAddress } from "@thirdweb-dev/react";
 import QRCode from "react-qr-code";
 
 export default function QrCode() {
-  const session = useSession((state) => state.session);
   const customerAddress = useAddress();
+  const userId = useUserStore((state) => state.user?.id);
 
   const qrCodeValue = {
-    userID: session?.user.id,
+    userID: userId,
     forNFT: false,
     address: customerAddress,
   };

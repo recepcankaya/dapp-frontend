@@ -8,11 +8,9 @@ import useUserStore from "@/src/store/userStore";
 import Link from "next/link";
 import { createClient } from "../lib/supabase/client";
 import { useEffect } from "react";
-import useSession from "../store/session";
 
 export default function Home() {
-  const session = useSession((state) => state.session);
-  const updateSession = useSession((state) => state.updateSession);
+
   const updateUser = useUserStore((state) => state.setUser);
   const supabase = createClient();
   const walletAddr = useAddress();
@@ -70,24 +68,7 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {
-    localStorage.setItem("session", JSON.stringify(session));
-  }, [session]);
 
-  useEffect(() => {
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      (event, _session) => {
-        if (event === "SIGNED_OUT") {
-          updateSession(null);
-        } else if (_session) {
-          updateSession(_session);
-        }
-      }
-    );
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
-  }, [session, supabase.auth, updateSession]);
 
   return (
     <section className="min-h-screen w-screen flex flex-col justify-evenly items-center">
