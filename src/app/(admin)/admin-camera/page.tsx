@@ -14,8 +14,8 @@ const AdminCamera = () => {
   const [scannedResult, setScannedResult] = useState<string>("");
   const supabase = createClientComponentClient();
   const secretSupabase = createClient(
-    String(process.env.NEXT_PUBLIC_SUPABASE_URL),
-    String(process.env.NEXT_PUBLIC_SUPABASE_SERVICE_KEY)
+    "https://gittjeqpqcmmbterylkd.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpdHRqZXFwcWNtbWJ0ZXJ5bGtkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDkyMDQzNjQsImV4cCI6MjAyNDc4MDM2NH0.uDpqKiizzzJd8WFrOqPKmwrI9gpCiM08ZHdL2zjE1h8"
   );
 
   const scanner = useRef<QrScanner>();
