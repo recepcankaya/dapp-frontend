@@ -11,7 +11,7 @@ export default function GetNFTTotalSupply({
   return (
     <div className="flex items-center justify-around">
       <div className="w-24 h-24 rounded-full border-2 border-lad-pink flex items-center justify-center">
-        <p className="text-lg">{isLoading ? <p>...</p> : Number(usedNFts)}</p>
+        <p className="text-lg">{isLoading ? "..." : Number(usedNFts)}</p>
       </div>
       <div className="w-3/5 h-16 bg-pink-500 rounded-lg pl-5 flex items-center">
         <p className="text-lg font-bold text-black">Verilen Ödüllerin Sayısı</p>

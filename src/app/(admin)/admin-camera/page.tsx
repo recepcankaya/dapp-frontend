@@ -1,29 +1,26 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import QrScanner from "qr-scanner";
+import { useRef } from "react";
 
 import { toast } from "@/src/components/ui/use-toast";
 import { Toaster } from "@/src/components/ui/toaster";
 import { useRouter } from "next/navigation";
 import { createClient, createServiceClient } from "@/src/lib/supabase/client";
+import { QrScanner } from "@yudiel/react-qr-scanner";
 
 const AdminCamera = () => {
-  const [qrOn, setQrOn] = useState<boolean>(true);
-  const [scannedResult, setScannedResult] = useState<string>("");
+  const isScanned = useRef<boolean>(false);
   const supabase = createClient();
   const secretSupabase = createServiceClient();
 
-  const scanner = useRef<QrScanner>();
-  const videoEl = useRef<HTMLVideoElement>(null);
-  const qrBoxEl = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  const handleScan = useCallback(
-    async (result: QrScanner.ScanResult) => {
-      if (!result?.data) return;
-      setScannedResult(result?.data);
-      const { userID, forNFT, address } = JSON.parse(scannedResult);
+  const handleScan = async (result: any) => {
+    if (!result || isScanned.current) return;
+    isScanned.current = true;
+    try {
+      const { userID, forNFT, address } = JSON.parse(result);
+      console.log("Okutuldu");
       const {
         data: { user: admin },
       } = await supabase.auth.getUser();
@@ -68,19 +65,21 @@ const AdminCamera = () => {
         );
         const { success } = await result.json();
         if (success === true) {
-          // Decrement not_used_nfts from admins table and number_of_free_rights from user_missions table
-          await supabase.rpc(
-            "decrement_admins&user_missions_number_of_free_rigths",
-            {
-              id: admin?.id,
-              mission_id: userMissionInfo[0].id,
-            }
-          );
+          await supabase.rpc("decrement_admins_not_used_nfts", {
+            admin_id: admin?.id,
+          });
+
+          await supabase.rpc("decrement_user_missions_number_of_free_rigths", {
+            mission_id: userMissionInfo[0].id,
+          });
+
+          await supabase.rpc("increment_admins_number_of_orders_so_far", {
+            admin_id: admin?.id,
+          });
 
           await supabase.rpc(
-            "increment_admins&user_missions_number_of_ordes_so_far",
+            "increment_user_missions_number_of_orders_so_far",
             {
-              id: admin?.id,
               mission_id: userMissionInfo[0].id,
             }
           );
@@ -104,18 +103,32 @@ const AdminCamera = () => {
       // If the order is not for free, check the number of orders
       else {
         if (userMissionInfo?.length === 0) {
+          console.log("İlk giriş");
           // If the user does not have a record in the user_missions table, add a new record
-          await supabase.from("user_missions").insert({
-            number_of_orders: 1,
-            user_id: userID,
-            admin_id: admin?.id,
-          });
+          const { data: missionId } = await supabase
+            .from("user_missions")
+            .insert({
+              number_of_orders: 1,
+              user_id: userID,
+              admin_id: admin?.id,
+            })
+            .select("id");
+
+          if (missionId === null) {
+            return;
+          }
 
           await supabase.rpc(
-            "increment_admins&user_missions_number_of_ordes_so_far",
+            "increment_user_missions_number_of_orders_so_far",
             {
-              id: admin?.id,
-              mission_id: userMissionInfo[0].id,
+              mission_id: missionId[0].id,
+            }
+          );
+
+          const { error: adminsError } = await supabase.rpc(
+            "increment_admins_number_of_orders_so_far",
+            {
+              admin_id: admin?.id,
             }
           );
 
@@ -134,10 +147,13 @@ const AdminCamera = () => {
             mission_id: userMissionInfo[0].id,
           });
 
+          await supabase.rpc("increment_admins_number_of_orders_so_far", {
+            admin_id: admin?.id,
+          });
+
           await supabase.rpc(
-            "increment_admins&user_missions_number_of_ordes_so_far",
+            "increment_user_missions_number_of_orders_so_far",
             {
-              id: admin?.id,
               mission_id: userMissionInfo[0].id,
             }
           );
@@ -160,19 +176,24 @@ const AdminCamera = () => {
         ) {
           // If the user has a record in the user_missions table and the number of orders is equal to the number_for_reward, make request
           try {
-            // Increment not_used_nfts from admins table and number_of_free_rights from user_missions table
+            await supabase.rpc("increment_admins_not_used_nfts", {
+              admin_id: admin?.id,
+            });
+
             await supabase.rpc(
-              "increment_admins&user_missions_number_of_free_rights",
+              "increment_user_missions_number_of_free_rigths",
               {
-                id: admin?.id,
                 mission_id: userMissionInfo[0].id,
               }
             );
 
+            await supabase.rpc("increment_admins_number_of_orders_so_far", {
+              admin_id: admin?.id,
+            });
+
             await supabase.rpc(
-              "increment_admins&user_missions_number_of_ordes_so_far",
+              "increment_user_missions_number_of_orders_so_far",
               {
-                id: admin?.id,
                 mission_id: userMissionInfo[0].id,
               }
             );
@@ -207,67 +228,32 @@ const AdminCamera = () => {
             console.log("error", error);
             toast({
               variant: "destructive",
-
               title: "Müşteriye ödülü verilemedi.",
               description: "Lütfen tekrar deneyiniz.",
             });
           }
         }
       }
-    },
-    [scannedResult, supabase, secretSupabase, router]
-  );
-
-  useEffect(() => {
-    let videoRef = videoEl.current;
-    if (videoRef && !scanner.current) {
-      // 👉 Instantiate the QR Scanner
-      scanner.current = new QrScanner(videoRef, handleScan, {
-        // onDecodeError: onScanFail,
-        // 📷 This is the camera facing mode. In mobile devices, "environment" means back camera and "user" means front camera.
-        preferredCamera: "environment",
-        // 🖼 This will help us position our "QrFrame.svg" so that user can only scan when qr code is put in between our QrFrame.svg.
-        highlightScanRegion: true,
-        // 🔥 This will produce a yellow (default color) outline around the qr code that we scan, showing a proof that our qr-scanner is scanning that qr code.
-        highlightCodeOutline: true,
-        // 📦 A custom div which will pair with "highlightScanRegion" option above 👆. This gives us full control over our scan region.
-        overlay: qrBoxEl?.current || undefined,
-      });
-
-      // 🚀 Start QR Scanner
-      scanner?.current
-        ?.start()
-        .then(() => setQrOn(true))
-        .catch((err) => {
-          if (err) setQrOn(false);
-        });
+    } catch (error) {
+      console.log("error", error);
+    } finally {
+      setTimeout(() => {
+        isScanned.current = false;
+      }, 5000);
     }
-
-    // 🧹 Clean up on unmount.
-    // 🚨 This removes the QR Scanner from rendering and using camera when it is closed or removed from the UI.
-    return () => {
-      if (!videoRef) {
-        scanner?.current?.stop();
-      }
-    };
-  }, [handleScan]);
-
-  // ❌ If "camera" is not allowed in browser permissions, show an alert.
-  useEffect(() => {
-    if (!qrOn)
-      alert(
-        "Kamera engellendi veya erişilemiyor. Lütfen tarayıcı izinlerinizde kameraya izin verin ve sayfayı yenileyin."
-      );
-  }, [qrOn]);
+  };
 
   return (
-    <div className="w-screen h-screen">
+    <>
       <Toaster />
-      <div className="bg-[#4b4a4a5d] p-12">
-        <video ref={videoEl} className="border-2 border-lad-purple"></video>
-      </div>
-      <div ref={qrBoxEl}></div>
-    </div>
+      <QrScanner
+        constraints={{ facingMode: "environment" }}
+        onDecode={handleScan}
+        onError={(error) => console.log(error?.message)}
+        stopDecoding={isScanned.current}
+        scanDelay={5000}
+      />
+    </>
   );
 };
 
