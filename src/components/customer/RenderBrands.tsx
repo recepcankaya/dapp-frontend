@@ -20,6 +20,7 @@ type RenderBrandsProps = {
     nft_src: string | null;
     contract_address: string | null;
     coords: Json | null;
+    free_right_image_url: string | null;
   }[];
 };
 
@@ -38,6 +39,7 @@ export default function RenderBrands(brands: RenderBrandsProps) {
       nft_src: string | null;
       contract_address: string | null;
       coords: Json;
+      free_right_image_url: string | null;
     }[]
   >([]);
   const [searchedAdmin, setSearchedAdmin] = useState<string>("");
@@ -58,9 +60,9 @@ export default function RenderBrands(brands: RenderBrandsProps) {
         lat: item.coords?.lat,
         long: item.coords?.long,
       },
+      freeRightImageUrl: item.free_right_image_url,
     };
     updateAdmin(admin);
-    localStorage.setItem("adminID", item.id);
     router.push(`/${username}?admin=${item.id}`);
   };
 

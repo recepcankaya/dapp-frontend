@@ -12,6 +12,7 @@ export type Admin = {
     lat: number;
     long: number;
   };
+  freeRightImageUrl: string;
 };
 
 type State = {
@@ -35,6 +36,7 @@ const useAdminStore = create<State & Action>((set) => ({
       lat: 0,
       long: 0,
     },
+    freeRightImageUrl: "",
   },
   updateAdmin: (admin) => set(() => ({ admin })),
 }));

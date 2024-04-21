@@ -17,6 +17,9 @@ export default function Profile() {
   const userID = useUserStore((state) => state.user.id);
   const contractAddress = useAdminStore((state) => state.admin.contractAddress);
   const NFTSrc = useAdminStore((state) => state.admin.NFTSrc);
+  const freeRightImageUrl = useAdminStore(
+    (state) => state.admin.freeRightImageUrl
+  );
   const supabase = createClient();
   const params = useParams<{ username: string }>();
   const searchParams = useSearchParams();
@@ -106,11 +109,10 @@ export default function Profile() {
                 onClick={() => setQrCodeModalVisible(true)}
                 className="mb-4">
                 <Image
-                  // src={notUsedNFTSrc.replace(
-                  //   "ipfs://",
-                  //   "https://ipfs.io/ipfs/"
-                  // )}
-                  src="https://ipfs.io/ipfs/QmRKw3Ah7qfzpSc1BHxR1hsq9P9J5aqGPG9iZaUm5KB1Bp"
+                  src={freeRightImageUrl.replace(
+                    "ipfs://",
+                    "https://ipfs.io/ipfs/"
+                  )}
                   alt="nft"
                   width={375}
                   height={375}

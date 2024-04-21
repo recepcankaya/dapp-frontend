@@ -4,20 +4,17 @@ import { useRef } from "react";
 
 import { useRouter } from "next/navigation";
 import { createClient, createServiceClient } from "@/src/lib/supabase/client";
-import { QrScanner } from "@yudiel/react-qr-scanner";
+// import { QrScanner } from "@yudiel/react-qr-scanner";
 import { Bounce, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/src/components/ui/alert-dialog";
+import dynamic from "next/dynamic";
+
+const QrScanner = dynamic(
+  () => import("@yudiel/react-qr-scanner").then((mod) => mod.QrScanner),
+  {
+    ssr: false,
+  }
+);
 
 const AdminCamera = () => {
   const isScanned = useRef<boolean>(false);
@@ -265,7 +262,6 @@ const AdminCamera = () => {
         transition={Bounce}
       />
       <QrScanner
-        constraints={{ facingMode: "environment" }}
         onDecode={handleScan}
         onError={(error) => console.log(error?.message)}
         stopDecoding={isScanned.current}

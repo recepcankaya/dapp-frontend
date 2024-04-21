@@ -11,7 +11,7 @@ export default function CustomerHomeHeader({
     <div className="p-2 flex justify-around items-center gap-36 mb-8">
       <div className="relative w-16 h-16">
         <Image
-          src={brandLogo.replace("ipfs://", "https://ipfs.io/ipfs/")}
+          src={brandLogo?.replace("ipfs://", "https://ipfs.io/ipfs/")}
           alt="brand logo"
           className="rounded-md cursor-pointer"
           priority
