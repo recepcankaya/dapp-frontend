@@ -152,7 +152,7 @@ export default function Profile() {
       )}
       <QrCodeModal
         isVisible={qrCodeModalVisible}
-        value={JSON.stringify({ userId: userID, forNFT: true, address })}
+        value={JSON.stringify({ userID: userID, forNFT: true, address })}
         onClose={() => setQrCodeModalVisible(false)}
       />
     </div>

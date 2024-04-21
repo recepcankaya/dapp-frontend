@@ -1,20 +1,18 @@
 "use client";
 
 import { useRef } from "react";
-
 import { useRouter } from "next/navigation";
-import { createClient, createServiceClient } from "@/src/lib/supabase/client";
-// import { QrScanner } from "@yudiel/react-qr-scanner";
 import { Bounce, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import dynamic from "next/dynamic";
-
 const QrScanner = dynamic(
   () => import("@yudiel/react-qr-scanner").then((mod) => mod.QrScanner),
   {
     ssr: false,
   }
 );
+
+import { createClient, createServiceClient } from "@/src/lib/supabase/client";
 
 const AdminCamera = () => {
   const isScanned = useRef<boolean>(false);

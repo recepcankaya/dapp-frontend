@@ -6,10 +6,10 @@ import QRCode from "react-qr-code";
 
 export default function QrCode() {
   const customerAddress = useAddress();
-  const userId = useUserStore((state) => state.user?.id);
+  const userID = useUserStore((state) => state.user?.id);
 
   const qrCodeValue = {
-    userID: userId,
+    userID: userID,
     forNFT: false,
     address: customerAddress,
   };
