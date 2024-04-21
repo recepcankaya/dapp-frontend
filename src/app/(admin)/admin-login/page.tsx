@@ -104,11 +104,11 @@ export default function UserInfo() {
             )}
           />
           <div className="flex justify-center">
-            <Button
+            <button
               className="px-8 py-1 mt-2 text-lg font-bold font-rosarivo rounded-3xl bg-lad-pink text-lad-black"
               type="submit">
               Kaydet
-            </Button>
+            </button>
           </div>
         </form>
       </Form>

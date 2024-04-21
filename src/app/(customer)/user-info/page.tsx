@@ -92,11 +92,11 @@ export default function UserInfo() {
               />
               <div className="flex">
                 <div></div>
-                <Button
+                <button
                   className="mt-[10vh] mx-4 grow text-lg font-bold font-rosarivo rounded-3xl bg-lad-pink text-lad-black"
                   type="submit">
                   Kaydet
-                </Button>
+                </button>
                 <div></div>
               </div>
             </form>
