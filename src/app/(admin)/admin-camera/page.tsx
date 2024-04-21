@@ -2,11 +2,22 @@
 
 import { useRef } from "react";
 
-import { toast } from "@/src/components/ui/use-toast";
-import { Toaster } from "@/src/components/ui/toaster";
 import { useRouter } from "next/navigation";
 import { createClient, createServiceClient } from "@/src/lib/supabase/client";
 import { QrScanner } from "@yudiel/react-qr-scanner";
+import { Bounce, ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/src/components/ui/alert-dialog";
 
 const AdminCamera = () => {
   const isScanned = useRef<boolean>(false);
@@ -84,20 +95,18 @@ const AdminCamera = () => {
             }
           );
 
-          toast({
-            title: `${username} adlı müşteriniz ödülünüzü kullandı.`,
-            description: `Bugüne kadar verilen sipariş sayısı: ${
-              userMissionInfo[0].customer_number_of_orders_so_far + 1
-            } ${"\n"} Kalan ödül hakkı: ${
-              userMissionInfo[0].number_of_free_rights - 1
-            }`,
-          });
+          toast.success(
+            <p>
+              <span className="font-bold">{username?.username}</span> adlı
+              müşteriniz ödülünüzü kullandı. <br />
+              Bugüne kadar verilen sipariş sayısı:{" "}
+              {userMissionInfo[0].customer_number_of_orders_so_far + 1} <br />
+              Kalan ödül hakkı:{""}
+              {userMissionInfo[0].number_of_free_rights - 1}
+            </p>
+          );
         } else {
-          toast({
-            variant: "destructive",
-            title: "Müşteri ödülünü kullanamadı.",
-            description: "Lütfen tekrar deneyiniz.",
-          });
+          toast.error("Müşteri ödülünü kullanamadı.Lütfen tekrar deneyiniz.");
         }
       }
       // If the order is not for free, check the number of orders
@@ -125,17 +134,17 @@ const AdminCamera = () => {
             }
           );
 
-          const { error: adminsError } = await supabase.rpc(
-            "increment_admins_number_of_orders_so_far",
-            {
-              admin_id: admin?.id,
-            }
-          );
-
-          toast({
-            title: `${username?.username} adlı müşterinizin işlemi başarıyla gerçekleştirildi.`,
-            description: `İlk sipariş!`,
+          await supabase.rpc("increment_admins_number_of_orders_so_far", {
+            admin_id: admin?.id,
           });
+
+          toast.success(
+            <p>
+              {username?.username} adlı müşterinizin işlemi başarıyla
+              gerçekleştirildi. <br />
+              <span className="font-bold">İlk sipariş!</span>
+            </p>
+          );
         } else if (
           numberForReward &&
           userMissionInfo &&
@@ -158,16 +167,18 @@ const AdminCamera = () => {
             }
           );
 
-          toast({
-            title: `${username?.username} adlı müşterinin işlemi başarıyla gerçekleştirildi.`,
-            description: `Bugüne kadar sipariş edilen kahve sayısı: ${
-              userMissionInfo[0].customer_number_of_orders_so_far + 1
-            } ${"\n"} Müşterinin ödül hakkı: ${
-              userMissionInfo[0].number_of_free_rights === null
+          toast.success(
+            <p>
+              <span className="font-bold">{username?.username}</span> adlı
+              müşterinin işlemi başarıyla gerçekleştirildi. <br />
+              Bugüne kadar sipariş edilen kahve sayısı:{""}
+              {userMissionInfo[0].customer_number_of_orders_so_far + 1} <br />
+              Müşterinin ödül hakkı:{""}
+              {userMissionInfo[0].number_of_free_rights === null
                 ? 0
-                : userMissionInfo[0].number_of_free_rights
-            }`,
-          });
+                : userMissionInfo[0].number_of_free_rights}
+            </p>
+          );
         } else if (
           numberForReward &&
           userMissionInfo &&
@@ -207,30 +218,25 @@ const AdminCamera = () => {
               .eq("admin_id", admin?.id);
 
             if (zeroError) {
-              toast({
-                variant: "destructive",
-                title: "Bir şeyler yanlış gitti.",
-                description: "Lütfen tekrar deneyiniz.",
-              });
+              toast.error("Bir şeyler yanlış gitti. Lütfen tekrar deneyiniz.");
             } else {
-              toast({
-                title: `${username} adlı müşteriniz ödülünüzü kazandı.`,
-                description: `Bugüne kadar sipariş edilen kahve sayısı: ${
-                  userMissionInfo[0].customer_number_of_orders_so_far + 1
-                } ${"\n"} Müşterinin ödül hakkı: ${
-                  userMissionInfo[0].number_of_free_rights === null
+              toast.success(
+                <p>
+                  <span className="font-bold">{username?.username}</span>
+                  adlı müşteriniz ödülünüzü kazandı. <br />
+                  Bugüne kadar sipariş edilen kahve sayısı:{""}
+                  {userMissionInfo[0].customer_number_of_orders_so_far + 1}
+                  <br />
+                  Müşterinin ödül hakkı:{""}
+                  {userMissionInfo[0].number_of_free_rights === null
                     ? 1
-                    : userMissionInfo[0].number_of_free_rights + 1
-                }`,
-              });
+                    : userMissionInfo[0].number_of_free_rights + 1}
+                </p>
+              );
             }
           } catch (error) {
             console.log("error", error);
-            toast({
-              variant: "destructive",
-              title: "Müşteriye ödülü verilemedi.",
-              description: "Lütfen tekrar deneyiniz.",
-            });
+            toast.error("Müşteriye ödülü verilemedi.Lütfen tekrar deneyiniz.");
           }
         }
       }
@@ -245,7 +251,19 @@ const AdminCamera = () => {
 
   return (
     <>
-      <Toaster />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+        transition={Bounce}
+      />
       <QrScanner
         constraints={{ facingMode: "environment" }}
         onDecode={handleScan}

@@ -2,15 +2,12 @@
 import { ConnectEmbed, useAddress } from "@thirdweb-dev/react";
 import { sha512 } from "js-sha512";
 import { useRouter } from "next/navigation";
-import { Button } from "../components/ui/button";
 
 import useUserStore from "@/src/store/userStore";
 import Link from "next/link";
 import { createClient } from "../lib/supabase/client";
-import { useEffect } from "react";
 
 export default function Home() {
-
   const updateUser = useUserStore((state) => state.setUser);
   const supabase = createClient();
   const walletAddr = useAddress();
@@ -68,8 +65,6 @@ export default function Home() {
     }
   };
 
-
-
   return (
     <section className="min-h-screen w-screen flex flex-col justify-evenly items-center">
       {walletAddr ? (
@@ -79,21 +74,21 @@ export default function Home() {
             Devam etmek için lütfen aşağıdaki butona tıklayın
           </p>
           <div className="text-center">
-            <Button
+            <button
               onClick={signIn}
-              className="border-2 border-solid border-[#C8AFD6] self-center text-xl rounded-3xl p-8 w-2/3">
+              className="border-2 border-solid border-[#C8AFD6] self-center text-xl rounded-3xl p-4 w-2/3">
               Devam Et
-            </Button>
+            </button>
           </div>
         </div>
       ) : (
         <ConnectEmbed style={{ width: "75%" }} />
       )}
-      <Button asChild>
+      <button>
         <Link href="/admin-login" className="text-lg">
           İşletmeyseniz Lütfen Giriş Yapmak için {"\n"}Tıklayınız
         </Link>
-      </Button>
+      </button>
     </section>
   );
 }

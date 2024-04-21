@@ -16,7 +16,6 @@ import {
   FormMessage,
 } from "@/src/components/ui/form";
 import { toast } from "@/src/components/ui/use-toast";
-import { Button } from "@/src/components/ui/button";
 import { createClient } from "@/src/lib/supabase/client";
 
 const FormSchema = z.object({
