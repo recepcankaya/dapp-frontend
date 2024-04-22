@@ -97,14 +97,14 @@ export default function RenderBrands(brands: RenderBrandsProps) {
   }, [customerLocation, brands]);
 
   return (
-    <div>
+    <div className="w-screen flex flex-col justify-center items-center">
       <Input
-        className="mb-12"
+        className="mb-12 w-4/5"
         value={searchedAdmin}
         onChange={(e) => setSearchedAdmin(e.target.value)}
         placeholder="Kafeni ara..."
       />
-      <div className="grid grid-cols-2 gap-10">
+      <div className="grid grid-cols-2 gap-16">
         {customerLocation
           ? sortedAdmins
               .filter((item) =>
@@ -115,8 +115,8 @@ export default function RenderBrands(brands: RenderBrandsProps) {
                   : true
               )
               .map((item: any, index: number) => (
-                <div key={index} className="flex flex-col items-center gap-6">
-                  <div className="relative w-36 h-36">
+                <div key={index} className="flex flex-col items-center gap-4">
+                  <div className="relative w-28 h-28">
                     <Image
                       src={item.brand_logo_ipfs_url.replace(
                         "ipfs://",
@@ -143,8 +143,8 @@ export default function RenderBrands(brands: RenderBrandsProps) {
                   : true
               )
               .map((item: any, index: number) => (
-                <div key={index} className="flex flex-col items-center gap-6">
-                  <div className="relative w-36 h-36">
+                <div key={index} className="flex flex-col items-center gap-4">
+                  <div className="relative w-28 h-28">
                     <Image
                       src={item.brand_logo_ipfs_url.replace(
                         "ipfs://",

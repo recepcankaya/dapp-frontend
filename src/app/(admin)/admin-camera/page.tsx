@@ -18,7 +18,6 @@ const AdminCamera = () => {
   const isScanned = useRef<boolean>(false);
   const supabase = createClient();
   const secretSupabase = createServiceClient();
-
   const router = useRouter();
 
   const handleScan = async (result: any) => {
@@ -56,53 +55,31 @@ const AdminCamera = () => {
         .single();
 
       if (forNFT === true && userMissionInfo) {
-        const result = await fetch(
-          "https://mint-nft-js.vercel.app/collectionNFT",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              admin_id: admin?.id,
-              user_wallet: address,
-            }),
-          }
+        await supabase.rpc("decrement_admins_not_used_nfts", {
+          admin_id: admin?.id,
+        });
+
+        await supabase.rpc("decrement_user_missions_number_of_free_rigths", {
+          mission_id: userMissionInfo[0].id,
+        });
+
+        await supabase.rpc("increment_admins_number_of_orders_so_far", {
+          admin_id: admin?.id,
+        });
+
+        await supabase.rpc("increment_user_missions_number_of_orders_so_far", {
+          mission_id: userMissionInfo[0].id,
+        });
+
+        toast.success(
+          <p>
+            <span className="font-bold">{username?.username}</span> adlı
+            müşteriniz ödülünüzü kullandı. <br />
+            Bugüne kadar verilen sipariş sayısı:{" "}
+            {userMissionInfo[0].customer_number_of_orders_so_far + 1} <br />
+            Kalan ödül hakkı: {userMissionInfo[0].number_of_free_rights - 1}
+          </p>
         );
-        const { success } = await result.json();
-        if (success === true) {
-          await supabase.rpc("decrement_admins_not_used_nfts", {
-            admin_id: admin?.id,
-          });
-
-          await supabase.rpc("decrement_user_missions_number_of_free_rigths", {
-            mission_id: userMissionInfo[0].id,
-          });
-
-          await supabase.rpc("increment_admins_number_of_orders_so_far", {
-            admin_id: admin?.id,
-          });
-
-          await supabase.rpc(
-            "increment_user_missions_number_of_orders_so_far",
-            {
-              mission_id: userMissionInfo[0].id,
-            }
-          );
-
-          toast.success(
-            <p>
-              <span className="font-bold">{username?.username}</span> adlı
-              müşteriniz ödülünüzü kullandı. <br />
-              Bugüne kadar verilen sipariş sayısı:{" "}
-              {userMissionInfo[0].customer_number_of_orders_so_far + 1} <br />
-              Kalan ödül hakkı:{""}
-              {userMissionInfo[0].number_of_free_rights - 1}
-            </p>
-          );
-        } else {
-          toast.error("Müşteri ödülünü kullanamadı.Lütfen tekrar deneyiniz.");
-        }
       }
       // If the order is not for free, check the number of orders
       else {
@@ -260,6 +237,7 @@ const AdminCamera = () => {
         transition={Bounce}
       />
       <QrScanner
+        constraints={{ facingMode: "environment" }}
         onDecode={handleScan}
         onError={(error) => console.log(error?.message)}
         stopDecoding={isScanned.current}

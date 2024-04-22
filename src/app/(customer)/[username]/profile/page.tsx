@@ -1,14 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Image from "next/image";
+import { useAddress, useContract, useOwnedNFTs } from "@thirdweb-dev/react";
 
+import { createClient } from "@/src/lib/supabase/client";
 import useUserStore from "@/src/store/userStore";
 import useAdminStore from "@/src/store/adminStore";
 import QrCodeModal from "@/src/components/QrCodeModal";
-import { useAddress, useContract, useOwnedNFTs } from "@thirdweb-dev/react";
-import { useParams } from "next/navigation";
-import { createClient } from "@/src/lib/supabase/client";
-import { useSearchParams } from "next/navigation";
 
 export default function Profile() {
   const [selectedTab, setSelectedTab] = useState("Waiting");
@@ -152,7 +152,7 @@ export default function Profile() {
       )}
       <QrCodeModal
         isVisible={qrCodeModalVisible}
-        value={JSON.stringify({ userID: userID, forNFT: true, address })}
+        value={JSON.stringify({ forNFT: true })}
         onClose={() => setQrCodeModalVisible(false)}
       />
     </div>
