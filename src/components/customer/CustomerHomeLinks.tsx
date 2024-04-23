@@ -11,17 +11,17 @@ export default function CustomerHomeLinks({
   return (
     <div className="flex justify-around">
       <Link
-        href="/brands"
+        href="/user/brands"
         className="text-right text-lg mr-8 underline decoration-2 underline-offset-2">
         Markalar
       </Link>
       <Link
-        href="/qr-code"
+        href="/user/qr-code"
         className="text-right text-lg mr-8 underline decoration-2 underline-offset-2">
         Qr Kodu Okut
       </Link>
       <Link
-        href={`/${username}/profile?admin=${adminId}`}
+        href={`/user/${username}/profile?admin=${adminId}`}
         className="text-right text-lg mr-8 underline decoration-2 underline-offset-2">
         Profil
       </Link>

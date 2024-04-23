@@ -56,9 +56,9 @@ export default function Home() {
       });
 
       if (isNewUser) {
-        router.push("/user-info");
+        router.push("/user/user-info");
       } else {
-        router.push("/brands");
+        router.push("/user/brands");
       }
     } catch (error) {
       console.error(error);

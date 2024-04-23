@@ -54,7 +54,7 @@ export default function UserInfo() {
           id: user[0].id,
           username: user[0].username,
         });
-        router.push("/brands");
+        router.push("/user/brands");
         toast({ title: "Uygulamamıza hoşgeldin 🤗🥳" });
       }
     } catch (error) {

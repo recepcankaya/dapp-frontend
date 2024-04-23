@@ -65,7 +65,7 @@ export default function RenderBrands(brands: RenderBrandsProps) {
       NFTMetadata: item.collection_metadata,
     };
     updateAdmin(admin);
-    router.push(`/${username}?admin=${item.id}`);
+    router.push(`/user/${username}?admin=${item.id}`);
   };
 
   useEffect(() => {
