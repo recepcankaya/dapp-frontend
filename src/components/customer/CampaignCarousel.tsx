@@ -1,21 +1,33 @@
 "use client";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css/navigation";
+import "swiper/css";
+import "swiper/css/pagination";
+
+import { Pagination, Autoplay } from "swiper/modules";
 import Image from "next/image";
-import AwesomeSlider from "react-awesome-slider";
-import "react-awesome-slider/dist/styles.css";
 
 export default function CampaignCarousel({ campaigns }: { campaigns: any[] }) {
   return (
-    <AwesomeSlider>
-      {campaigns.map((campaign) => (
-        <div key={campaign.campaign_id}>
-          <div
-            data-src={`${campaign.campaign_name.replace(
-              "ipfs://",
-              "https://ipfs.io/ipfs/"
-            )}`}
-          />
-        </div>
-      ))}
-    </AwesomeSlider>
+    <section className="w-full pt-12">
+      <Swiper
+        pagination={true}
+        autoplay={true}
+        modules={[Pagination, Autoplay]}>
+        {campaigns.map((campaign) => (
+          <SwiperSlide key={campaign.campaign_id}>
+            <Image
+              src={campaign.campaign_image.replace(
+                "ipfs://",
+                "https://ipfs.io/ipfs/"
+              )}
+              alt="campaign image"
+              width={500}
+              height={500}
+            />
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </section>
   );
 }

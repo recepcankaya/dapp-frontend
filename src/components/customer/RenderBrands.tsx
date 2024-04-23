@@ -21,6 +21,7 @@ type RenderBrandsProps = {
     contract_address: string | null;
     coords: Json | null;
     free_right_image_url: string | null;
+    collection_metadata: { name: string; image: string; description: string };
   }[];
 };
 
@@ -61,6 +62,7 @@ export default function RenderBrands(brands: RenderBrandsProps) {
         long: item.coords?.long,
       },
       freeRightImageUrl: item.free_right_image_url,
+      NFTMetadata: item.collection_metadata,
     };
     updateAdmin(admin);
     router.push(`/${username}?admin=${item.id}`);

@@ -46,11 +46,20 @@ export default function UserInfo() {
       password,
     });
     if (data && data.user) {
+      const { data: admin } = await supabase
+        .from("admins")
+        .select("brand_name, brand_branch")
+        .eq("id", data.user.id);
+
       // Check if it's the first login
-      if (data.user.last_sign_in_at === null) {
-        router.push("Admin New Password");
-      } else {
-        router.push("/admin-home");
+      if (admin && admin[0]) {
+        if (data.user.last_sign_in_at === null) {
+          router.push("/admin-new-password");
+        } else {
+          router.push(
+            `/admin/${admin[0].brand_name}-${admin[0].brand_branch}?isAdmin=true`
+          );
+        }
       }
     }
     if (error) {

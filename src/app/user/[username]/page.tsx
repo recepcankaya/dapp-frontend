@@ -3,6 +3,7 @@ import CustomerHomeHeader from "@/src/components/customer/CustomerHomeHeader";
 import CustomerHomeLinks from "@/src/components/customer/CustomerHomeLinks";
 import CampaignCarousel from "@/src/components/customer/CampaignCarousel";
 import RenderOrderNumber from "@/src/components/customer/RenderOrderNumber";
+import BrandVideo from "@/src/components/customer/BrandVideo";
 import { Button } from "@/src/components/ui/button";
 
 export default async function CustomerHome({
@@ -17,14 +18,14 @@ export default async function CustomerHome({
 
   const { data: userMissionNumbers, error } = await supabase
     .from("user_missions")
-    .select("number_of_orders, number_of_free_rights")
+    .select("number_of_orders")
     .eq("user_id", user?.id)
     .eq("admin_id", searchParams.admin);
 
   const { data: adminInfo, error: adminError } = await supabase
     .from("admins")
     .select(
-      "number_for_reward, number_for_reward, ticket_ipfs_url, brand_logo_ipfs_url, campaigns, contract_address, collection_metadata"
+      "number_for_reward, number_for_reward, ticket_ipfs_url, brand_logo_ipfs_url, campaigns, brand_video_url"
     )
     .eq("id", searchParams.admin);
 
@@ -54,6 +55,7 @@ export default async function CustomerHome({
         Menü
       </Button>
       <CampaignCarousel campaigns={adminInfo && adminInfo[0].campaigns} />
+      <BrandVideo brandVideo={adminInfo && adminInfo[0].brand_video_url} />
     </section>
   );
 }

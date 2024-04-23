@@ -9,11 +9,13 @@ import { createClient } from "@/src/lib/supabase/client";
 import useUserStore from "@/src/store/userStore";
 import useAdminStore from "@/src/store/adminStore";
 import QrCodeModal from "@/src/components/QrCodeModal";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Profile() {
   const [selectedTab, setSelectedTab] = useState("Waiting");
   const [qrCodeModalVisible, setQrCodeModalVisible] = useState<boolean>(false);
   const [numberOfFreeRights, setNumberOfFreeRights] = useState<number[]>([]);
+
   const userID = useUserStore((state) => state.user.id);
   const contractAddress = useAdminStore((state) => state.admin.contractAddress);
   const NFTSrc = useAdminStore((state) => state.admin.NFTSrc);
@@ -56,30 +58,6 @@ export default function Profile() {
     renderImages();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    const numberOfFreeRights = supabase
-      .channel("orders-change-channel")
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "user_missions",
-          filter: `user_id=eq.${userID}`,
-        },
-        (payload: any) => {
-          setNumberOfFreeRights(
-            new Array(payload.new.number_of_free_rights).fill(0)
-          );
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(numberOfFreeRights);
-    };
-  }, [numberOfFreeRights, userID, supabase]);
 
   return (
     <div className="flex flex-col items-center pt-20 text-white">
@@ -129,30 +107,31 @@ export default function Profile() {
         </div>
       )}
       {selectedTab === "Your Collection" && (
-        <div className="flex flex-wrap justify-center mt-16">
-          {nftData && nftData.length > 0 ? (
-            nftDataArray?.map((item, index) => (
-              <div key={index} className="mb-4">
-                <Image
-                  src={NFTSrc.replace("ipfs://", "https://ipfs.io/ipfs/")}
-                  width={375}
-                  height={375}
-                  alt="nfts"
-                  style={{
-                    maxWidth: "100%",
-                    height: "auto",
-                  }}
-                />
-              </div>
-            ))
-          ) : (
-            <p>Herhangi bir Koleksiyon parçasına sahip değilsiniz.</p>
-          )}
-        </div>
+        <h1>Yakında gelecek</h1>
+        // <div className="flex flex-wrap justify-center mt-16">
+        //   {nftData && nftData.length > 0 ? (
+        //     nftDataArray?.map((item, index) => (
+        //       <div key={index} className="mb-4">
+        //         <Image
+        //           src={NFTSrc.replace("ipfs://", "https://ipfs.io/ipfs/")}
+        //           width={375}
+        //           height={375}
+        //           alt="nfts"
+        //           style={{
+        //             maxWidth: "100%",
+        //             height: "auto",
+        //           }}
+        //         />
+        //       </div>
+        //     ))
+        //   ) : (
+        //     <p>Herhangi bir Koleksiyon parçasına sahip değilsiniz.</p>
+        //   )}
+        // </div>
       )}
       <QrCodeModal
         isVisible={qrCodeModalVisible}
-        value={JSON.stringify({ forNFT: true })}
+        value={JSON.stringify({ forNFT: true, userID: userID })}
         onClose={() => setQrCodeModalVisible(false)}
       />
     </div>

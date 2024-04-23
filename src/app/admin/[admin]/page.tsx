@@ -17,7 +17,10 @@ export default async function AdminHome() {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-black text-white">
-      <Link href="/admin-camera">Qr Kodu Okut</Link>
+      <Link
+        href={`/admin/${adminData[0].brand_name}-${adminData[0].brand_branch}/admin-camera?isAdmin=true`}>
+        Qr Kodu Okut
+      </Link>
       <div className="w-11/12 h-[650px] flex flex-col justify-between">
         <div className="flex items-center justify-around">
           <div className="w-24 h-24 rounded-full border-2 border-lad-pink flex items-center justify-center">

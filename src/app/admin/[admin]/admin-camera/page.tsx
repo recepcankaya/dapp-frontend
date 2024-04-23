@@ -24,7 +24,7 @@ const AdminCamera = () => {
     if (!result || isScanned.current) return;
     isScanned.current = true;
     try {
-      const { userID, forNFT, address } = JSON.parse(result);
+      const { userID, forNFT } = JSON.parse(result);
       console.log("Okutuldu");
       const {
         data: { user: admin },

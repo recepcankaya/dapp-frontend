@@ -85,7 +85,7 @@ export default function Home() {
         <ConnectEmbed style={{ width: "75%" }} />
       )}
       <button>
-        <Link href="/admin-login" className="text-lg">
+        <Link href="/admin/admin-login" className="text-lg">
           İşletmeyseniz Lütfen Giriş Yapmak için {"\n"}Tıklayınız
         </Link>
       </button>

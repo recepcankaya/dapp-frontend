@@ -13,6 +13,11 @@ export type Admin = {
     long: number;
   };
   freeRightImageUrl: string;
+  NFTMetadata: {
+    name: string;
+    image: string;
+    description: string;
+  };
 };
 
 type State = {
@@ -37,6 +42,11 @@ const useAdminStore = create<State & Action>((set) => ({
       long: 0,
     },
     freeRightImageUrl: "",
+    NFTMetadata: {
+      name: "",
+      image: "",
+      description: "",
+    },
   },
   updateAdmin: (admin) => set(() => ({ admin })),
 }));
