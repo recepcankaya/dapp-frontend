@@ -116,7 +116,9 @@ export default function RenderBrands(brands: RenderBrandsProps) {
                 <div key={index} className="flex flex-col items-center gap-4">
                   <div className="relative w-28 h-28">
                     <Link
-                      href={`/user/${item.brand_name.toLowerCase()}-${item.brand_branch.toLowerCase()}`}>
+                      href={`/user/${item.brand_name.toLowerCase()}/${item.brand_branch.toLowerCase()}?adminID=${
+                        item.id
+                      }`}>
                       <Image
                         src={item.brand_logo_ipfs_url.replace(
                           "ipfs://",
@@ -147,7 +149,9 @@ export default function RenderBrands(brands: RenderBrandsProps) {
                 <div key={index} className="flex flex-col items-center gap-4">
                   <div className="relative w-28 h-28">
                     <Link
-                      href={`/user/${item.brand_name.toLowerCase()}-${item.brand_branch.toLowerCase()}`}>
+                      href={`/user/${item.brand_name.toLowerCase()}/${item.brand_branch.toLowerCase()}?adminID=${
+                        item.id
+                      }`}>
                       <Image
                         src={item.brand_logo_ipfs_url.replace(
                           "ipfs://",

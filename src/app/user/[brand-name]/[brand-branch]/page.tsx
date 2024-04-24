@@ -9,7 +9,7 @@ import { Button } from "@/src/components/ui/button";
 export default async function CustomerHome({
   searchParams,
 }: {
-  searchParams: { admin: string };
+  searchParams: { adminID: string };
 }) {
   const supabase = createClient();
   const {
@@ -20,14 +20,14 @@ export default async function CustomerHome({
     .from("user_missions")
     .select("number_of_orders")
     .eq("user_id", user?.id)
-    .eq("admin_id", searchParams.admin);
+    .eq("admin_id", searchParams.adminID);
 
   const { data: adminInfo, error: adminError } = await supabase
     .from("admins")
     .select(
       "number_for_reward, number_for_reward, ticket_ipfs_url, brand_logo_ipfs_url, campaigns, brand_video_url"
     )
-    .eq("id", searchParams.admin);
+    .eq("id", searchParams.adminID);
 
   const { data: username, error: usernameError } = await supabase
     .from("users")
@@ -42,7 +42,7 @@ export default async function CustomerHome({
       />
       <CustomerHomeLinks
         username={username && username.username}
-        adminId={searchParams.admin}
+        adminId={searchParams.adminID}
       />
       <RenderOrderNumber
         adminInfo={adminInfo}
