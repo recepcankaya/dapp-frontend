@@ -1,13 +1,10 @@
 "use client";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
-export default function CustomerHomeLinks({
-  username,
-  adminId,
-}: {
-  username: string;
-  adminId: string;
-}) {
+export default function CustomerHomeLinks({ adminId }: { adminId: string }) {
+  const pathname = usePathname();
+
   return (
     <div className="flex justify-around">
       <Link
@@ -21,7 +18,7 @@ export default function CustomerHomeLinks({
         Qr Kodu Okut
       </Link>
       <Link
-        href={`/user/${username}/profile?admin=${adminId}`}
+        href={`${pathname}/profile?adminID=${adminId}`}
         className="text-right text-lg mr-8 underline decoration-2 underline-offset-2">
         Profil
       </Link>

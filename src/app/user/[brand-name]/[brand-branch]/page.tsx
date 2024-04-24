@@ -29,21 +29,12 @@ export default async function CustomerHome({
     )
     .eq("id", searchParams.adminID);
 
-  const { data: username, error: usernameError } = await supabase
-    .from("users")
-    .select("username")
-    .eq("id", user?.id)
-    .single();
-
   return (
     <section className="h-screen w-screen">
       <CustomerHomeHeader
         brandLogo={adminInfo && adminInfo[0].brand_logo_ipfs_url}
       />
-      <CustomerHomeLinks
-        username={username && username.username}
-        adminId={searchParams.adminID}
-      />
+      <CustomerHomeLinks adminId={searchParams.adminID} />
       <RenderOrderNumber
         adminInfo={adminInfo}
         userMissionNumbers={userMissionNumbers}
