@@ -30,7 +30,7 @@ export default async function Profile({
     .eq("id", searchParams.adminID);
 
   return (
-    <div className="flex flex-col items-center pt-20 text-white">
+    <div className="flex flex-col items-center pt-16 text-white">
       <h1 className="text-xl mb-16 text-white">{username?.username}</h1>
       <ProfileHOC
         userID={user?.id}

@@ -7,7 +7,7 @@ export default function RenderCustomerNFTs({
   return (
     <>
       {selectedTab === "Your Collection" && (
-        <h1 className="mt-20 text-2xl">Yakında...</h1>
+        <h1 className="mt-20 text-center text-2xl">Yakında...</h1>
       )}
     </>
   );

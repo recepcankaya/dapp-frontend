@@ -22,28 +22,32 @@ export default function ProfileHOC({
   );
 
   return (
-    <div className="flex justify-around w-full">
-      <button
-        onClick={() => setSelectedTab("Waiting")}
-        className={`py-2 ${
-          selectedTab === "Waiting" ? "border-b-2 border-white" : ""
-        }`}>
-        Bekleyenler
-      </button>
-      <button
-        onClick={() => setSelectedTab("Your Collection")}
-        className={`py-2 ${
-          selectedTab === "Your Collection" ? "border-b-2 border-white" : ""
-        }`}>
-        Koleksiyonunuz
-      </button>
-      <RenderFreeRights
-        selectedTab={selectedTab}
-        numberOfFreeRights={numberOfFreeRights}
-        freeRightImageUrl={freeRightImageUrl}
-        setQrCodeModalVisible={setQrCodeModalVisible}
-      />
-      <RenderCustomerNFTs selectedTab={selectedTab} />
+    <div className="w-full">
+      <div className="flex justify-around">
+        <button
+          onClick={() => setSelectedTab("Waiting")}
+          className={`py-2 ${
+            selectedTab === "Waiting" ? "border-b-2 border-white" : ""
+          }`}>
+          Bekleyenler
+        </button>
+        <button
+          onClick={() => setSelectedTab("Your Collection")}
+          className={`py-2 ${
+            selectedTab === "Your Collection" ? "border-b-2 border-white" : ""
+          }`}>
+          Koleksiyonunuz
+        </button>
+      </div>
+      <div>
+        <RenderFreeRights
+          selectedTab={selectedTab}
+          numberOfFreeRights={numberOfFreeRights}
+          freeRightImageUrl={freeRightImageUrl}
+          setQrCodeModalVisible={setQrCodeModalVisible}
+        />
+        <RenderCustomerNFTs selectedTab={selectedTab} />
+      </div>
       <QrCodeModal
         isVisible={qrCodeModalVisible}
         value={JSON.stringify({ forNFT: true, userID: userID })}

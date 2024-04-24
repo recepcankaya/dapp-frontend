@@ -2,7 +2,7 @@
 import Image from "next/image";
 
 type RenderFreeRightsProps = {
-  selectedTab: string | undefined;
+  selectedTab: string;
   numberOfFreeRights: any;
   freeRightImageUrl: any;
   setQrCodeModalVisible: (value: boolean) => void;
@@ -32,12 +32,9 @@ export default function RenderFreeRights({
                     "https://ipfs.io/ipfs/"
                   )}
                   alt="nft"
+                  priority
                   width={375}
                   height={375}
-                  style={{
-                    maxWidth: "100%",
-                    height: "auto",
-                  }}
                 />
               </div>
             ))
