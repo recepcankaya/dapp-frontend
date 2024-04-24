@@ -1,11 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 
 import useAdminStore, { Admin } from "@/src/store/adminStore";
-import useUserStore from "@/src/store/userStore";
 import { haversine } from "@/src/lib/haveresine";
 import { Json } from "@/src/lib/database.types";
 import { Input } from "../ui/input";
@@ -45,8 +44,6 @@ export default function RenderBrands(brands: RenderBrandsProps) {
   >([]);
   const [searchedAdmin, setSearchedAdmin] = useState<string>("");
   const updateAdmin = useAdminStore((state) => state.updateAdmin);
-  const username = useUserStore((state) => state.user.username);
-  const router = useRouter();
 
   const selectBrand = (item: any) => {
     const admin: Admin = {
@@ -65,7 +62,6 @@ export default function RenderBrands(brands: RenderBrandsProps) {
       NFTMetadata: item.collection_metadata,
     };
     updateAdmin(admin);
-    router.push(`/user/${username}?admin=${item.id}`);
   };
 
   useEffect(() => {
@@ -119,19 +115,22 @@ export default function RenderBrands(brands: RenderBrandsProps) {
               .map((item: any, index: number) => (
                 <div key={index} className="flex flex-col items-center gap-4">
                   <div className="relative w-28 h-28">
-                    <Image
-                      src={item.brand_logo_ipfs_url.replace(
-                        "ipfs://",
-                        "https://ipfs.io/ipfs/"
-                      )}
-                      alt="brand logo"
-                      className="rounded-2xl cursor-pointer object-cover border-2 border-lad-pink"
-                      onClick={() => selectBrand(item)}
-                      key={index}
-                      priority
-                      fill
-                      sizes="10vw"
-                    />
+                    <Link
+                      href={`/user/${item.brand_name.toLowerCase()}-${item.brand_branch.toLowerCase()}`}>
+                      <Image
+                        src={item.brand_logo_ipfs_url.replace(
+                          "ipfs://",
+                          "https://ipfs.io/ipfs/"
+                        )}
+                        alt="brand logo"
+                        className="rounded-2xl cursor-pointer object-cover border-2 border-lad-pink"
+                        onClick={() => selectBrand(item)}
+                        key={index}
+                        priority
+                        fill
+                        sizes="10vw"
+                      />
+                    </Link>
                   </div>
                   <p>{item.brand_name}</p>
                 </div>
@@ -147,19 +146,22 @@ export default function RenderBrands(brands: RenderBrandsProps) {
               .map((item: any, index: number) => (
                 <div key={index} className="flex flex-col items-center gap-4">
                   <div className="relative w-28 h-28">
-                    <Image
-                      src={item.brand_logo_ipfs_url.replace(
-                        "ipfs://",
-                        "https://ipfs.io/ipfs/"
-                      )}
-                      alt="brand logo"
-                      className="rounded-2xl cursor-pointer object-cover border-2 border-lad-pink"
-                      onClick={() => selectBrand(item)}
-                      key={index}
-                      priority
-                      fill
-                      sizes="10vw"
-                    />
+                    <Link
+                      href={`/user/${item.brand_name.toLowerCase()}-${item.brand_branch.toLowerCase()}`}>
+                      <Image
+                        src={item.brand_logo_ipfs_url.replace(
+                          "ipfs://",
+                          "https://ipfs.io/ipfs/"
+                        )}
+                        alt="brand logo"
+                        className="rounded-2xl cursor-pointer object-cover border-2 border-lad-pink"
+                        onClick={() => selectBrand(item)}
+                        key={index}
+                        priority
+                        fill
+                        sizes="10vw"
+                      />
+                    </Link>
                   </div>
                   <p>{item.brand_name}</p>
                 </div>

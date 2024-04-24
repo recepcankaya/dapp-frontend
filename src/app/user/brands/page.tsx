@@ -1,6 +1,7 @@
-import RenderBrands from "@/src/components/customer/RenderBrands";
 import { createClient } from "@/src/lib/supabase/server";
 import { ToastContainer, toast } from "react-toastify";
+
+import RenderBrands from "@/src/components/customer/RenderBrands";
 
 export default async function Brands() {
   const supabase = createClient();
@@ -8,7 +9,7 @@ export default async function Brands() {
   const { data: brands, error } = await supabase
     .from("admins")
     .select(
-      "id, brand_name, brand_logo_ipfs_url, ticket_ipfs_url, number_for_reward, nft_src, contract_address, coords, free_right_image_url, collection_metadata"
+      "id, brand_name, brand_branch, brand_logo_ipfs_url, ticket_ipfs_url, number_for_reward, nft_src, contract_address, coords, free_right_image_url, collection_metadata"
     );
 
   if (error) {
