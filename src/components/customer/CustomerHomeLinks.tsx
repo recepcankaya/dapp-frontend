@@ -9,17 +9,17 @@ export default function CustomerHomeLinks({ adminId }: { adminId: string }) {
     <div className="flex justify-around">
       <Link
         href="/user/brands"
-        className="text-right text-lg mr-8 underline decoration-2 underline-offset-2">
+        className="text-right text-lg underline decoration-2 underline-offset-2">
         Markalar
       </Link>
       <Link
         href="/user/qr-code"
-        className="text-right text-lg mr-8 underline decoration-2 underline-offset-2">
+        className="text-right text-lg underline decoration-2 underline-offset-2">
         Qr Kodu Okut
       </Link>
       <Link
         href={`${pathname}/profile?adminID=${adminId}`}
-        className="text-right text-lg mr-8 underline decoration-2 underline-offset-2">
+        className="text-right text-lg underline decoration-2 underline-offset-2">
         Profil
       </Link>
     </div>

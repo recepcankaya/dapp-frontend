@@ -41,12 +41,12 @@ export default async function CustomerHome({
         userID={user?.id}
       />
       <Button
-        className="px-16 py-6 mb-8 mx-auto flex text-lg font-bold font-rosarivo rounded-xl border-2 border-lad-pink text-lad-white"
+        className="mt-16 px-16 py-6 mb-8 mx-auto flex text-lg font-bold font-rosarivo rounded-xl border-2 border-lad-pink text-lad-white"
         type="submit">
         Menü
       </Button>
       <CampaignCarousel campaigns={adminInfo && adminInfo[0].campaigns} />
-      <BrandVideo brandVideo={adminInfo && adminInfo[0].brand_video_url} />
+      {/* <BrandVideo brandVideo={adminInfo && adminInfo[0].brand_video_url} /> */}
     </section>
   );
 }
