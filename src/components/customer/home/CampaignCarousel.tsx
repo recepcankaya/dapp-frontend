@@ -12,7 +12,7 @@ import CarouselModal from "./CarouselModal";
 export default function CampaignCarousel({ campaigns }: { campaigns: any[] }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   return (
-    <section className="w-full pt-12">
+    <section className="pt-12">
       <Swiper
         pagination={true}
         autoplay={true}
@@ -32,8 +32,9 @@ export default function CampaignCarousel({ campaigns }: { campaigns: any[] }) {
                   "https://ipfs.io/ipfs/"
                 )}
                 alt="campaign image"
-                width={500}
-                height={500}
+                width={425}
+                height={425}
+                className="mx-auto"
                 onClick={() => setIsModalOpen(true)}
               />
             </SwiperSlide>

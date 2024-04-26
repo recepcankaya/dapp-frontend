@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/src/lib/supabase/client";
 import Image from "next/image";
 
-type RenderOrderNumberProps = {
+type RenderTicketProps = {
   adminInfo:
     | {
         number_for_reward: any;
@@ -19,11 +19,11 @@ type RenderOrderNumberProps = {
   userID: string | undefined;
 };
 
-export default function RenderOrderNumber({
+export default function RenderTicket({
   adminInfo,
   userID,
   userMissionNumbers,
-}: RenderOrderNumberProps) {
+}: RenderTicketProps) {
   const [screenWidth, setScreenWidth] = useState<number | null>(null);
   const userOrderNumberRef = useRef<number>(
     userMissionNumbers && userMissionNumbers[0]?.number_of_orders
@@ -71,8 +71,8 @@ export default function RenderOrderNumber({
 
   // @todo - TICKETIN DÜZELTİLMESİ LAZIM
   return (
-    <section className="pt-16 w-full">
-      <div className="w-full min-[320px]:h-40 min-[375px]:h-44 min-[425px]:h-48 min-[475px]:h-52 min-[525px]:h-56 min-[600px]:h-60 min-[675px]:h-72 relative">
+    <section className="pt-16 w-full flex justify-center items-center">
+      <div className="w-full min-[525px]:w-5/6 min-[320px]:h-40 min-[375px]:h-44 min-[425px]:h-48 min-[475px]:h-52 min-[525px]:h-56 min-[600px]:h-60 min-[675px]:h-72 relative">
         <Image
           src={
             adminInfo &&
@@ -99,7 +99,7 @@ export default function RenderOrderNumber({
           {ticketCircles.map((_, index) => (
             <li
               key={index}
-              className="min-[320px]:w-6 min-[320px]:h-6 min-[375px]:w-8 min-[375px]:h-8 min-[425px]:w-9 min-[425px]:h-9 min-[525px]:w-12 min-[525px]:h-12 min-[600px]:w-14 min-[600px]:h-14 min-[675px]:h-16 min-[675px]:w-16 rounded-full ring ring-[#7B3501] ring-offset-2"
+              className="min-[320px]:w-6 min-[320px]:h-6 min-[375px]:w-8 min-[375px]:h-8 min-[425px]:w-9 min-[425px]:h-9 min-[525px]:w-11 min-[525px]:h-11 min-[600px]:w-12 min-[600px]:h-12 min-[675px]:h-14 min-[675px]:w-14 rounded-full ring ring-[#7B3501] ring-offset-2"
               style={{
                 background:
                   userMissionNumbers &&

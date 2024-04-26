@@ -2,7 +2,7 @@ import { createClient } from "@/src/lib/supabase/server";
 import CustomerHomeHeader from "@/src/components/customer/home/CustomerHomeHeader";
 import CustomerHomeLinks from "@/src/components/customer/home/CustomerHomeLinks";
 import CampaignCarousel from "@/src/components/customer/home/CampaignCarousel";
-import RenderOrderNumber from "@/src/components/customer/home/RenderOrderNumber";
+import RenderTicket from "@/src/components/customer/home/RenderTicket";
 import BrandVideo from "@/src/components/customer/BrandVideo";
 import { Button } from "@/src/components/ui/button";
 
@@ -35,7 +35,7 @@ export default async function CustomerHome({
         brandLogo={adminInfo && adminInfo[0].brand_logo_ipfs_url}
       />
       <CustomerHomeLinks adminId={searchParams.adminID} />
-      <RenderOrderNumber
+      <RenderTicket
         adminInfo={adminInfo}
         userMissionNumbers={userMissionNumbers}
         userID={user?.id}
