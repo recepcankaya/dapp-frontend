@@ -1,8 +1,8 @@
 import { createClient } from "@/src/lib/supabase/server";
-import CustomerHomeHeader from "@/src/components/customer/CustomerHomeHeader";
-import CustomerHomeLinks from "@/src/components/customer/CustomerHomeLinks";
-import CampaignCarousel from "@/src/components/customer/CampaignCarousel";
-import RenderOrderNumber from "@/src/components/customer/RenderOrderNumber";
+import CustomerHomeHeader from "@/src/components/customer/home/CustomerHomeHeader";
+import CustomerHomeLinks from "@/src/components/customer/home/CustomerHomeLinks";
+import CampaignCarousel from "@/src/components/customer/home/CampaignCarousel";
+import RenderOrderNumber from "@/src/components/customer/home/RenderOrderNumber";
 import BrandVideo from "@/src/components/customer/BrandVideo";
 import { Button } from "@/src/components/ui/button";
 

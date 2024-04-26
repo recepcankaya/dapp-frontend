@@ -99,7 +99,7 @@ export default function RenderOrderNumber({
           {ticketCircles.map((_, index) => (
             <li
               key={index}
-              className="min-[320px]:w-6 min-[320px]:h-6 min-[375px]:w-8 min-[375px]:h-8 min-[425px]:w-9 min-[425px]:h-9 min-[525px]:w-12 min-[525px]:h-12 min-[600px]:w-14 min-[600px]:h-14 min-[675px]:h-16 min-[675px]:w-16 rounded-full z-10 ring ring-[#7B3501] ring-offset-2"
+              className="min-[320px]:w-6 min-[320px]:h-6 min-[375px]:w-8 min-[375px]:h-8 min-[425px]:w-9 min-[425px]:h-9 min-[525px]:w-12 min-[525px]:h-12 min-[600px]:w-14 min-[600px]:h-14 min-[675px]:h-16 min-[675px]:w-16 rounded-full ring ring-[#7B3501] ring-offset-2"
               style={{
                 background:
                   userMissionNumbers &&
