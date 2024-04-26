@@ -32,8 +32,8 @@ export default function CampaignCarousel({ campaigns }: { campaigns: any[] }) {
                   "https://ipfs.io/ipfs/"
                 )}
                 alt="campaign image"
-                width={425}
-                height={425}
+                width={500}
+                height={500}
                 className="mx-auto"
                 onClick={() => setIsModalOpen(true)}
               />

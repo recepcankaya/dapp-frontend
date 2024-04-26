@@ -9,19 +9,14 @@ export default function CustomerHomeHeader({
 }) {
   return (
     <div className="p-2 flex justify-around items-center gap-36 mb-8">
-      <div className="relative w-16 h-16">
-        <Image
-          src={brandLogo?.replace("ipfs://", "https://ipfs.io/ipfs/")}
-          alt="brand logo"
-          className="rounded-md cursor-pointer"
-          priority
-          fill
-          sizes="10vw"
-        />
-      </div>
-      <div className="relative w-24 h-24">
-        <Image src={logo} alt="Logo" loading="lazy" fill sizes="10vw" />
-      </div>
+      <Image
+        src={brandLogo?.replace("ipfs://", "https://ipfs.io/ipfs/")}
+        alt="brand logo"
+        className="rounded-md cursor-pointer"
+        width={60}
+        height={60}
+      />
+      <Image src={logo} alt="Logo" loading="lazy" width={85} height={85} />
     </div>
   );
 }

@@ -23,6 +23,9 @@ export default function CarouselModal({
           alt="campaign image"
           fill
           sizes="100vw"
+          style={{
+            objectFit: "contain",
+          }}
         />
       </div>
     </div>

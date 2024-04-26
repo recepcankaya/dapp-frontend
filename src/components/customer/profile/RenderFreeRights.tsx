@@ -33,6 +33,7 @@ export default function RenderFreeRights({
                   )}
                   alt="nft"
                   priority
+                  quality={100}
                   width={375}
                   height={375}
                 />

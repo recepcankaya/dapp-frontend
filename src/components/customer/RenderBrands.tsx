@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import useAdminStore, { Admin } from "@/src/store/adminStore";
 import { haversine } from "@/src/lib/haveresine";
 import { Json } from "@/src/lib/database.types";
 import { Input } from "../ui/input";
@@ -13,14 +12,9 @@ type RenderBrandsProps = {
   brands: {
     id: string;
     brand_name: string | null;
+    brand_branch: string | null;
     brand_logo_ipfs_url: string | null;
-    ticket_ipfs_url: string | null;
-    number_for_reward: number | null;
-    nft_src: string | null;
-    contract_address: string | null;
     coords: Json | null;
-    free_right_image_url: string | null;
-    collection_metadata: { name: string; image: string; description: string };
   }[];
 };
 
@@ -29,40 +23,11 @@ export default function RenderBrands(brands: RenderBrandsProps) {
     lat: number;
     long: number;
   } | null>(null);
-  const [sortedAdmins, setSortedAdmins] = useState<
-    {
-      id: string;
-      brand_name: string | null;
-      brand_logo_ipfs_url: string | null;
-      ticket_ipfs_url: string | null;
-      number_for_reward: number | null;
-      nft_src: string | null;
-      contract_address: string | null;
-      coords: Json;
-      free_right_image_url: string | null;
-    }[]
-  >([]);
+  const [sortedAdmins, setSortedAdmins] = useState<RenderBrandsProps["brands"]>(
+    []
+  );
+  // @todo - Arama fonksyionu url'e bağlanacak
   const [searchedAdmin, setSearchedAdmin] = useState<string>("");
-  const updateAdmin = useAdminStore((state) => state.updateAdmin);
-
-  const selectBrand = (item: any) => {
-    const admin: Admin = {
-      id: item.id,
-      brandName: item.brand_name,
-      brandLogo: item.brand_logo_ipfs_url,
-      ticketImage: item.ticket_ipfs_url,
-      numberForReward: item.number_for_reward,
-      NFTSrc: item.nft_src,
-      contractAddress: item.contract_address,
-      coords: {
-        lat: item.coords?.lat,
-        long: item.coords?.long,
-      },
-      freeRightImageUrl: item.free_right_image_url,
-      NFTMetadata: item.collection_metadata,
-    };
-    updateAdmin(admin);
-  };
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -114,26 +79,24 @@ export default function RenderBrands(brands: RenderBrandsProps) {
               )
               .map((item: any, index: number) => (
                 <div key={index} className="flex flex-col items-center gap-4">
-                  <div className="relative w-28 h-28">
-                    <Link
-                      href={`/user/${item.brand_name.toLowerCase()}/${item.brand_branch.toLowerCase()}?adminID=${
-                        item.id
-                      }`}>
-                      <Image
-                        src={item.brand_logo_ipfs_url.replace(
-                          "ipfs://",
-                          "https://ipfs.io/ipfs/"
-                        )}
-                        alt="brand logo"
-                        className="rounded-2xl cursor-pointer object-cover border-2 border-lad-pink"
-                        onClick={() => selectBrand(item)}
-                        key={index}
-                        priority
-                        fill
-                        sizes="10vw"
-                      />
-                    </Link>
-                  </div>
+                  <Link
+                    href={`/user/${item.brand_name.toLowerCase()}/${item.brand_branch.toLowerCase()}?adminID=${
+                      item.id
+                    }`}>
+                    <Image
+                      src={item.brand_logo_ipfs_url.replace(
+                        "ipfs://",
+                        "https://ipfs.io/ipfs/"
+                      )}
+                      alt="brand logo"
+                      className="rounded-2xl cursor-pointer object-cover border-2 border-lad-pink"
+                      key={index}
+                      quality={100}
+                      priority
+                      width={100}
+                      height={100}
+                    />
+                  </Link>
                   <p>{item.brand_name}</p>
                 </div>
               ))
@@ -147,26 +110,24 @@ export default function RenderBrands(brands: RenderBrandsProps) {
               )
               .map((item: any, index: number) => (
                 <div key={index} className="flex flex-col items-center gap-4">
-                  <div className="relative w-28 h-28">
-                    <Link
-                      href={`/user/${item.brand_name.toLowerCase()}/${item.brand_branch.toLowerCase()}?adminID=${
-                        item.id
-                      }`}>
-                      <Image
-                        src={item.brand_logo_ipfs_url.replace(
-                          "ipfs://",
-                          "https://ipfs.io/ipfs/"
-                        )}
-                        alt="brand logo"
-                        className="rounded-2xl cursor-pointer object-cover border-2 border-lad-pink"
-                        onClick={() => selectBrand(item)}
-                        key={index}
-                        priority
-                        fill
-                        sizes="10vw"
-                      />
-                    </Link>
-                  </div>
+                  <Link
+                    href={`/user/${item.brand_name.toLowerCase()}/${item.brand_branch.toLowerCase()}?adminID=${
+                      item.id
+                    }`}>
+                    <Image
+                      src={item.brand_logo_ipfs_url.replace(
+                        "ipfs://",
+                        "https://ipfs.io/ipfs/"
+                      )}
+                      alt="brand logo"
+                      className="rounded-2xl cursor-pointer object-cover border-2 border-lad-pink"
+                      key={index}
+                      quality={100}
+                      priority
+                      width={100}
+                      height={100}
+                    />
+                  </Link>
                   <p>{item.brand_name}</p>
                 </div>
               ))}

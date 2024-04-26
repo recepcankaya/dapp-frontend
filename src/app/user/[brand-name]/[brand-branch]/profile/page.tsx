@@ -35,7 +35,9 @@ export default async function Profile({
       <ProfileHOC
         userID={user?.id}
         numberOfFreeRights={
-          numberOfFreeRights && numberOfFreeRights[0].number_of_free_rights
+          numberOfFreeRights && numberOfFreeRights.length > 0
+            ? numberOfFreeRights[0].number_of_free_rights
+            : 0
         }
         freeRightImageUrl={
           freeRightImageUrl && freeRightImageUrl[0].free_right_image_url

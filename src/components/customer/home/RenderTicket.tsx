@@ -24,7 +24,6 @@ export default function RenderTicket({
   userID,
   userMissionNumbers,
 }: RenderTicketProps) {
-  const [screenWidth, setScreenWidth] = useState<number | null>(null);
   const userOrderNumberRef = useRef<number>(
     userMissionNumbers && userMissionNumbers[0]?.number_of_orders
   );
@@ -55,20 +54,6 @@ export default function RenderTicket({
     };
   }, [userID, supabase]);
 
-  useEffect(() => {
-    setScreenWidth(window.innerWidth);
-
-    const handleResize = () => {
-      setScreenWidth(window.innerWidth);
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
   // @todo - TICKETIN DÜZELTİLMESİ LAZIM
   return (
     <section className="pt-16 w-full flex justify-center items-center">
@@ -82,7 +67,10 @@ export default function RenderTicket({
             )
           }
           alt="Ticket"
+          quality={100}
+          priority
           fill
+          sizes="(max-width: 525px) 100vw, 83.333333vw"
         />
         <ul
           className={`h-full w-2/3 absolute right-0 grid ${

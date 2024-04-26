@@ -13,7 +13,7 @@ export default function CustomerHomeLinks({ adminId }: { adminId: string }) {
         Markalar
       </Link>
       <Link
-        href="/user/qr-code"
+        href={`${pathname}/qr-code?adminID=${adminId}`}
         className="text-right text-lg underline decoration-2 underline-offset-2">
         Qr Kodu Okut
       </Link>
