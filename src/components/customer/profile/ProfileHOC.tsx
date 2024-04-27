@@ -41,6 +41,7 @@ export default function ProfileHOC({
       </div>
       <div>
         <RenderFreeRights
+          userID={userID}
           selectedTab={selectedTab}
           numberOfFreeRights={numberOfFreeRights}
           freeRightImageUrl={freeRightImageUrl}

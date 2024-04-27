@@ -1,10 +1,14 @@
 "use client";
+import { createClient } from "@/src/lib/supabase/client";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef } from "react";
 
 type RenderFreeRightsProps = {
   selectedTab: string;
   numberOfFreeRights: any;
   freeRightImageUrl: any;
+  userID: string | undefined;
   setQrCodeModalVisible: (value: boolean) => void;
 };
 
@@ -12,9 +16,36 @@ export default function RenderFreeRights({
   selectedTab,
   numberOfFreeRights,
   freeRightImageUrl,
+  userID,
   setQrCodeModalVisible,
 }: RenderFreeRightsProps) {
+  const freeRightsRef = useRef<number>(numberOfFreeRights);
+  const supabase = createClient();
+  const router = useRouter();
   const numberOfFreeRightsArray = new Array(numberOfFreeRights).fill(0);
+
+  useEffect(() => {
+    const orders = supabase
+      .channel("orders-change-channel")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "user_missions",
+          filter: `user_id=eq.${userID}`,
+        },
+        (payload: any) => {
+          freeRightsRef.current = payload.new.number_of_free_rights;
+          router.refresh();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(orders);
+    };
+  }, [userID, supabase, router]);
 
   return (
     <>

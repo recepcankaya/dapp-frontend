@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/src/lib/supabase/client";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 type RenderTicketProps = {
   adminInfo:
@@ -28,6 +29,7 @@ export default function RenderTicket({
     userMissionNumbers && userMissionNumbers[0]?.number_of_orders
   );
   const supabase = createClient();
+  const router = useRouter();
   const ticketCircles = adminInfo
     ? new Array(adminInfo[0].number_for_reward).fill(0)
     : [];
@@ -45,6 +47,7 @@ export default function RenderTicket({
         },
         (payload: any) => {
           userOrderNumberRef.current = payload.new.number_of_orders;
+          router.refresh();
         }
       )
       .subscribe();
@@ -52,7 +55,7 @@ export default function RenderTicket({
     return () => {
       supabase.removeChannel(orders);
     };
-  }, [userID, supabase]);
+  }, [userID, supabase, router]);
 
   // @todo - TICKETIN DÜZELTİLMESİ LAZIM
   return (
@@ -98,9 +101,8 @@ export default function RenderTicket({
                           "ipfs://",
                           "https://ipfs.io/ipfs/"
                         )
-                      }) no-repeat center center`
+                      }) no-repeat center center / contain`
                     : "#7B3501",
-                backgroundSize: "cover",
                 transform: "rotate(-45deg)",
               }}></li>
           ))}
