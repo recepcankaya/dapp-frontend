@@ -1,6 +1,6 @@
 "use client";
 
-import addUsername from "@/src/server-actions/addUsername";
+import addUsername from "@/src/server-actions/user/addUsername";
 import { useFormState } from "react-dom";
 
 const errorMessage = {

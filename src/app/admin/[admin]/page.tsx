@@ -66,9 +66,9 @@ export default async function AdminHome() {
             </p>
           </div>
         </div>
-        <GetNFTTotalSupply
+        {/* <GetNFTTotalSupply
           contractAddress={adminData && adminData[0].contract_address}
-        />
+        /> */}
         <div className="flex items-center justify-around">
           <div className="w-24 h-24 rounded-full border-2 border-lad-pink flex items-center justify-center">
             <p className="text-lg">

@@ -1,114 +1,47 @@
 "use client";
+import { useFormState } from "react-dom";
+import login from "@/src/server-actions/admin/login";
 
-import { useRouter } from "next/navigation";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+const errorMessage = {
+  message: "",
+};
 
-import { Input } from "@/src/components/ui/input";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/src/components/ui/form";
-import { toast } from "@/src/components/ui/use-toast";
-import { Toaster } from "@/src/components/ui/toaster";
-import { createClient } from "@/src/lib/supabase/client";
-
-const FormSchema = z.object({
-  email: z.string().email({
-    message: "Invalid email address.",
-  }),
-  password: z.string().min(8, {
-    message: "Password must be at least 8 characters.",
-  }),
-});
-
-export default function UserInfo() {
-  const router = useRouter();
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
-  const supabase = createClient();
-
-  const { email, password } = form.watch();
-
-  const submitForm = async () => {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    if (data && data.user) {
-      const { data: admin } = await supabase
-        .from("admins")
-        .select("brand_name, brand_branch")
-        .eq("id", data.user.id);
-    }
-    if (error) {
-      toast({ title: "Böyle bir marka bulunamadı." });
-      return;
-    }
-  };
+// @todo - Tasarım açısından eksikler var, düzeltilecek.
+export default function AdminLogin() {
+  const [state, formAction] = useFormState(login, errorMessage);
 
   return (
-    <section className="flex justify-center items-center h-screen">
-      <Toaster />
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(submitForm)}
-          className="p-6 py-12 space-y-6 border-2 rounded-2xl border-lad-pink">
-          <FormLabel className="font-rosarivo text-xl text-lad-white">
-            Giriş
-          </FormLabel>
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem className=" flex flex-col justify-evenly space-y-3 items-center ">
-                <FormControl className="mx-6">
-                  <Input
-                    className="rounded-full border-2 pl-5 border-none font-rosarivo font-black bg-lad-pink text-black"
-                    placeholder="e-mail"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem className=" flex flex-col justify-evenly space-y-3 items-center">
-                <FormControl className="mx-6">
-                  <Input
-                    className="rounded-full border-2 pl-5 border-none font-rosarivo font-black bg-lad-pink text-black"
-                    placeholder="şifre"
-                    type="password"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <div className="flex justify-center">
-            <button
-              className="px-8 py-1 mt-2 text-lg font-bold font-rosarivo rounded-3xl bg-lad-pink text-lad-black"
-              type="submit">
-              Giriş Yap
-            </button>
-          </div>
-        </form>
-      </Form>
+    <section className="flex justify-center pt-24">
+      <form action={formAction} className="flex flex-col justify-center">
+        <label
+          htmlFor="email"
+          className="content-start font-rosarivo text-xl mb-6 mr-[16vh] text-lad-white">
+          Mailiniz
+        </label>
+        <input
+          type="email"
+          name="email"
+          id="email"
+          className="rounded-full border-2 border-lad-pink bg-black py-1.5 pl-4"
+        />
+        <label
+          htmlFor="password"
+          className="content-start font-rosarivo text-xl mb-6 mt-14 mr-[16vh] text-lad-white">
+          Şifreniz
+        </label>
+        <input
+          type="password"
+          name="password"
+          id="password"
+          className="rounded-full border-2 border-lad-pink bg-black py-1.5 pl-4"
+        />
+        <p className="text-destructive mt-6">{state?.message}</p>
+        <button
+          type="submit"
+          className="mt-12 mx-4 grow text-lg font-bold font-rosarivo rounded-3xl bg-lad-pink text-lad-black py-2">
+          Giriş Yap
+        </button>
+      </form>
     </section>
   );
 }
