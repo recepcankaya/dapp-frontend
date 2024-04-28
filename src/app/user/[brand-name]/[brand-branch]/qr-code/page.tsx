@@ -9,9 +9,7 @@ export default async function QrCode() {
 
   return (
     <div className=" w-screen h-screen flex justify-center items-center bg-lad-white">
-      <QrCodeClient
-        value={JSON.stringify({ forNFT: false, userID: user?.id })}
-      />
+      <QrCodeClient userID={user?.id} />
     </div>
   );
 }

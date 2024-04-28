@@ -24,7 +24,7 @@ const AdminCamera = () => {
     if (!result || isScanned.current) return;
     isScanned.current = true;
     try {
-      const { userID, forNFT } = JSON.parse(result);
+      const { userID, forNFT, address, adminID } = JSON.parse(result);
       console.log("Okutuldu");
       const {
         data: { user: admin },
@@ -55,6 +55,16 @@ const AdminCamera = () => {
         .single();
 
       if (forNFT === true && userMissionInfo) {
+        if (admin?.id !== adminID) {
+          toast.error(
+            "Müşteriniz başka işletmenin ödülünün qr kodunu kullanmaktadır. Lütfen müşterinizden doğru qr kodu okutmasını isteyiniz."
+          );
+        }
+
+        if (userMissionInfo[0].number_of_free_rights === 0) {
+          toast.error("Müşterinizin ödül hakkı kalmamıştır.");
+        }
+
         await supabase.rpc("decrement_admins_not_used_nfts", {
           admin_id: admin?.id,
         });
