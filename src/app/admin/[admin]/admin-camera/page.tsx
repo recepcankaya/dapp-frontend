@@ -14,7 +14,7 @@ const QrScanner = dynamic(
 
 import { createClient, createServiceClient } from "@/src/lib/supabase/client";
 
-const AdminCamera = () => {
+export default function AdminCamera() {
   const isScanned = useRef<boolean>(false);
   const supabase = createClient();
   const secretSupabase = createServiceClient();
@@ -255,6 +255,4 @@ const AdminCamera = () => {
       />
     </>
   );
-};
-
-export default AdminCamera;
+}
