@@ -37,7 +37,7 @@ export default function AdminCamera() {
       const { data: userMissionInfo } = await supabase
         .from("user_missions")
         .select(
-          "number_of_orders, id, customer_number_of_orders_so_far, number_of_free_rights"
+          "number_of_orders, id, customer_number_of_orders_so_far, number_of_free_rights, used_rewards"
         )
         .eq("user_id", userID)
         .eq("admin_id", admin?.id);
@@ -91,7 +91,11 @@ export default function AdminCamera() {
             müşteriniz ödülünüzü kullandı. <br />
             Bugüne kadar verilen sipariş sayısı:{" "}
             {userMissionInfo[0].customer_number_of_orders_so_far + 1} <br />
-            Kalan ödül hakkı: {userMissionInfo[0].number_of_free_rights - 1}
+            Kalan ödül hakkı: {userMissionInfo[0].number_of_free_rights -
+              1}{" "}
+            <br />
+            Bugüne kadar kullandığı ödül sayısı:{" "}
+            {userMissionInfo[0].used_rewards + 1}
           </p>
         );
       }
@@ -162,7 +166,10 @@ export default function AdminCamera() {
               Müşterinin ödül hakkı:{""}
               {userMissionInfo[0].number_of_free_rights === null
                 ? 0
-                : userMissionInfo[0].number_of_free_rights}
+                : userMissionInfo[0].number_of_free_rights}{" "}
+              <br />
+              Bugüne kadar kullandığı ödül sayısı:{" "}
+              {userMissionInfo[0].used_rewards}
             </p>
           );
         } else if (
@@ -217,6 +224,8 @@ export default function AdminCamera() {
                   {userMissionInfo[0].number_of_free_rights === null
                     ? 1
                     : userMissionInfo[0].number_of_free_rights + 1}
+                  Bugüne kadar kullandığı ödül sayısı:{" "}
+                  {userMissionInfo[0].used_rewards}
                 </p>
               );
             }

@@ -14,61 +14,61 @@ export type Database = {
           brand_branch: string | null
           brand_logo_ipfs_url: string | null
           brand_name: string | null
+          brand_video_url: string | null
+          campaigns: Json[] | null
           collection_metadata: Json | null
           contract_address: string | null
           coords: Json | null
           created_at: string | null
           email: string | null
+          free_right_image_url: string | null
           id: string
-          last_qr_scan_time: string | null
           nft_src: string | null
-          not_used_contract_address: string | null
-          not_used_metadata: Json | null
-          not_used_nft_src: string | null
           not_used_nfts: number | null
           number_for_reward: number | null
           number_of_orders_so_far: number | null
-          used_nfts: number | null
+          ticket_ipfs_url: string | null
+          used_rewards: number | null
         }
         Insert: {
           brand_branch?: string | null
           brand_logo_ipfs_url?: string | null
           brand_name?: string | null
+          brand_video_url?: string | null
+          campaigns?: Json[] | null
           collection_metadata?: Json | null
           contract_address?: string | null
           coords?: Json | null
           created_at?: string | null
           email?: string | null
+          free_right_image_url?: string | null
           id: string
-          last_qr_scan_time?: string | null
           nft_src?: string | null
-          not_used_contract_address?: string | null
-          not_used_metadata?: Json | null
-          not_used_nft_src?: string | null
           not_used_nfts?: number | null
           number_for_reward?: number | null
           number_of_orders_so_far?: number | null
-          used_nfts?: number | null
+          ticket_ipfs_url?: string | null
+          used_rewards?: number | null
         }
         Update: {
           brand_branch?: string | null
           brand_logo_ipfs_url?: string | null
           brand_name?: string | null
+          brand_video_url?: string | null
+          campaigns?: Json[] | null
           collection_metadata?: Json | null
           contract_address?: string | null
           coords?: Json | null
           created_at?: string | null
           email?: string | null
+          free_right_image_url?: string | null
           id?: string
-          last_qr_scan_time?: string | null
           nft_src?: string | null
-          not_used_contract_address?: string | null
-          not_used_metadata?: Json | null
-          not_used_nft_src?: string | null
           not_used_nfts?: number | null
           number_for_reward?: number | null
           number_of_orders_so_far?: number | null
-          used_nfts?: number | null
+          ticket_ipfs_url?: string | null
+          used_rewards?: number | null
         }
         Relationships: [
           {
@@ -159,7 +159,6 @@ export type Database = {
           created_at: string | null
           id: string
           last_login: string | null
-          nonce: string | null
           username: string | null
           walletAddr: string | null
         }
@@ -167,7 +166,6 @@ export type Database = {
           created_at?: string | null
           id?: string
           last_login?: string | null
-          nonce?: string | null
           username?: string | null
           walletAddr?: string | null
         }
@@ -175,7 +173,6 @@ export type Database = {
           created_at?: string | null
           id?: string
           last_login?: string | null
-          nonce?: string | null
           username?: string | null
           walletAddr?: string | null
         }
@@ -186,31 +183,49 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      decrement_user_missions_number_of_free_rights: {
+      decrement_admins_not_used_nfts: {
+        Args: {
+          admin_id: string
+        }
+        Returns: undefined
+      }
+      decrement_user_missions_number_of_free_rigths: {
         Args: {
           mission_id: string
+        }
+        Returns: undefined
+      }
+      increment_admins_not_used_nfts: {
+        Args: {
+          admin_id: string
         }
         Returns: undefined
       }
       increment_admins_number_of_orders_so_far: {
         Args: {
-          id: number
+          admin_id: string
         }
         Returns: undefined
       }
-      increment_user_missions_customer_number_of_orders_so_far: {
+      increment_admins_used_rewards: {
         Args: {
-          mission_id: string
+          admin_id: string
         }
         Returns: undefined
       }
-      increment_user_missions_number_of_free_rights: {
+      increment_user_missions_number_of_free_rigths: {
         Args: {
           mission_id: string
         }
         Returns: undefined
       }
       increment_user_missions_number_of_orders: {
+        Args: {
+          mission_id: string
+        }
+        Returns: undefined
+      }
+      increment_user_missions_number_of_orders_so_far: {
         Args: {
           mission_id: string
         }
