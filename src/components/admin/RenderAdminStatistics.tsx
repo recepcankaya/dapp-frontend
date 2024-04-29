@@ -57,6 +57,16 @@ export default function RenderAdminStatistics({
             </p>
           </div>
         </div>
+        <div className="flex items-center justify-around">
+          <div className="w-24 h-24 rounded-full border-2 border-lad-pink flex items-center justify-center">
+            <p className="text-lg">{adminData && adminData[0].used_rewards}</p>
+          </div>
+          <div className="w-3/5 h-16 bg-pink-500 rounded-lg pl-5 flex items-center">
+            <p className="text-lg font-bold text-black">
+              Verilen Ödüllerin Sayısı
+            </p>
+          </div>
+        </div>
         {/* <GetNFTTotalSupply
           contractAddress={adminData && adminData[0].contract_address}
         /> */}

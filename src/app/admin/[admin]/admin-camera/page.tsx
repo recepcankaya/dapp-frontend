@@ -69,6 +69,10 @@ export default function AdminCamera() {
           admin_id: admin?.id,
         });
 
+        await supabase.rpc("increment_admins_used_rewards", {
+          admin_id: admin?.id,
+        });
+
         await supabase.rpc("decrement_user_missions_number_of_free_rigths", {
           mission_id: userMissionInfo[0].id,
         });
