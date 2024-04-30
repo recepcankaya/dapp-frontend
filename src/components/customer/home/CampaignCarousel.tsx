@@ -8,9 +8,15 @@ import { Pagination, Autoplay } from "swiper/modules";
 import Image from "next/image";
 import { useState } from "react";
 import CarouselModal from "./CarouselModal";
+import { AdminCampaigns, Campaign } from "@/src/lib/jsonQuery.types";
 
-export default function CampaignCarousel({ campaigns }: { campaigns: any[] }) {
+type CampaignCarouselProps = {
+  campaigns: Campaign[];
+};
+
+export default function CampaignCarousel({ campaigns }: CampaignCarouselProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <section className="pt-12">
       <Swiper

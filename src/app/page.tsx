@@ -1,14 +1,13 @@
 "use client";
+import Link from "next/link";
 import { ConnectEmbed, useAddress } from "@thirdweb-dev/react";
 import { sha512 } from "js-sha512";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
-import useUserStore from "@/src/store/userStore";
-import Link from "next/link";
 import { createClient } from "../lib/supabase/client";
 
 export default function Home() {
-  const updateUser = useUserStore((state) => state.setUser);
   const supabase = createClient();
   const walletAddr = useAddress();
   const router = useRouter();
@@ -21,7 +20,6 @@ export default function Home() {
       }
 
       const passwordHash = sha512(`${walletAddr}l4dder1t`).slice(0, 50);
-
       const { data, error } = await supabase.auth.signInWithPassword({
         email: `${walletAddr}@ladderuser.com`,
         password: passwordHash,
@@ -29,31 +27,25 @@ export default function Home() {
 
       if (error) {
         isNewUser = true;
-        const { data } = await supabase.auth.signUp({
+        const {
+          data: { user },
+        } = await supabase.auth.signUp({
           email: `${walletAddr}@ladderuser.com`,
           password: passwordHash,
         });
-        await supabase
-          .from("users")
-          .update({ walletAddr })
-          .eq("id", data.user?.id);
+
+        if (!user) {
+          toast.error("Kullanıcı oluşturulamadı. Lütfen tekrar deneyiniz.");
+          return;
+        }
+
+        await supabase.from("users").update({ walletAddr }).eq("id", user?.id);
       } else {
         await supabase
           .from("users")
-          .update({ last_login: new Date() })
+          .update({ last_login: String(new Date()) })
           .eq("id", data.user?.id);
       }
-
-      const { data: user, error: userError } = await supabase
-        .from("users")
-        .select("*")
-        .eq("walletAddr", walletAddr)
-        .single();
-
-      updateUser({
-        id: user.id.toString(),
-        username: user.username,
-      });
 
       if (isNewUser) {
         router.push("/user/user-info");

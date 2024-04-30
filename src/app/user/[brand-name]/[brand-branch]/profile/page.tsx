@@ -1,5 +1,6 @@
 import { createClient } from "@/src/lib/supabase/server";
 import ProfileHOC from "@/src/components/customer/profile/ProfileHOC";
+import { redirect } from "next/navigation";
 
 export default async function Profile({
   searchParams,
@@ -11,6 +12,10 @@ export default async function Profile({
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/");
+  }
 
   const { data: username } = await supabase
     .from("users")
@@ -40,7 +45,7 @@ export default async function Profile({
             : 0
         }
         freeRightImageUrl={
-          freeRightImageUrl && freeRightImageUrl[0].free_right_image_url
+          freeRightImageUrl ? freeRightImageUrl[0].free_right_image_url : ""
         }
       />
     </div>

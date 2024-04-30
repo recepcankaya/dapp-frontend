@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "./server";
+import { createClient } from "./supabase/server";
 
 export default async function getUserID() {
   const supabase = createClient();

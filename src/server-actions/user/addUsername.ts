@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 
 import { createClient } from "@/src/lib/supabase/server";
-import getUserID from "@/src/lib/supabase/getUserID";
+import getUserID from "@/src/lib/getUserID";
 
 export default async function addUsername(prevState: any, formData: FormData) {
   const schema = z.object({
@@ -19,9 +19,14 @@ export default async function addUsername(prevState: any, formData: FormData) {
   const supabase = createClient();
 
   const userID = await getUserID();
+
+  if (!userID) {
+    redirect("/");
+  }
+
   const { error } = await supabase
     .from("users")
-    .update({ username: result.data?.username, last_login: new Date() })
+    .update({ username: result.data?.username, last_login: String(new Date()) })
     .eq("id", userID);
   if (
     error?.message.includes("duplicate key value violates unique constraint")

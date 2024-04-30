@@ -8,9 +8,9 @@ import { useAddress } from "@thirdweb-dev/react";
 import { useSearchParams } from "next/navigation";
 
 type ProfileHOCProps = {
-  userID: string | undefined;
-  numberOfFreeRights: any;
-  freeRightImageUrl: any;
+  userID: User["id"];
+  numberOfFreeRights: UserMission["number_of_free_rights"];
+  freeRightImageUrl: Admin["free_right_image_url"];
 };
 
 export default function ProfileHOC({

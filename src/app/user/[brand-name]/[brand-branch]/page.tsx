@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+
 import { createClient } from "@/src/lib/supabase/server";
 import CustomerHomeHeader from "@/src/components/customer/home/CustomerHomeHeader";
 import CustomerHomeLinks from "@/src/components/customer/home/CustomerHomeLinks";
@@ -5,6 +7,13 @@ import CampaignCarousel from "@/src/components/customer/home/CampaignCarousel";
 import RenderTicket from "@/src/components/customer/home/RenderTicket";
 import BrandVideo from "@/src/components/customer/BrandVideo";
 import { Button } from "@/src/components/ui/button";
+import { Json } from "@/src/lib/database.types";
+import { AdminCampaigns } from "@/src/lib/jsonQuery.types";
+
+type Campaign = {
+  campaign_id: string;
+  campaign_image: string;
+};
 
 export default async function CustomerHome({
   searchParams,
@@ -15,6 +24,10 @@ export default async function CustomerHome({
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/");
+  }
 
   const { data: userMissionNumbers, error } = await supabase
     .from("user_missions")
@@ -29,11 +42,13 @@ export default async function CustomerHome({
     )
     .eq("id", searchParams.adminID);
 
+  if (!adminInfo) {
+    redirect("/");
+  }
+
   return (
     <section className="h-screen w-screen">
-      <CustomerHomeHeader
-        brandLogo={adminInfo && adminInfo[0].brand_logo_ipfs_url}
-      />
+      <CustomerHomeHeader brandLogo={adminInfo[0].brand_logo_ipfs_url ?? ""} />
       <CustomerHomeLinks adminId={searchParams.adminID} />
       <RenderTicket
         adminInfo={adminInfo}
@@ -45,7 +60,11 @@ export default async function CustomerHome({
         type="submit">
         Menü
       </Button>
-      <CampaignCarousel campaigns={adminInfo && adminInfo[0].campaigns} />
+      <CampaignCarousel
+        campaigns={
+          (adminInfo[0].campaigns as AdminCampaigns["campaigns"]) ?? []
+        }
+      />
       {/* <BrandVideo brandVideo={adminInfo && adminInfo[0].brand_video_url} /> */}
     </section>
   );

@@ -6,9 +6,9 @@ import { useEffect, useRef } from "react";
 
 type RenderFreeRightsProps = {
   selectedTab: string;
-  numberOfFreeRights: any;
-  freeRightImageUrl: any;
-  userID: string | undefined;
+  numberOfFreeRights: UserMission["number_of_free_rights"];
+  freeRightImageUrl: Admin["free_right_image_url"];
+  userID: User["id"];
   setQrCodeModalVisible: (value: boolean) => void;
 };
 
@@ -19,7 +19,9 @@ export default function RenderFreeRights({
   userID,
   setQrCodeModalVisible,
 }: RenderFreeRightsProps) {
-  const freeRightsRef = useRef<number>(numberOfFreeRights);
+  const freeRightsRef = useRef<number>(
+    numberOfFreeRights
+  ) as React.MutableRefObject<number>;
   const supabase = createClient();
   const router = useRouter();
   const numberOfFreeRightsArray = new Array(numberOfFreeRights).fill(0);
@@ -58,10 +60,14 @@ export default function RenderFreeRights({
                 onClick={() => setQrCodeModalVisible(true)}
                 className="mb-4">
                 <Image
-                  src={freeRightImageUrl.replace(
-                    "ipfs://",
-                    "https://ipfs.io/ipfs/"
-                  )}
+                  src={
+                    freeRightImageUrl
+                      ? freeRightImageUrl.replace(
+                          "ipfs://",
+                          "https://ipfs.io/ipfs/"
+                        )
+                      : ""
+                  }
                   alt="nft"
                   priority
                   quality={100}
