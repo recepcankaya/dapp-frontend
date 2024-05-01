@@ -5,16 +5,16 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { haversine } from "@/src/lib/haveresine";
-import { Json } from "@/src/lib/database.types";
 import { Input } from "../ui/input";
 
+// @todo - DAHA İYİ BİR TYPE SAFETY KONTROLÜ
 type RenderBrandsProps = {
   brands: {
-    id: string;
-    brand_name: string | null;
-    brand_branch: string | null;
-    brand_logo_ipfs_url: string | null;
-    coords: Json | null;
+    id: Admin["id"];
+    brand_name: Admin["brand_name"];
+    brand_branch: Admin["brand_branch"];
+    brand_logo_ipfs_url: Admin["brand_logo_ipfs_url"];
+    coords: Admin["coords"];
   }[];
 };
 

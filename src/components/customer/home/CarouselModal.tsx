@@ -1,8 +1,9 @@
 "use client";
+import { Campaign } from "@/src/lib/types/jsonQuery.types";
 import Image from "next/image";
 
 type CarouselModalProps = {
-  campaign: any;
+  campaign: Campaign;
   setIsModalOpen: (value: boolean) => void;
 };
 

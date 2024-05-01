@@ -30,30 +30,32 @@ export default function AdminCamera() {
         data: { user: admin },
       } = await supabase.auth.getUser();
 
-      if (admin === null) {
+      if (!admin) {
         router.push("/");
       }
 
       const { data: userMissionInfo } = await supabase
         .from("user_missions")
         .select(
-          "number_of_orders, id, customer_number_of_orders_so_far, number_of_free_rights, used_rewards"
+          "number_of_orders, id, customer_number_of_orders_so_far, number_of_free_rights, customer_used_rewards"
         )
         .eq("user_id", userID)
-        .eq("admin_id", admin?.id);
+        .eq("admin_id", admin?.id || "");
 
       // get number_for_reward from admin table
       const { data: numberForReward } = await supabase
         .from("admins")
         .select("number_for_reward")
-        .eq("id", admin?.id);
+        .eq("id", admin?.id || "");
 
+      // @todo - BUNU RLS POLICY İLE DÜZELTEBİLİRİZ. KULLANICILARI SELECT İÇİN "authenticated" yapalım
       const { data: username } = await secretSupabase
         .from("users")
         .select("username")
         .eq("id", userID)
         .single();
 
+      // @todo - ÇOK SAÇMA BİR TYPE-SAFETY KONTROLÜ. SONRA DÜZELTELİM.
       if (forNFT === true && userMissionInfo) {
         if (admin?.id !== adminID) {
           toast.error(
@@ -66,19 +68,23 @@ export default function AdminCamera() {
         }
 
         await supabase.rpc("decrement_admins_not_used_nfts", {
-          admin_id: admin?.id,
+          admin_id: admin?.id || "",
         });
 
         await supabase.rpc("increment_admins_used_rewards", {
-          admin_id: admin?.id,
+          admin_id: admin?.id || "",
         });
 
         await supabase.rpc("decrement_user_missions_number_of_free_rigths", {
           mission_id: userMissionInfo[0].id,
         });
 
+        await supabase.rpc("increment_user_missions_used_rewards", {
+          mission_id: userMissionInfo[0].id,
+        });
+
         await supabase.rpc("increment_admins_number_of_orders_so_far", {
-          admin_id: admin?.id,
+          admin_id: admin?.id || "",
         });
 
         await supabase.rpc("increment_user_missions_number_of_orders_so_far", {
@@ -90,42 +96,44 @@ export default function AdminCamera() {
             <span className="font-bold">{username?.username}</span> adlı
             müşteriniz ödülünüzü kullandı. <br />
             Bugüne kadar verilen sipariş sayısı:{" "}
-            {userMissionInfo[0].customer_number_of_orders_so_far + 1} <br />
-            Kalan ödül hakkı: {userMissionInfo[0].number_of_free_rights -
-              1}{" "}
+            {userMissionInfo[0].customer_number_of_orders_so_far === null
+              ? 0
+              : userMissionInfo[0].customer_number_of_orders_so_far + 1}{" "}
+            <br />
+            Kalan ödül hakkı:{" "}
+            {userMissionInfo[0].number_of_free_rights === null
+              ? 0
+              : userMissionInfo[0].number_of_free_rights - 1}{" "}
             <br />
             Bugüne kadar kullandığı ödül sayısı:{" "}
-            {userMissionInfo[0].used_rewards + 1}
+            {userMissionInfo[0].customer_used_rewards === null
+              ? 0
+              : userMissionInfo[0].customer_used_rewards + 1}
           </p>
         );
       }
       // If the order is not for free, check the number of orders
       else {
         if (userMissionInfo?.length === 0) {
-          console.log("İlk giriş");
           // If the user does not have a record in the user_missions table, add a new record
           const { data: missionId } = await supabase
             .from("user_missions")
             .insert({
               number_of_orders: 1,
               user_id: userID,
-              admin_id: admin?.id,
+              admin_id: admin?.id || "",
             })
             .select("id");
-
-          if (missionId === null) {
-            return;
-          }
 
           await supabase.rpc(
             "increment_user_missions_number_of_orders_so_far",
             {
-              mission_id: missionId[0].id,
+              mission_id: missionId === null ? "" : missionId[0].id,
             }
           );
 
           await supabase.rpc("increment_admins_number_of_orders_so_far", {
-            admin_id: admin?.id,
+            admin_id: admin?.id || "",
           });
 
           toast.success(
@@ -136,10 +144,13 @@ export default function AdminCamera() {
             </p>
           );
         } else if (
+          // @todo - ÇOK SAÇMA BİR TYPE-SAFETY KONTROLÜ. SONRA DÜZELTELİM.
           numberForReward &&
           userMissionInfo &&
-          userMissionInfo[0].number_of_orders <
-            numberForReward[0].number_for_reward - 1
+          userMissionInfo[0].number_of_orders !== null &&
+          numberForReward[0].number_for_reward !== null &&
+          numberForReward[0].number_for_reward - 1 >
+            userMissionInfo[0].number_of_orders
         ) {
           // If the user has a record in the user_missions table and the number of orders is less than the number_for_reward, increase the number of orders by one
           await supabase.rpc("increment_user_missions_number_of_orders", {
@@ -147,7 +158,7 @@ export default function AdminCamera() {
           });
 
           await supabase.rpc("increment_admins_number_of_orders_so_far", {
-            admin_id: admin?.id,
+            admin_id: admin?.id || "",
           });
 
           await supabase.rpc(
@@ -162,26 +173,31 @@ export default function AdminCamera() {
               <span className="font-bold">{username?.username}</span> adlı
               müşterinin işlemi başarıyla gerçekleştirildi. <br />
               Bugüne kadar sipariş edilen kahve sayısı:{""}
-              {userMissionInfo[0].customer_number_of_orders_so_far + 1} <br />
+              {userMissionInfo[0].customer_number_of_orders_so_far === null
+                ? 0
+                : userMissionInfo[0].customer_number_of_orders_so_far + 1}{" "}
+              <br />
               Müşterinin ödül hakkı:{""}
               {userMissionInfo[0].number_of_free_rights === null
                 ? 0
                 : userMissionInfo[0].number_of_free_rights}{" "}
               <br />
               Bugüne kadar kullandığı ödül sayısı:{" "}
-              {userMissionInfo[0].used_rewards}
+              {userMissionInfo[0].customer_used_rewards}
             </p>
           );
         } else if (
+          // @todo - ÇOK SAÇMA BİR TYPE-SAFETY KONTROLÜ. SONRA DÜZELTELİM.
           numberForReward &&
           userMissionInfo &&
+          numberForReward[0].number_for_reward !== null &&
           userMissionInfo[0].number_of_orders ===
             numberForReward[0].number_for_reward - 1
         ) {
           // If the user has a record in the user_missions table and the number of orders is equal to the number_for_reward, make request
           try {
             await supabase.rpc("increment_admins_not_used_nfts", {
-              admin_id: admin?.id,
+              admin_id: admin?.id || "",
             });
 
             await supabase.rpc(
@@ -192,7 +208,7 @@ export default function AdminCamera() {
             );
 
             await supabase.rpc("increment_admins_number_of_orders_so_far", {
-              admin_id: admin?.id,
+              admin_id: admin?.id || "",
             });
 
             await supabase.rpc(
@@ -202,13 +218,13 @@ export default function AdminCamera() {
               }
             );
 
-            const { error: zeroError } = await secretSupabase
+            const { error: zeroError } = await supabase
               .from("user_missions")
               .update({
                 number_of_orders: 0,
               })
               .eq("user_id", userID)
-              .eq("admin_id", admin?.id);
+              .eq("admin_id", admin?.id || "");
 
             if (zeroError) {
               toast.error("Bir şeyler yanlış gitti. Lütfen tekrar deneyiniz.");
@@ -218,25 +234,26 @@ export default function AdminCamera() {
                   <span className="font-bold">{username?.username}</span>
                   adlı müşteriniz ödülünüzü kazandı. <br />
                   Bugüne kadar sipariş edilen kahve sayısı:{""}
-                  {userMissionInfo[0].customer_number_of_orders_so_far + 1}
+                  {userMissionInfo[0].customer_number_of_orders_so_far === null
+                    ? 0
+                    : userMissionInfo[0].customer_number_of_orders_so_far + 1}
                   <br />
                   Müşterinin ödül hakkı:{""}
                   {userMissionInfo[0].number_of_free_rights === null
                     ? 1
                     : userMissionInfo[0].number_of_free_rights + 1}
                   Bugüne kadar kullandığı ödül sayısı:{" "}
-                  {userMissionInfo[0].used_rewards}
+                  {userMissionInfo[0].customer_used_rewards}
                 </p>
               );
             }
           } catch (error) {
-            console.log("error", error);
             toast.error("Müşteriye ödülü verilemedi.Lütfen tekrar deneyiniz.");
           }
         }
       }
     } catch (error) {
-      console.log("error", error);
+      toast.error("Bir şeyler yanlış gitti. Lütfen tekrar deneyiniz.");
     } finally {
       setTimeout(() => {
         isScanned.current = false;
@@ -262,7 +279,6 @@ export default function AdminCamera() {
       <QrScanner
         constraints={{ facingMode: "environment" }}
         onDecode={handleScan}
-        onError={(error) => console.log(error?.message)}
         stopDecoding={isScanned.current}
         scanDelay={5000}
       />

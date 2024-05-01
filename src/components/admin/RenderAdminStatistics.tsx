@@ -1,10 +1,11 @@
 "use client";
+import { AdminStatistics } from "@/src/lib/types/jsonQuery.types";
 import Link from "next/link";
 
 export default function RenderAdminStatistics({
   adminData,
 }: {
-  adminData: any;
+  adminData: AdminStatistics[];
 }) {
   return (
     <>
@@ -59,7 +60,9 @@ export default function RenderAdminStatistics({
         </div>
         <div className="flex items-center justify-around">
           <div className="w-24 h-24 rounded-full border-2 border-lad-pink flex items-center justify-center">
-            <p className="text-lg">{adminData && adminData[0].used_rewards}</p>
+            <p className="text-lg">
+              {adminData && adminData[0].admin_used_rewards}
+            </p>
           </div>
           <div className="w-3/5 h-16 bg-pink-500 rounded-lg pl-5 flex items-center">
             <p className="text-lg font-bold text-black">

@@ -7,18 +7,12 @@ import CampaignCarousel from "@/src/components/customer/home/CampaignCarousel";
 import RenderTicket from "@/src/components/customer/home/RenderTicket";
 import BrandVideo from "@/src/components/customer/BrandVideo";
 import { Button } from "@/src/components/ui/button";
-import { Json } from "@/src/lib/database.types";
-import { AdminCampaigns } from "@/src/lib/jsonQuery.types";
-
-type Campaign = {
-  campaign_id: string;
-  campaign_image: string;
-};
+import { AdminCampaigns } from "@/src/lib/types/jsonQuery.types";
 
 export default async function CustomerHome({
   searchParams,
 }: {
-  searchParams: { adminID: string };
+  searchParams: { adminID: Admin["id"] };
 }) {
   const supabase = createClient();
   const {

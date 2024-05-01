@@ -1,11 +1,15 @@
 "use client";
 import Video from "next-video";
 
-export default function BrandVideo({ brandVideo }: { brandVideo: string }) {
+export default function BrandVideo({
+  brandVideo,
+}: {
+  brandVideo: Admin["brand_video_url"];
+}) {
   console.log(brandVideo);
   return (
     <section className="w-screen pt-12 pb-24">
-      <Video src={brandVideo} />
+      {brandVideo && <Video src={brandVideo} />}
     </section>
   );
 }

@@ -8,13 +8,13 @@ import { Pagination, Autoplay } from "swiper/modules";
 import Image from "next/image";
 import { useState } from "react";
 import CarouselModal from "./CarouselModal";
-import { AdminCampaigns, Campaign } from "@/src/lib/jsonQuery.types";
+import { AdminCampaigns } from "@/src/lib/types/jsonQuery.types";
 
-type CampaignCarouselProps = {
-  campaigns: Campaign[];
-};
-
-export default function CampaignCarousel({ campaigns }: CampaignCarouselProps) {
+export default function CampaignCarousel({
+  campaigns,
+}: {
+  campaigns: AdminCampaigns["campaigns"];
+}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
@@ -23,7 +23,7 @@ export default function CampaignCarousel({ campaigns }: CampaignCarouselProps) {
         pagination={true}
         autoplay={true}
         modules={[Pagination, Autoplay]}>
-        {campaigns.map((campaign) =>
+        {campaigns?.map((campaign) =>
           isModalOpen ? (
             <CarouselModal
               setIsModalOpen={setIsModalOpen}

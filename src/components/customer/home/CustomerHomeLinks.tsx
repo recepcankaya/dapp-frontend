@@ -2,7 +2,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-export default function CustomerHomeLinks({ adminId }: { adminId: string }) {
+export default function CustomerHomeLinks({
+  adminId,
+}: {
+  adminId: Admin["id"];
+}) {
   const pathname = usePathname();
 
   return (

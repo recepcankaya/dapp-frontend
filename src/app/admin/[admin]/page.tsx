@@ -1,6 +1,8 @@
 import { createClient } from "@/src/lib/supabase/server";
 import GetNFTTotalSupply from "@/src/components/admin/GetNFTTotalSupply";
 import RenderAdminStatistics from "@/src/components/admin/RenderAdminStatistics";
+import { redirect } from "next/navigation";
+import { AdminStatistics } from "@/src/lib/types/jsonQuery.types";
 
 export default async function AdminHome() {
   const supabase = createClient();
@@ -8,10 +10,14 @@ export default async function AdminHome() {
     data: { user },
   } = await supabase.auth.getUser();
 
+  if (!user) {
+    redirect("/admin/admin-login");
+  }
+
   const { data: adminData, error: adminError } = await supabase
     .from("admins")
     .select(
-      "brand_name, brand_branch, not_used_nfts, number_for_reward, number_of_orders_so_far, used_rewards, contract_address"
+      "brand_name, brand_branch, not_used_nfts, number_for_reward, number_of_orders_so_far, admin_used_rewards, contract_address"
     )
     .eq("id", user?.id);
 
@@ -21,7 +27,7 @@ export default async function AdminHome() {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-black text-white">
-      <RenderAdminStatistics adminData={adminData} />
+      <RenderAdminStatistics adminData={adminData as AdminStatistics[]} />
     </div>
   );
 }

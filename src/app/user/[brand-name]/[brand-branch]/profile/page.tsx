@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 export default async function Profile({
   searchParams,
 }: {
-  searchParams: { adminID: string };
+  searchParams: { adminID: Admin["id"] };
 }) {
   const supabase = createClient();
 
