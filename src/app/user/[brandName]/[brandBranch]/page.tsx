@@ -49,11 +49,6 @@ export default async function CustomerHome({
         userMissionNumbers={userMissionNumbers}
         userID={user?.id}
       />
-      <Button
-        className="mt-16 px-16 py-6 mb-8 mx-auto flex text-lg font-bold font-rosarivo rounded-xl border-2 border-lad-pink text-lad-white"
-        type="submit">
-        Menü
-      </Button>
       <CampaignCarousel
         campaigns={
           (adminInfo[0].campaigns as AdminCampaigns["campaigns"]) ?? []

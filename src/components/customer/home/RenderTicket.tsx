@@ -1,8 +1,10 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
-import { createClient } from "@/src/lib/supabase/client";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
+
+import { createClient } from "@/src/lib/supabase/client";
+import { Button } from "../../ui/button";
 
 type RenderTicketProps = {
   adminInfo:
@@ -20,6 +22,16 @@ type RenderTicketProps = {
   userID: User["id"];
 };
 
+function decodeTurkishCharacters(text: string) {
+  return text
+    .replace(/\ğ/g, "g")
+    .replace(/\ü/g, "u")
+    .replace(/\ş/g, "s")
+    .replace(/\ı/g, "i")
+    .replace(/\ö/g, "o")
+    .replace(/\ç/g, "c");
+}
+
 export default function RenderTicket({
   adminInfo,
   userID,
@@ -33,6 +45,17 @@ export default function RenderTicket({
   const ticketCircles = adminInfo
     ? new Array(adminInfo[0].number_for_reward).fill(0)
     : [];
+  const params = useParams<{ brandName: string; brandBranch: string }>();
+  const convertedBrandName = decodeTurkishCharacters(
+    decodeURIComponent(params.brandName.toString())
+  );
+  const convertedBrandBranch = decodeTurkishCharacters(
+    decodeURIComponent(params.brandBranch.toString())
+  );
+
+  const { data: menuURL } = supabase.storage
+    .from("menus")
+    .getPublicUrl(`${convertedBrandName}-${convertedBrandBranch}-menu.pdf`);
 
   useEffect(() => {
     const orders = supabase
@@ -59,7 +82,7 @@ export default function RenderTicket({
 
   // @todo - TICKETIN DÜZELTİLMESİ LAZIM
   return (
-    <section className="pt-16 w-full flex justify-center items-center">
+    <section className="pt-16 w-full grid justify-items-center items-center">
       <div className="w-full min-[525px]:w-5/6 min-[320px]:h-40 min-[375px]:h-44 min-[425px]:h-48 min-[475px]:h-52 min-[525px]:h-56 min-[600px]:h-60 min-[675px]:h-72 relative">
         {/* @todo - ÇOK SAÇMA BİR TYPE-SAFETY KONTROLÜ. SONRA DÜZELTELİM.*/}
         <Image
@@ -113,6 +136,14 @@ export default function RenderTicket({
           ))}
         </ul>
       </div>
+      <Button
+        asChild
+        className="mt-16 px-16 py-6 mb-8 mx-auto flex text-lg font-bold font-rosarivo rounded-xl border-2 border-lad-pink text-lad-white"
+        type="submit">
+        <a href={menuURL.publicUrl} target="_blank" rel="noopener noreferrer">
+          Menü
+        </a>
+      </Button>
     </section>
   );
 }

@@ -18,6 +18,10 @@ type RenderBrandsProps = {
   }[];
 };
 
+function convertString(str: string): string {
+  return str.toLowerCase().replace(/\s+/g, "-");
+}
+
 export default function RenderBrands(brands: RenderBrandsProps) {
   const [customerLocation, setCustomerLocation] = useState<{
     lat: number;
@@ -80,9 +84,9 @@ export default function RenderBrands(brands: RenderBrandsProps) {
               .map((item: any, index: number) => (
                 <div key={index} className="flex flex-col items-center gap-4">
                   <Link
-                    href={`/user/${item.brand_name.toLowerCase()}/${item.brand_branch.toLowerCase()}?adminID=${
-                      item.id
-                    }`}>
+                    href={`/user/${convertString(
+                      item.brand_name
+                    )}/${convertString(item.brand_branch)}?adminID=${item.id}`}>
                     <Image
                       src={item.brand_logo_ipfs_url.replace(
                         "ipfs://",
@@ -111,9 +115,9 @@ export default function RenderBrands(brands: RenderBrandsProps) {
               .map((item: any, index: number) => (
                 <div key={index} className="flex flex-col items-center gap-4">
                   <Link
-                    href={`/user/${item.brand_name.toLowerCase()}/${item.brand_branch.toLowerCase()}?adminID=${
-                      item.id
-                    }`}>
+                    href={`/user/${convertString(
+                      item.brand_name
+                    )}/${convertString(item.brand_branch)}?adminID=${item.id}`}>
                     <Image
                       src={item.brand_logo_ipfs_url.replace(
                         "ipfs://",
