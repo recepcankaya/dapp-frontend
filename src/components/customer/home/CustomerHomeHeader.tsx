@@ -5,7 +5,7 @@ import logo from "@/src/public/LadderLogo.png";
 export default function CustomerHomeHeader({
   brandLogo,
 }: {
-  brandLogo: Admin["brand_logo_ipfs_url"];
+  brandLogo: Brand["brand_logo_ipfs_url"];
 }) {
   return (
     <div className="p-2 flex justify-around items-center gap-36 mb-8">

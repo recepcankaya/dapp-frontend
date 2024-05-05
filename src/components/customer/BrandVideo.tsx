@@ -4,7 +4,7 @@ import Video from "next-video";
 export default function BrandVideo({
   brandVideo,
 }: {
-  brandVideo: Admin["brand_video_url"];
+  brandVideo: BrandBranch["video_url"];
 }) {
   console.log(brandVideo);
   return (

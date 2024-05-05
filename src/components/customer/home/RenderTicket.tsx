@@ -7,18 +7,16 @@ import { createClient } from "@/src/lib/supabase/client";
 import { Button } from "../../ui/button";
 
 type RenderTicketProps = {
-  adminInfo:
-    | {
-        number_for_reward: Admin["number_for_reward"];
-        ticket_ipfs_url: Admin["ticket_ipfs_url"];
-        brand_logo_ipfs_url: Admin["brand_logo_ipfs_url"];
-      }[]
-    | null;
-  userMissionNumbers:
-    | {
-        number_of_orders: UserMission["number_of_orders"];
-      }[]
-    | null;
+  branchInfo: {
+    required_number_for_free_right: BrandBranch["required_number_for_free_right"];
+    campaigns: BrandBranch["campaigns"];
+    video_url: BrandBranch["video_url"];
+    brand: {
+      ticket_ipfs_url: Brand["ticket_ipfs_url"];
+      brand_logo_ipfs_url: Brand["brand_logo_ipfs_url"];
+    } | null;
+  };
+  totalTicketOrders: UserOrders["total_ticket_orders"];
   userID: User["id"];
 };
 
@@ -33,17 +31,17 @@ function decodeTurkishCharacters(text: string) {
 }
 
 export default function RenderTicket({
-  adminInfo,
+  branchInfo,
   userID,
-  userMissionNumbers,
+  totalTicketOrders,
 }: RenderTicketProps) {
   const userOrderNumberRef = useRef<number>(
-    userMissionNumbers && userMissionNumbers[0]?.number_of_orders
+    totalTicketOrders
   ) as React.MutableRefObject<number>;
   const supabase = createClient();
   const router = useRouter();
-  const ticketCircles = adminInfo
-    ? new Array(adminInfo[0].number_for_reward).fill(0)
+  const ticketCircles = branchInfo
+    ? new Array(branchInfo.required_number_for_free_right).fill(0)
     : [];
   const params = useParams<{ brandName: string; brandBranch: string }>();
   const convertedBrandName = decodeTurkishCharacters(
@@ -87,12 +85,10 @@ export default function RenderTicket({
         {/* @todo - ÇOK SAÇMA BİR TYPE-SAFETY KONTROLÜ. SONRA DÜZELTELİM.*/}
         <Image
           src={
-            (adminInfo &&
-              adminInfo[0]?.ticket_ipfs_url?.replace(
-                "ipfs://",
-                "https://ipfs.io/ipfs/"
-              )) ||
-            ""
+            branchInfo.brand?.ticket_ipfs_url?.replace(
+              "ipfs://",
+              "https://ipfs.io/ipfs/"
+            ) || ""
           }
           alt="Ticket"
           quality={100}
@@ -119,13 +115,11 @@ export default function RenderTicket({
               style={{
                 // @todo - ÇOK SAÇMA BİR TYPE-SAFETY KONTROLÜ. SONRA DÜZELTELİM.
                 background:
-                  userMissionNumbers &&
-                  userMissionNumbers[0]?.number_of_orders &&
-                  index < userMissionNumbers[0]?.number_of_orders
+                  totalTicketOrders && index < totalTicketOrders
                     ? `url(${
-                        adminInfo &&
-                        adminInfo[0].brand_logo_ipfs_url &&
-                        adminInfo[0].brand_logo_ipfs_url.replace(
+                        branchInfo &&
+                        branchInfo.brand?.brand_logo_ipfs_url &&
+                        branchInfo.brand?.brand_logo_ipfs_url.replace(
                           "ipfs://",
                           "https://ipfs.io/ipfs/"
                         )

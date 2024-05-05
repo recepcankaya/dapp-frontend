@@ -6,13 +6,13 @@ import CustomerHomeLinks from "@/src/components/customer/home/CustomerHomeLinks"
 import CampaignCarousel from "@/src/components/customer/home/CampaignCarousel";
 import RenderTicket from "@/src/components/customer/home/RenderTicket";
 import BrandVideo from "@/src/components/customer/BrandVideo";
-import { Button } from "@/src/components/ui/button";
+
 import { AdminCampaigns } from "@/src/lib/types/jsonQuery.types";
 
 export default async function CustomerHome({
   searchParams,
 }: {
-  searchParams: { adminID: Admin["id"] };
+  searchParams: { brandID: BrandBranch["id"] };
 }) {
   const supabase = createClient();
   const {
@@ -23,38 +23,50 @@ export default async function CustomerHome({
     redirect("/");
   }
 
-  const { data: userMissionNumbers, error } = await supabase
-    .from("user_missions")
-    .select("number_of_orders")
+  const { data: totalTicketOrders, error } = await supabase
+    .from("user_orders")
+    .select("total_ticket_orders")
     .eq("user_id", user?.id)
-    .eq("admin_id", searchParams.adminID);
+    .eq("admin_id", searchParams.brandID)
+    .single();
 
-  const { data: adminInfo, error: adminError } = await supabase
-    .from("admins")
+  const { data: branchInfo, error: adminError } = await supabase
+    .from("brand_branch")
     .select(
-      "number_for_reward, number_for_reward, ticket_ipfs_url, brand_logo_ipfs_url, campaigns, brand_video_url"
+      `
+      required_number_for_free_right,
+      campaigns,
+      video_url,
+      brand (
+        ticket_ipfs_url,
+        brand_logo_ipfs_url
+      )
+    `
     )
-    .eq("id", searchParams.adminID);
+    .eq("id", searchParams.brandID)
+    .single();
 
-  if (!adminInfo) {
+  if (!branchInfo) {
     redirect("/");
   }
 
   return (
     <section className="h-screen w-screen">
-      <CustomerHomeHeader brandLogo={adminInfo[0].brand_logo_ipfs_url ?? ""} />
-      <CustomerHomeLinks adminId={searchParams.adminID} />
+      <CustomerHomeHeader
+        brandLogo={branchInfo.brand?.brand_logo_ipfs_url ?? ""}
+      />
+      <CustomerHomeLinks brandID={searchParams.brandID} />
       <RenderTicket
-        adminInfo={adminInfo}
-        userMissionNumbers={userMissionNumbers}
+        branchInfo={branchInfo}
+        totalTicketOrders={totalTicketOrders?.total_ticket_orders ?? 0}
         userID={user?.id}
       />
       <CampaignCarousel
-        campaigns={
-          (adminInfo[0].campaigns as AdminCampaigns["campaigns"]) ?? []
-        }
+        campaigns={(branchInfo.campaigns as AdminCampaigns["campaigns"]) ?? []}
       />
-      {/* <BrandVideo brandVideo={adminInfo && adminInfo[0].brand_video_url} /> */}
+      {branchInfo.video_url ? (
+        <BrandVideo brandVideo={branchInfo?.video_url} />
+      ) : null}
     </section>
   );
 }
