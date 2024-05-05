@@ -12,7 +12,7 @@ import { AdminCampaigns } from "@/src/lib/types/jsonQuery.types";
 export default async function CustomerHome({
   searchParams,
 }: {
-  searchParams: { brandID: BrandBranch["id"] };
+  searchParams: { brandID: Brand["id"]; branchID: BrandBranch["id"] };
 }) {
   const supabase = createClient();
   const {
@@ -27,7 +27,7 @@ export default async function CustomerHome({
     .from("user_orders")
     .select("total_ticket_orders")
     .eq("user_id", user?.id)
-    .eq("admin_id", searchParams.brandID)
+    .eq("admin_id", searchParams.branchID)
     .single();
 
   const { data: branchInfo, error: adminError } = await supabase
@@ -43,7 +43,7 @@ export default async function CustomerHome({
       )
     `
     )
-    .eq("id", searchParams.brandID)
+    .eq("id", searchParams.branchID)
     .single();
 
   if (!branchInfo) {
@@ -55,7 +55,10 @@ export default async function CustomerHome({
       <CustomerHomeHeader
         brandLogo={branchInfo.brand?.brand_logo_ipfs_url ?? ""}
       />
-      <CustomerHomeLinks brandID={searchParams.brandID} />
+      <CustomerHomeLinks
+        brandID={searchParams.brandID}
+        branchID={searchParams.branchID}
+      />
       <RenderTicket
         branchInfo={branchInfo}
         totalTicketOrders={totalTicketOrders?.total_ticket_orders ?? 0}

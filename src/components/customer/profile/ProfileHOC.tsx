@@ -9,13 +9,13 @@ import { useSearchParams } from "next/navigation";
 
 type ProfileHOCProps = {
   userID: User["id"];
-  numberOfFreeRights: UserMission["number_of_free_rights"];
-  freeRightImageUrl: Admin["free_right_image_url"];
+  userTotalFreeRights: UserOrders["user_total_free_rights"] | undefined;
+  freeRightImageUrl: Brand["free_right_image_url"] | undefined;
 };
 
 export default function ProfileHOC({
   userID,
-  numberOfFreeRights,
+  userTotalFreeRights,
   freeRightImageUrl,
 }: ProfileHOCProps) {
   const [qrCodeModalVisible, setQrCodeModalVisible] = useState<boolean>(false);
@@ -24,7 +24,7 @@ export default function ProfileHOC({
   );
   const customerAddress = useAddress();
   const searchParams = useSearchParams();
-  const adminID = searchParams.get("adminID");
+  const adminID = searchParams.get("branchID");
 
   return (
     <div className="w-full">
@@ -48,7 +48,7 @@ export default function ProfileHOC({
         <RenderFreeRights
           userID={userID}
           selectedTab={selectedTab}
-          numberOfFreeRights={numberOfFreeRights}
+          userTotalFreeRights={userTotalFreeRights}
           freeRightImageUrl={freeRightImageUrl}
           setQrCodeModalVisible={setQrCodeModalVisible}
         />

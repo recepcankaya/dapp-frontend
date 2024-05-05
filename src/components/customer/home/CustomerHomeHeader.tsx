@@ -9,13 +9,8 @@ export default function CustomerHomeHeader({
 }) {
   return (
     <div className="p-2 flex justify-around items-center gap-36 mb-8">
-      {/* @todo - DEFAULT PNG EKLENECEK */}
       <Image
-        src={
-          brandLogo
-            ? brandLogo.replace("ipfs://", "https://ipfs.io/ipfs/")
-            : "/default.png"
-        }
+        src={brandLogo.replace("ipfs://", "https://ipfs.io/ipfs/")}
         alt="brand logo"
         className="rounded-md cursor-pointer"
         width={60}

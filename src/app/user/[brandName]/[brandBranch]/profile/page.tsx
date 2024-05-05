@@ -1,11 +1,12 @@
+import { redirect } from "next/navigation";
+
 import { createClient } from "@/src/lib/supabase/server";
 import ProfileHOC from "@/src/components/customer/profile/ProfileHOC";
-import { redirect } from "next/navigation";
 
 export default async function Profile({
   searchParams,
 }: {
-  searchParams: { adminID: Admin["id"] };
+  searchParams: { brandID: Brand["id"]; branchID: BrandBranch["id"] };
 }) {
   const supabase = createClient();
 
@@ -23,30 +24,26 @@ export default async function Profile({
     .eq("id", user?.id)
     .single();
 
-  const { data: numberOfFreeRights, error } = await supabase
-    .from("user_missions")
-    .select("number_of_free_rights")
+  const { data: userTotalFreeRights, error } = await supabase
+    .from("user_orders")
+    .select("user_total_free_rights")
     .eq("user_id", user?.id)
-    .eq("admin_id", searchParams.adminID);
+    .eq("admin_id", searchParams.branchID)
+    .single();
 
   const { data: freeRightImageUrl, error: error1 } = await supabase
-    .from("admins")
+    .from("brand")
     .select("free_right_image_url")
-    .eq("id", searchParams.adminID);
+    .eq("id", searchParams.brandID)
+    .single();
 
   return (
     <div className="flex flex-col items-center pt-16 text-white">
       <h1 className="text-xl mb-16 text-white">{username?.username}</h1>
       <ProfileHOC
         userID={user?.id}
-        numberOfFreeRights={
-          numberOfFreeRights && numberOfFreeRights.length > 0
-            ? numberOfFreeRights[0].number_of_free_rights
-            : 0
-        }
-        freeRightImageUrl={
-          freeRightImageUrl ? freeRightImageUrl[0].free_right_image_url : ""
-        }
+        userTotalFreeRights={userTotalFreeRights?.user_total_free_rights}
+        freeRightImageUrl={freeRightImageUrl?.free_right_image_url}
       />
     </div>
   );

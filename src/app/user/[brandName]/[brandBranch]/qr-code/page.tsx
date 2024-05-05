@@ -1,6 +1,7 @@
-import QrCodeClient from "@/src/components/QrCodeClient";
-import { createClient } from "@/src/lib/supabase/server";
 import { redirect } from "next/navigation";
+
+import { createClient } from "@/src/lib/supabase/server";
+import QrCodeClient from "@/src/components/QrCodeClient";
 
 export default async function QrCode() {
   const supabase = createClient();
@@ -13,7 +14,7 @@ export default async function QrCode() {
   }
 
   return (
-    <div className=" w-screen h-screen flex justify-center items-center bg-lad-white">
+    <div className="w-screen h-screen flex justify-center items-center bg-lad-white">
       <QrCodeClient userID={user?.id} />
     </div>
   );

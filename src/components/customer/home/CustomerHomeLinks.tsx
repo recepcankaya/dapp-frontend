@@ -4,8 +4,10 @@ import { usePathname } from "next/navigation";
 
 export default function CustomerHomeLinks({
   brandID,
+  branchID,
 }: {
   brandID: BrandBranch["id"];
+  branchID: BrandBranch["id"];
 }) {
   const pathname = usePathname();
 
@@ -17,12 +19,12 @@ export default function CustomerHomeLinks({
         Markalar
       </Link>
       <Link
-        href={`${pathname}/qr-code?brandID=${brandID}`}
+        href={`${pathname}/qr-code?brandID=${brandID}&branchID=${branchID}`}
         className="text-right text-lg underline decoration-2 underline-offset-2">
         Qr Kodu Okut
       </Link>
       <Link
-        href={`${pathname}/profile?brandID=${brandID}`}
+        href={`${pathname}/profile?brandID=${brandID}&branchID=${branchID}`}
         className="text-right text-lg underline decoration-2 underline-offset-2">
         Profil
       </Link>

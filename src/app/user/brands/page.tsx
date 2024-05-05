@@ -5,6 +5,7 @@ export default async function Brands() {
   const supabase = createClient();
 
   const { data: brands, error } = await supabase.from("brand").select(`
+      id,
       brand_name,
       brand_logo_ipfs_url,
       brand_branch (

@@ -1,30 +1,31 @@
 "use client";
-import { createClient } from "@/src/lib/supabase/client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+
+import { createClient } from "@/src/lib/supabase/client";
 import { useEffect, useRef } from "react";
 
 type RenderFreeRightsProps = {
   selectedTab: string;
-  numberOfFreeRights: UserMission["number_of_free_rights"];
-  freeRightImageUrl: Admin["free_right_image_url"];
+  userTotalFreeRights: UserOrders["user_total_free_rights"] | undefined;
+  freeRightImageUrl: Brand["free_right_image_url"] | undefined;
   userID: User["id"];
   setQrCodeModalVisible: (value: boolean) => void;
 };
 
 export default function RenderFreeRights({
   selectedTab,
-  numberOfFreeRights,
+  userTotalFreeRights,
   freeRightImageUrl,
   userID,
   setQrCodeModalVisible,
 }: RenderFreeRightsProps) {
   const freeRightsRef = useRef<number>(
-    numberOfFreeRights
+    userTotalFreeRights ?? 0
   ) as React.MutableRefObject<number>;
   const supabase = createClient();
   const router = useRouter();
-  const numberOfFreeRightsArray = new Array(numberOfFreeRights).fill(0);
+  const userTotalFreeRightsArray = new Array(userTotalFreeRights).fill(0);
 
   useEffect(() => {
     const orders = supabase
@@ -34,11 +35,11 @@ export default function RenderFreeRights({
         {
           event: "*",
           schema: "public",
-          table: "user_missions",
+          table: "user_orders",
           filter: `user_id=eq.${userID}`,
         },
         (payload: any) => {
-          freeRightsRef.current = payload.new.number_of_free_rights;
+          freeRightsRef.current = payload.new.user_total_free_rights;
           router.refresh();
         }
       )
@@ -53,8 +54,8 @@ export default function RenderFreeRights({
     <>
       {selectedTab === "Waiting" && (
         <div className="flex flex-wrap justify-center mt-16">
-          {numberOfFreeRightsArray.length > 0 ? (
-            numberOfFreeRightsArray.map((item, index) => (
+          {userTotalFreeRightsArray.length > 0 ? (
+            userTotalFreeRightsArray.map((item, index) => (
               <div
                 key={index.toString()}
                 onClick={() => setQrCodeModalVisible(true)}

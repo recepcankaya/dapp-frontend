@@ -10,6 +10,7 @@ import { Input } from "../ui/input";
 // @todo - DAHA İYİ BİR TYPE SAFETY KONTROLÜ
 type RenderBrandsProps = {
   brands: {
+    id: Brand["id"];
     brand_name: Brand["brand_name"];
     brand_logo_ipfs_url: Brand["brand_logo_ipfs_url"];
     brand_branch: {
@@ -21,6 +22,7 @@ type RenderBrandsProps = {
 };
 
 type BrandItem = {
+  id: Brand["id"];
   brand_name: Brand["brand_name"];
   brand_logo_ipfs_url: Brand["brand_logo_ipfs_url"];
   brand_branch: {
@@ -102,10 +104,10 @@ export default function RenderBrands(brands: RenderBrandsProps) {
                   className="flex flex-col items-center gap-4">
                   <Link
                     href={`/user/${convertString(
-                      item.brand_name || ""
+                      item.brand_name
                     )}/${convertString(
-                      item.brand_branch[0].branch_name || ""
-                    )}?brandID=${item.brand_branch[0].id}`}>
+                      item.brand_branch[0].branch_name
+                    )}?brandID=${item.id}&branchID=${item.brand_branch[0].id}`}>
                     <Image
                       src={
                         item.brand_logo_ipfs_url
@@ -139,10 +141,10 @@ export default function RenderBrands(brands: RenderBrandsProps) {
                 <div key={index} className="flex flex-col items-center gap-4">
                   <Link
                     href={`/user/${convertString(
-                      item.brand_name || ""
+                      item.brand_name
                     )}/${convertString(
-                      item.brand_branch[0].branch_name || ""
-                    )}?adminID=${item.brand_branch[0].id}`}>
+                      item.brand_branch[0].branch_name
+                    )}?brandID=${item.id}&branchID=${item.brand_branch[0].id}`}>
                     <Image
                       src={
                         item.brand_logo_ipfs_url
