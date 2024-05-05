@@ -1,34 +1,21 @@
 import { createClient } from "@/src/lib/supabase/server";
-import { ToastContainer, toast } from "react-toastify";
-
 import RenderBrands from "@/src/components/customer/RenderBrands";
 
 export default async function Brands() {
   const supabase = createClient();
 
-  const { data: brands, error } = await supabase
-    .from("admins")
-    .select("id, brand_name, brand_branch, brand_logo_ipfs_url, coords");
-
-  if (error) {
-    toast.error(
-      "Markaları yüklerken bir hata oluştu. Lütfen tekrar dener misiniz?",
-      {
-        position: "top-right",
-        autoClose: 2500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      }
-    );
-  }
+  const { data: brands, error } = await supabase.from("brand").select(`
+      brand_name,
+      brand_logo_ipfs_url,
+      brand_branch (
+        id,
+        branch_name,
+        coords
+      )  
+    `);
 
   return (
     <section className="flex justify-center pt-16">
-      <ToastContainer />
       <RenderBrands brands={brands || []} />
     </section>
   );

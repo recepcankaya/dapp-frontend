@@ -10,11 +10,23 @@ import { Input } from "../ui/input";
 // @todo - DAHA İYİ BİR TYPE SAFETY KONTROLÜ
 type RenderBrandsProps = {
   brands: {
-    id: Admin["id"];
-    brand_name: Admin["brand_name"];
-    brand_branch: Admin["brand_branch"];
-    brand_logo_ipfs_url: Admin["brand_logo_ipfs_url"];
-    coords: Admin["coords"];
+    brand_name: Brand["brand_name"];
+    brand_logo_ipfs_url: Brand["brand_logo_ipfs_url"];
+    brand_branch: {
+      id: BrandBranch["id"];
+      branch_name: BrandBranch["branch_name"];
+      coords: BrandBranch["coords"];
+    }[];
+  }[];
+};
+
+type BrandItem = {
+  brand_name: Brand["brand_name"];
+  brand_logo_ipfs_url: Brand["brand_logo_ipfs_url"];
+  brand_branch: {
+    id: BrandBranch["id"];
+    branch_name: BrandBranch["branch_name"];
+    coords: BrandBranch["coords"];
   }[];
 };
 
@@ -30,7 +42,6 @@ export default function RenderBrands(brands: RenderBrandsProps) {
   const [sortedAdmins, setSortedAdmins] = useState<RenderBrandsProps["brands"]>(
     []
   );
-  // @todo - Arama fonksyionu url'e bağlanacak
   const [searchedAdmin, setSearchedAdmin] = useState<string>("");
 
   useEffect(() => {
@@ -46,9 +57,13 @@ export default function RenderBrands(brands: RenderBrandsProps) {
     if (!customerLocation || !brands) return;
     const sorted = [...brands.brands].sort((a, b): any => {
       const coordsA =
-        typeof a.coords === "string" ? JSON.parse(a.coords) : a.coords;
+        typeof a.brand_branch[0].coords === "string"
+          ? JSON.parse(a.brand_branch[0].coords)
+          : a.brand_branch[0].coords;
       const coordsB =
-        typeof b.coords === "string" ? JSON.parse(b.coords) : b.coords;
+        typeof b.brand_branch[0].coords === "string"
+          ? JSON.parse(b.brand_branch[0].coords)
+          : b.brand_branch[0].coords;
       const distanceA = haversine(
         { lat: customerLocation?.lat, lng: customerLocation?.long },
         { lat: coordsA?.lat, lng: coordsA?.long }
@@ -81,20 +96,28 @@ export default function RenderBrands(brands: RenderBrandsProps) {
                       .includes(searchedAdmin.toLowerCase())
                   : true
               )
-              .map((item: any, index: number) => (
-                <div key={index} className="flex flex-col items-center gap-4">
+              .map((item: BrandItem) => (
+                <div
+                  key={item.brand_branch[0].id}
+                  className="flex flex-col items-center gap-4">
                   <Link
                     href={`/user/${convertString(
-                      item.brand_name
-                    )}/${convertString(item.brand_branch)}?adminID=${item.id}`}>
+                      item.brand_name || ""
+                    )}/${convertString(
+                      item.brand_branch[0].branch_name || ""
+                    )}?brandID=${item.brand_branch[0].id}`}>
                     <Image
-                      src={item.brand_logo_ipfs_url.replace(
-                        "ipfs://",
-                        "https://ipfs.io/ipfs/"
-                      )}
+                      src={
+                        item.brand_logo_ipfs_url
+                          ? item.brand_logo_ipfs_url.replace(
+                              "ipfs://",
+                              "https://ipfs.io/ipfs/"
+                            )
+                          : ""
+                      }
                       alt="brand logo"
                       className="rounded-2xl cursor-pointer object-cover border-2 border-lad-pink"
-                      key={index}
+                      key={item.brand_branch[0].id}
                       quality={100}
                       priority
                       width={100}
@@ -112,17 +135,23 @@ export default function RenderBrands(brands: RenderBrandsProps) {
                       .includes(searchedAdmin.toLowerCase())
                   : true
               )
-              .map((item: any, index: number) => (
+              .map((item: BrandItem, index: number) => (
                 <div key={index} className="flex flex-col items-center gap-4">
                   <Link
                     href={`/user/${convertString(
-                      item.brand_name
-                    )}/${convertString(item.brand_branch)}?adminID=${item.id}`}>
+                      item.brand_name || ""
+                    )}/${convertString(
+                      item.brand_branch[0].branch_name || ""
+                    )}?adminID=${item.brand_branch[0].id}`}>
                     <Image
-                      src={item.brand_logo_ipfs_url.replace(
-                        "ipfs://",
-                        "https://ipfs.io/ipfs/"
-                      )}
+                      src={
+                        item.brand_logo_ipfs_url
+                          ? item.brand_logo_ipfs_url.replace(
+                              "ipfs://",
+                              "https://ipfs.io/ipfs/"
+                            )
+                          : ""
+                      }
                       alt="brand logo"
                       className="rounded-2xl cursor-pointer object-cover border-2 border-lad-pink"
                       key={index}
