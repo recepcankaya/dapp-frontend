@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/src/components/ui/button";
 import {
   DropdownMenuTrigger,
@@ -8,6 +9,8 @@ import {
   DropdownMenu,
 } from "@/src/components/ui/dropdown-menu";
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 type AdminHomeHeaderProps = {
   brandName: Admin["brand_name"];
@@ -20,6 +23,8 @@ export default function AdminHomeHeader({
   brandBranch,
   brandLogo,
 }: AdminHomeHeaderProps) {
+  const pathname = usePathname();
+
   return (
     <header className="flex items-center justify-between px-8 py-4 shadow-md text-[#000101]">
       <div className="flex items-center gap-4">
@@ -29,6 +34,9 @@ export default function AdminHomeHeader({
           <div className="text-sm text-black">{brandBranch}</div>
         </div>
       </div>
+      <Button asChild className="">
+        <Link href={`${pathname}/admin-camera`}>Qr Kodu Okut</Link>
+      </Button>
       <div className="flex items-center gap-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -54,13 +62,19 @@ export default function AdminHomeHeader({
               <span className="sr-only">Toggle user menu</span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <DropdownMenuContent align="end" className="bg-[#d8d0c3]">
+            <DropdownMenuLabel>Hesabım</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuItem>Support</DropdownMenuItem>
+            <DropdownMenuItem className="hover:cursor-pointer">
+              Ayarlar
+            </DropdownMenuItem>
+            <DropdownMenuItem className="hover:cursor-pointer">
+              Destek
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+            <DropdownMenuItem className="hover:cursor-pointer">
+              Çıkış Yap
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
