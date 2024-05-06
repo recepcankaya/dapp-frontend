@@ -13,9 +13,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 type AdminHomeHeaderProps = {
-  brandName: Admin["brand_name"];
-  brandBranch: Admin["brand_branch"];
-  brandLogo: Admin["brand_logo_ipfs_url"];
+  brandName: Brand["brand_name"];
+  brandBranch: BrandBranch["branch_name"];
+  brandLogo: Brand["brand_logo_ipfs_url"];
 };
 
 export default function AdminHomeHeader({
@@ -35,7 +35,7 @@ export default function AdminHomeHeader({
         </div>
       </div>
       <Button asChild className="">
-        <Link href={`${pathname}/admin-camera`}>Qr Kodu Okut</Link>
+        <Link href={`${pathname}/brand-camera`}>Qr Kodu Okut</Link>
       </Button>
       <div className="flex items-center gap-4">
         <DropdownMenu>

@@ -1,6 +1,7 @@
-export type Admin = Database["public"]["Tables"]["admins"]["Row"];
+export type BrandBranchInfo =
+  Database["public"]["Tables"]["brand_branch"]["Row"];
 
-export interface AdminCampaigns extends Omit<Admin, "campaigns"> {
+export interface AdminCampaigns extends Omit<BrandBranchInfo, "campaigns"> {
   campaigns: Campaign[] | null;
 }
 
@@ -10,13 +11,13 @@ export type Campaign = {
   campaign_name?: string;
 };
 
-export type AdminStatistics = Pick<
-  Admin,
-  | "brand_name"
-  | "brand_branch"
-  | "not_used_nfts"
-  | "number_for_reward"
-  | "number_of_orders_so_far"
-  | "admin_used_rewards"
-  | "contract_address"
+export type BrandBranchStatistics = Pick<
+  BrandBranchInfo,
+  | "required_number_for_free_right"
+  | "total_orders"
+  | "total_unused_free_rigths"
+  | "total_used_free_rights"
+  | "daily_total_orders"
+  | "daily_total_used_free_rights"
+  | "monthly_total_orders"
 >;

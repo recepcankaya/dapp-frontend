@@ -39,7 +39,10 @@ export default function Home() {
           return;
         }
 
-        await supabase.from("users").update({ walletAddr }).eq("id", user?.id);
+        await supabase
+          .from("users")
+          .update({ wallet_addr: walletAddr })
+          .eq("id", user?.id);
       } else {
         await supabase
           .from("users")
@@ -77,7 +80,7 @@ export default function Home() {
         <ConnectEmbed style={{ width: "75%" }} />
       )}
       <button>
-        <Link href="/admin/admin-login" className="text-lg">
+        <Link href="/brand/brand-login" className="text-lg">
           İşletmeyseniz Lütfen Giriş Yapmak için {"\n"}Tıklayınız
         </Link>
       </button>

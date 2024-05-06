@@ -22,10 +22,10 @@ ChartJS.register(
 );
 
 type LineChartProps = {
-  numberOfOrders: Admin["number_of_orders_so_far"];
+  totalOrders: BrandBranch["total_orders"];
 };
 
-export default function LineChart(numberOfOrders: LineChartProps) {
+export default function LineChart(totalOrders: LineChartProps) {
   const data = {
     labels: ["Pzt", "Salı", "Çrş", "Prş", "Cuma", "Cmt", "Pzr"],
     datasets: [

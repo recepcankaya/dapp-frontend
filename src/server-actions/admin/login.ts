@@ -35,24 +35,27 @@ export default async function login(prevState: any, formData: FormData) {
   }
 
   const { data: brandInfo, error: brandError } = await supabase
-    .from("admins")
-    .select("brand_name, brand_branch")
-    .eq("id", data.user?.id);
+    .from("brand")
+    .select(
+      `
+      brand_name,
+      brand_branch (
+        branch_name
+      )
+    `
+    )
+    .eq("id", data.user?.id)
+    .single();
 
   if (brandError) {
     return {
       message: "Böyle bir marka bulunamadı.",
     };
   } else {
-    //  @todo - DAHA İYİ BİR TYPE-SAFETY LAZIM
-    if (brandInfo[0].brand_name && brandInfo[0].brand_branch) {
-      const brandName = encodeURIComponent(
-        brandInfo[0].brand_name.toLowerCase()
-      );
-      const brandBranch = encodeURIComponent(
-        brandInfo[0].brand_branch.toLowerCase()
-      );
-      redirect(`/admin/${brandName}-${brandBranch}/`);
-    }
+    const brandName = encodeURIComponent(brandInfo.brand_name.toLowerCase());
+    const brandBranch = encodeURIComponent(
+      brandInfo.brand_branch[0].branch_name.toLowerCase()
+    );
+    redirect(`/brand/${brandName}-${brandBranch}/`);
   }
 }

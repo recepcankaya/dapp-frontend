@@ -143,10 +143,10 @@ export type Database = {
       }
       user_orders: {
         Row: {
-          admin_id: string
+          brand_id: string
           created_at: string
           id: string
-          last_order_date: string | null
+          last_order_date: string
           total_ticket_orders: number
           total_user_orders: number
           user_id: string
@@ -154,10 +154,10 @@ export type Database = {
           user_total_used_free_rights: number
         }
         Insert: {
-          admin_id: string
+          brand_id: string
           created_at?: string
           id?: string
-          last_order_date?: string | null
+          last_order_date?: string
           total_ticket_orders?: number
           total_user_orders?: number
           user_id?: string
@@ -165,10 +165,10 @@ export type Database = {
           user_total_used_free_rights?: number
         }
         Update: {
-          admin_id?: string
+          brand_id?: string
           created_at?: string
           id?: string
-          last_order_date?: string | null
+          last_order_date?: string
           total_ticket_orders?: number
           total_user_orders?: number
           user_id?: string
@@ -184,10 +184,10 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "user_orders_admin_id_fkey"
-            columns: ["admin_id"]
+            foreignKeyName: "user_orders_brand_id_fkey"
+            columns: ["brand_id"]
             isOneToOne: false
-            referencedRelation: "brand_branch"
+            referencedRelation: "brand"
             referencedColumns: ["id"]
           },
         ]
