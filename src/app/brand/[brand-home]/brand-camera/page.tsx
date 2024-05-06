@@ -23,7 +23,7 @@ export default function AdminCamera() {
     if (!result || isScanned.current) return;
     isScanned.current = true;
     try {
-      const { userID, forNFT, address, adminID } = JSON.parse(result);
+      const { userID, forNFT, address, brandBranchID } = JSON.parse(result);
       console.log("Okutuldu");
       const {
         data: { user: admin },
@@ -42,13 +42,25 @@ export default function AdminCamera() {
         .eq("admin_id", admin?.id || "")
         .single();
 
-      const { data: requiredNumberForFreeRight } = await supabase
+      const { data: brandBranchInfo } = await supabase
         .from("brand_branch")
-        .select(
-          "required_number_for_free_right, total_unused_free_rigths, total_used_free_rights, total_orders"
-        )
+        .select("brand_id, total_used_free_rights, total_orders")
         .eq("id", admin?.id || "")
         .single();
+
+      if (!brandBranchInfo) {
+        toast.error("İşletme bilgisi bulunamadı.");
+        return;
+      }
+
+      const { data: brandInfo } = await supabase
+        .from("brand")
+        .select("required_number_for_free_right, total_unused_free_rights")
+        .eq("id", brandBranchInfo.brand_id)
+        .single();
+
+      console.log("userOrderInfo", userOrderInfo);
+      console.log("requiredNumberForFreeRight", brandBranchInfo);
 
       const { data: username } = await supabase
         .from("users")
@@ -56,13 +68,13 @@ export default function AdminCamera() {
         .eq("id", userID)
         .single();
 
-      if (!userOrderInfo || !requiredNumberForFreeRight) {
+      if (!userOrderInfo || !brandBranchInfo || !brandInfo) {
         toast.error("Kullanıcıya ait sipariş bilgisi bulunamadı.");
         return;
       }
 
       if (forNFT === true) {
-        if (admin?.id !== adminID) {
+        if (admin?.id !== brandBranchID) {
           toast.error(
             "Müşteriniz başka işletmenin ödülünün qr kodunu kullanmaktadır. Lütfen müşterinizden doğru qr kodu okutmasını isteyiniz."
           );
@@ -83,12 +95,12 @@ export default function AdminCamera() {
         });
 
         await supabase.from("brand_branch").update({
-          total_orders: Number(requiredNumberForFreeRight.total_orders + 1),
+          total_orders: Number(brandBranchInfo.total_orders + 1),
           total_unused_free_rigths: Number(
-            requiredNumberForFreeRight.total_unused_free_rigths - 1
+            brandInfo.total_unused_free_rights - 1
           ),
           total_used_free_rights: Number(
-            requiredNumberForFreeRight.total_used_free_rights + 1
+            brandBranchInfo.total_used_free_rights + 1
           ),
         });
 
@@ -146,22 +158,24 @@ export default function AdminCamera() {
             .from("user_orders")
             .insert({
               total_user_orders: 1,
+              total_ticket_orders: 1,
               user_id: userID,
               brand_id: admin?.id || "",
+              branch_id: brandBranchID,
             })
             .select("id")
             .single();
 
-          await supabase.rpc(
-            "increment_user_missions_number_of_orders_so_far",
-            {
-              mission_id: orderId ? orderId.id : "",
-            }
-          );
+          // await supabase.rpc(
+          //   "increment_user_missions_number_of_orders_so_far",
+          //   {
+          //     mission_id: orderId ? orderId.id : "",
+          //   }
+          // );
 
-          await supabase.rpc("increment_admins_number_of_orders_so_far", {
-            admin_id: admin?.id || "",
-          });
+          // await supabase.rpc("increment_admins_number_of_orders_so_far", {
+          //   admin_id: admin?.id || "",
+          // });
 
           toast.success(
             <p>
@@ -171,25 +185,25 @@ export default function AdminCamera() {
             </p>
           );
         } else if (
-          Number(requiredNumberForFreeRight?.required_number_for_free_right) -
-            1 >
+          Number(brandInfo?.required_number_for_free_right) - 1 >
           userOrderInfo.total_ticket_orders
         ) {
           // If the user has a record in the user_orders table and the ticket orders is less than the requiredNumberForFreeRight, increase the ticket orders by one
-          await supabase.rpc("increment_user_missions_number_of_orders", {
-            mission_id: userOrderInfo.id,
-          });
 
-          await supabase.rpc("increment_admins_number_of_orders_so_far", {
-            admin_id: admin?.id || "",
-          });
+          // await supabase.rpc("increment_user_missions_number_of_orders", {
+          //   mission_id: userOrderInfo.id,
+          // });
 
-          await supabase.rpc(
-            "increment_user_missions_number_of_orders_so_far",
-            {
-              mission_id: userOrderInfo.id,
-            }
-          );
+          // await supabase.rpc("increment_admins_number_of_orders_so_far", {
+          //   admin_id: admin?.id || "",
+          // });
+
+          // await supabase.rpc(
+          //   "increment_user_missions_number_of_orders_so_far",
+          //   {
+          //     mission_id: userOrderInfo.id,
+          //   }
+          // );
 
           toast.success(
             <p>
@@ -205,31 +219,31 @@ export default function AdminCamera() {
           );
         } else if (
           userOrderInfo.total_ticket_orders ===
-          Number(requiredNumberForFreeRight?.required_number_for_free_right) - 1
+          Number(brandInfo?.required_number_for_free_right) - 1
         ) {
           // If the user has a record in the user_orders table and the ticket orders is equal to the requiredNumberForFreeRight, make a request
           try {
-            await supabase.rpc("increment_admins_not_used_nfts", {
-              admin_id: admin?.id || "",
-            });
+            // await supabase.rpc("increment_admins_not_used_nfts", {
+            //   admin_id: admin?.id || "",
+            // });
 
-            await supabase.rpc(
-              "increment_user_missions_number_of_free_rigths",
-              {
-                mission_id: userOrderInfo.id,
-              }
-            );
+            // await supabase.rpc(
+            //   "increment_user_missions_number_of_free_rigths",
+            //   {
+            //     mission_id: userOrderInfo.id,
+            //   }
+            // );
 
-            await supabase.rpc("increment_admins_number_of_orders_so_far", {
-              admin_id: admin?.id || "",
-            });
+            // await supabase.rpc("increment_admins_number_of_orders_so_far", {
+            //   admin_id: admin?.id || "",
+            // });
 
-            await supabase.rpc(
-              "increment_user_missions_number_of_orders_so_far",
-              {
-                mission_id: userOrderInfo.id,
-              }
-            );
+            // await supabase.rpc(
+            //   "increment_user_missions_number_of_orders_so_far",
+            //   {
+            //     mission_id: userOrderInfo.id,
+            //   }
+            // );
 
             const { error: zeroError } = await supabase
               .from("user_missions")

@@ -8,10 +8,10 @@ import { Button } from "../../ui/button";
 
 type RenderTicketProps = {
   branchInfo: {
-    required_number_for_free_right: BrandBranch["required_number_for_free_right"];
     campaigns: BrandBranch["campaigns"];
     video_url: BrandBranch["video_url"];
     brand: {
+      required_number_for_free_right: Brand["required_number_for_free_right"];
       ticket_ipfs_url: Brand["ticket_ipfs_url"];
       brand_logo_ipfs_url: Brand["brand_logo_ipfs_url"];
     } | null;
@@ -41,7 +41,7 @@ export default function RenderTicket({
   const supabase = createClient();
   const router = useRouter();
   const ticketCircles = branchInfo
-    ? new Array(branchInfo.required_number_for_free_right).fill(0)
+    ? new Array(branchInfo.brand?.required_number_for_free_right).fill(0)
     : [];
   const params = useParams<{ brandName: string; brandBranch: string }>();
   const convertedBrandName = decodeTurkishCharacters(

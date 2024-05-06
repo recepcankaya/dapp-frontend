@@ -30,7 +30,7 @@ export default function HomeCards({
     },
     {
       id: 5,
-      number: brandBranchData.total_unused_free_rigths,
+      number: brandBranchData.total_unused_free_rights,
       text: "Bekleyen ödüllerin sayısı",
     },
     {

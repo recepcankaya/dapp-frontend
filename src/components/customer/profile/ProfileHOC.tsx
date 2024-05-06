@@ -24,7 +24,8 @@ export default function ProfileHOC({
   );
   const customerAddress = useAddress();
   const searchParams = useSearchParams();
-  const adminID = searchParams.get("branchID");
+  const brandID = searchParams.get("brandID");
+  const branchID = searchParams.get("branchID");
 
   return (
     <div className="w-full">
@@ -60,7 +61,7 @@ export default function ProfileHOC({
           forNFT: true,
           userID: userID,
           address: customerAddress,
-          adminID: adminID,
+          brandBranchID: branchID,
         })}
         onClose={() => setQrCodeModalVisible(false)}
       />

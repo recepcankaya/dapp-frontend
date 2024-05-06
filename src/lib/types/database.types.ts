@@ -16,11 +16,13 @@ export type Database = {
           collection_metadata: Json | null
           contract_address: string | null
           created_at: string | null
-          email: string | null
+          email: string
           free_right_image_url: string
           id: string
           nft_src: string | null
+          required_number_for_free_right: number
           ticket_ipfs_url: string
+          total_unused_free_rights: number
         }
         Insert: {
           brand_logo_ipfs_url?: string
@@ -28,11 +30,13 @@ export type Database = {
           collection_metadata?: Json | null
           contract_address?: string | null
           created_at?: string | null
-          email?: string | null
+          email?: string
           free_right_image_url?: string
           id: string
           nft_src?: string | null
+          required_number_for_free_right?: number
           ticket_ipfs_url?: string
+          total_unused_free_rights?: number
         }
         Update: {
           brand_logo_ipfs_url?: string
@@ -40,11 +44,13 @@ export type Database = {
           collection_metadata?: Json | null
           contract_address?: string | null
           created_at?: string | null
-          email?: string | null
+          email?: string
           free_right_image_url?: string
           id?: string
           nft_src?: string | null
+          required_number_for_free_right?: number
           ticket_ipfs_url?: string
+          total_unused_free_rights?: number
         }
         Relationships: [
           {
@@ -59,46 +65,43 @@ export type Database = {
       brand_branch: {
         Row: {
           branch_name: string
-          brand_id: string | null
+          brand_id: string
           campaigns: Json[] | null
           coords: Json | null
           daily_total_orders: number
           daily_total_used_free_rights: number
+          email: string
           id: string
           monthly_total_orders: number
-          required_number_for_free_right: number
           total_orders: number
-          total_unused_free_rigths: number
           total_used_free_rights: number
           video_url: string | null
         }
         Insert: {
           branch_name?: string
-          brand_id?: string | null
+          brand_id?: string
           campaigns?: Json[] | null
           coords?: Json | null
           daily_total_orders?: number
           daily_total_used_free_rights?: number
+          email?: string
           id?: string
           monthly_total_orders?: number
-          required_number_for_free_right?: number
           total_orders?: number
-          total_unused_free_rigths?: number
           total_used_free_rights?: number
           video_url?: string | null
         }
         Update: {
           branch_name?: string
-          brand_id?: string | null
+          brand_id?: string
           campaigns?: Json[] | null
           coords?: Json | null
           daily_total_orders?: number
           daily_total_used_free_rights?: number
+          email?: string
           id?: string
           monthly_total_orders?: number
-          required_number_for_free_right?: number
           total_orders?: number
-          total_unused_free_rigths?: number
           total_used_free_rights?: number
           video_url?: string | null
         }
@@ -143,6 +146,7 @@ export type Database = {
       }
       user_orders: {
         Row: {
+          branch_id: string
           brand_id: string
           created_at: string
           id: string
@@ -154,6 +158,7 @@ export type Database = {
           user_total_used_free_rights: number
         }
         Insert: {
+          branch_id: string
           brand_id: string
           created_at?: string
           id?: string
@@ -165,6 +170,7 @@ export type Database = {
           user_total_used_free_rights?: number
         }
         Update: {
+          branch_id?: string
           brand_id?: string
           created_at?: string
           id?: string
@@ -181,6 +187,13 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_orders_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "brand_branch"
             referencedColumns: ["id"]
           },
           {

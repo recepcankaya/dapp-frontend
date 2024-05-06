@@ -34,10 +34,10 @@ export default async function CustomerHome({
     .from("brand_branch")
     .select(
       `
-      required_number_for_free_right,
       campaigns,
       video_url,
       brand (
+        required_number_for_free_right,
         ticket_ipfs_url,
         brand_logo_ipfs_url
       )

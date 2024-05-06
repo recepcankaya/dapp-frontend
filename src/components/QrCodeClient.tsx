@@ -8,7 +8,7 @@ export default function QrCodeClient({ userID }: { userID: User["id"] }) {
 
   const qrCodeValue = {
     userID: userID,
-    adminID: "",
+    brandBranchID: "",
     forNFT: false,
     address: customerAddress,
   };
