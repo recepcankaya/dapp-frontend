@@ -47,6 +47,8 @@ export default async function login(prevState: any, formData: FormData) {
     .eq("id", data.user?.id)
     .single();
 
+  console.log(brandError);
+
   if (brandError) {
     return {
       message: "Böyle bir marka bulunamadı.",

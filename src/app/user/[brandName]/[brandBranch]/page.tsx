@@ -27,7 +27,7 @@ export default async function CustomerHome({
     .from("user_orders")
     .select("total_ticket_orders")
     .eq("user_id", user?.id)
-    .eq("admin_id", searchParams.branchID)
+    .eq("branch_id", searchParams.branchID)
     .single();
 
   const { data: branchInfo, error: adminError } = await supabase
