@@ -28,7 +28,7 @@ export default async function Profile({
     .from("user_orders")
     .select("user_total_free_rights")
     .eq("user_id", user?.id)
-    .eq("admin_id", searchParams.branchID)
+    .eq("brand_id", searchParams.brandID)
     .single();
 
   const { data: freeRightImageUrl, error: error1 } = await supabase
