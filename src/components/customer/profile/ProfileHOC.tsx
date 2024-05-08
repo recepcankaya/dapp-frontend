@@ -4,7 +4,6 @@ import { useState } from "react";
 import RenderFreeRights from "./RenderFreeRights";
 import RenderCustomerNFTs from "./RenderCustomerNFTs";
 import QrCodeModal from "@/src/components/QrCodeModal";
-import { useAddress } from "@thirdweb-dev/react";
 import { useSearchParams } from "next/navigation";
 
 type ProfileHOCProps = {
@@ -22,9 +21,7 @@ export default function ProfileHOC({
   const [selectedTab, setSelectedTab] = useState<"Waiting" | "Your Collection">(
     "Waiting"
   );
-  const customerAddress = useAddress();
   const searchParams = useSearchParams();
-  const brandID = searchParams.get("brandID");
   const branchID = searchParams.get("branchID");
 
   return (
@@ -60,7 +57,6 @@ export default function ProfileHOC({
         value={JSON.stringify({
           forNFT: true,
           userID: userID,
-          address: customerAddress,
           brandBranchID: branchID,
         })}
         onClose={() => setQrCodeModalVisible(false)}
