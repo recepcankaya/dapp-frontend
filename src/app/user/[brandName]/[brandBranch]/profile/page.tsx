@@ -28,8 +28,16 @@ export default async function Profile({
     .from("user_orders")
     .select("user_total_free_rights")
     .eq("user_id", user?.id)
-    .eq("brand_id", searchParams.brandID)
-    .single();
+    .eq("brand_id", searchParams.brandID);
+
+  if (!userTotalFreeRights) {
+    return;
+  }
+
+  const totalFreeRights = userTotalFreeRights.reduce(
+    (total, item) => total + item.user_total_free_rights,
+    0
+  );
 
   const { data: freeRightImageUrl, error: error1 } = await supabase
     .from("brand")
@@ -42,7 +50,7 @@ export default async function Profile({
       <h1 className="text-xl mb-16 text-white">{username?.username}</h1>
       <ProfileHOC
         userID={user?.id}
-        userTotalFreeRights={userTotalFreeRights?.user_total_free_rights}
+        userTotalFreeRights={totalFreeRights}
         freeRightImageUrl={freeRightImageUrl?.free_right_image_url}
       />
     </div>
