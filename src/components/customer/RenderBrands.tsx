@@ -83,7 +83,7 @@ export default function RenderBrands(brands: RenderBrandsProps) {
         onChange={(e) => setSearchedAdmin(e.target.value)}
         placeholder="Kafeni ara..."
       />
-      <div className="grid grid-cols-2 gap-16">
+      <div className="grid grid-cols-2 gap-y-12">
         {customerLocation
           ? sortedAdmins
               .filter((item) =>
@@ -120,7 +120,9 @@ export default function RenderBrands(brands: RenderBrandsProps) {
                         height={100}
                       />
                     </Link>
-                    <p>{item.brand.brand_name}</p>
+                    <p className="text-center text-balance">
+                      {item.brand.brand_name}
+                    </p>
                   </div>
                 )
               )
