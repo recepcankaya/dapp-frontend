@@ -4,15 +4,15 @@ import RenderBrands from "@/src/components/customer/RenderBrands";
 export default async function Brands() {
   const supabase = createClient();
 
-  const { data: brands, error } = await supabase.from("brand").select(`
+  const { data: brands, error } = await supabase.from("brand_branch").select(`
       id,
-      brand_name,
-      brand_logo_ipfs_url,
-      brand_branch (
+      branch_name,
+      coords,
+      brand (
         id,
-        branch_name,
-        coords
-      )  
+        brand_name,
+        brand_logo_ipfs_url
+      )
     `);
 
   return (
