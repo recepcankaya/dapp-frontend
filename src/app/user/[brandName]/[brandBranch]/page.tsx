@@ -23,14 +23,14 @@ export default async function CustomerHome({
     redirect("/");
   }
 
-  const { data: totalTicketOrders, error } = await supabase
+  const { data: totalTicketOrders } = await supabase
     .from("user_orders")
     .select("total_ticket_orders")
     .eq("user_id", user?.id)
     .eq("branch_id", searchParams.branchID)
     .single();
 
-  const { data: branchInfo, error: adminError } = await supabase
+  const { data: branchInfo } = await supabase
     .from("brand_branch")
     .select(
       `
@@ -47,7 +47,7 @@ export default async function CustomerHome({
     .single();
 
   if (!branchInfo) {
-    redirect("/");
+    redirect("/user/brands");
   }
 
   return (

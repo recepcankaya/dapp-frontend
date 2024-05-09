@@ -63,11 +63,11 @@ export default function RenderTicket({
         {
           event: "*",
           schema: "public",
-          table: "user_missions",
+          table: "user_orders",
           filter: `user_id=eq.${userID}`,
         },
         (payload: any) => {
-          userOrderNumberRef.current = payload.new.number_of_orders;
+          userOrderNumberRef.current = payload.new.total_ticket_orders;
           router.refresh();
         }
       )
