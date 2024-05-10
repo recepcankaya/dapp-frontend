@@ -36,23 +36,13 @@ export default async function login(prevState: any, formData: FormData) {
 
   const { data: brandInfo, error: brandError } = await supabase
     .from("brand")
-    .select(
-      `
-      brand_name,
-      brand_branch (
-        branch_name
-      )
-    `
-    )
+    .select("brand_name")
     .eq("id", data.user?.id)
     .single();
 
   if (!brandError) {
     const brandName = encodeURIComponent(brandInfo.brand_name.toLowerCase());
-    const brandBranch = encodeURIComponent(
-      brandInfo.brand_branch[0].branch_name.toLowerCase()
-    );
-    redirect(`/brand/${brandName}-${brandBranch}?isAdmin=true`);
+    redirect(`/brand/admin/${brandName}/`);
   } else {
     const { data: branchInfo, error: branchError } = await supabase
       .from("brand_branch")
@@ -74,7 +64,7 @@ export default async function login(prevState: any, formData: FormData) {
       const brandBranch = encodeURIComponent(
         branchInfo.branch_name.toLowerCase()
       );
-      redirect(`/brand/${brandName}-${brandBranch}?isAdmin=false`);
+      redirect(`/brand/${brandName}-${brandBranch}/`);
     } else {
       return {
         message: "Böyle bir marka bulunamadı.",

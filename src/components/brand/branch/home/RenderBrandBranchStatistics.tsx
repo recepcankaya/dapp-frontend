@@ -1,9 +1,9 @@
 "use client";
 import type { BrandBranchStatistics } from "@/src/lib/types/jsonQuery.types";
-import HomeCards from "./HomeCards";
-import LineChart from "./LineChart";
+import HomeCards from "./BranchHomeCards";
+import LineChart from "./BranchLineChart";
 
-export default function RenderAdminStatistics({
+export default function RenderBrandBranchStatistics({
   brandBranchData,
 }: {
   brandBranchData: BrandBranchStatistics;
@@ -11,7 +11,10 @@ export default function RenderAdminStatistics({
   return (
     <main className="flex flex-col gap-8 p-8 md:p-12 lg:p-16 text-[#000101]">
       <HomeCards brandBranchData={brandBranchData} />
-      <LineChart totalOrders={brandBranchData.total_orders} />
+      <LineChart
+        totalOrders={brandBranchData.total_orders}
+        weeklyTotalOrders={brandBranchData.weekly_total_orders}
+      />
     </main>
   );
 }

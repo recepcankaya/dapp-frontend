@@ -2,7 +2,7 @@
 
 import type { BrandBranchStatistics } from "@/src/lib/types/jsonQuery.types";
 
-export default function HomeCards({
+export default function BranchHomeCards({
   brandBranchData,
 }: {
   brandBranchData: BrandBranchStatistics;

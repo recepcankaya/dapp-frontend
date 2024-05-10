@@ -14,13 +14,11 @@ import { usePathname } from "next/navigation";
 
 type AdminHomeHeaderProps = {
   brandName: Brand["brand_name"];
-  brandBranch: BrandBranch["branch_name"];
   brandLogo: Brand["brand_logo_ipfs_url"];
 };
 
 export default function AdminHomeHeader({
   brandName,
-  brandBranch,
   brandLogo,
 }: AdminHomeHeaderProps) {
   const pathname = usePathname();
@@ -29,10 +27,7 @@ export default function AdminHomeHeader({
     <header className="flex items-center justify-between px-8 py-4 shadow-md text-[#000101]">
       <div className="flex items-center gap-4">
         <Package2Icon className="h-6 w-6" />
-        <div>
-          <div className="text-lg font-semibold text-black">{brandName}</div>
-          <div className="text-sm text-black">{brandBranch}</div>
-        </div>
+        <div className="text-lg font-semibold text-black">{brandName}</div>
       </div>
       <Button asChild className="">
         <Link href={`${pathname}/brand-camera`}>Qr Kodu Okut</Link>

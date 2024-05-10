@@ -1,5 +1,6 @@
 "use server";
 
+import { redirect } from "next/navigation";
 import { createClient } from "./supabase/server";
 
 export default async function getUserID() {
@@ -7,6 +8,10 @@ export default async function getUserID() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/");
+  }
 
   return user?.id;
 }

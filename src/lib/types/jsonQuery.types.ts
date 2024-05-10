@@ -20,6 +20,16 @@ export type BrandBranchStatistics = Pick<
   | "daily_total_orders"
   | "daily_total_used_free_rights"
   | "monthly_total_orders"
+  | "weekly_total_orders"
   | "required_number_for_free_right"
   | "total_unused_free_rights"
+>;
+
+export type AdminHomeStatistics = Pick<
+  BrandInfo & BrandBranchInfo,
+  | "total_orders"
+  | "total_used_free_rights"
+  | "daily_total_orders"
+  | "daily_total_used_free_rights"
+  | "monthly_total_orders"
 >;

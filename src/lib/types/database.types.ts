@@ -76,6 +76,7 @@ export type Database = {
           total_orders: number
           total_used_free_rights: number
           video_url: string | null
+          weekly_total_orders: Json | null
         }
         Insert: {
           branch_name?: string
@@ -90,6 +91,7 @@ export type Database = {
           total_orders?: number
           total_used_free_rights?: number
           video_url?: string | null
+          weekly_total_orders?: Json | null
         }
         Update: {
           branch_name?: string
@@ -104,6 +106,7 @@ export type Database = {
           total_orders?: number
           total_used_free_rights?: number
           video_url?: string | null
+          weekly_total_orders?: Json | null
         }
         Relationships: [
           {
@@ -234,60 +237,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      decrement_admins_not_used_nfts: {
-        Args: {
-          admin_id: string
-        }
-        Returns: undefined
-      }
-      decrement_user_missions_number_of_free_rigths: {
-        Args: {
-          mission_id: string
-        }
-        Returns: undefined
-      }
-      increment_admins_not_used_nfts: {
-        Args: {
-          admin_id: string
-        }
-        Returns: undefined
-      }
-      increment_admins_number_of_orders_so_far: {
-        Args: {
-          admin_id: string
-        }
-        Returns: undefined
-      }
-      increment_admins_used_rewards: {
-        Args: {
-          admin_id: string
-        }
-        Returns: undefined
-      }
-      increment_user_missions_number_of_free_rigths: {
-        Args: {
-          mission_id: string
-        }
-        Returns: undefined
-      }
-      increment_user_missions_number_of_orders: {
-        Args: {
-          mission_id: string
-        }
-        Returns: undefined
-      }
-      increment_user_missions_number_of_orders_so_far: {
-        Args: {
-          mission_id: string
-        }
-        Returns: undefined
-      }
-      increment_user_missions_used_rewards: {
-        Args: {
-          mission_id: string
-        }
-        Returns: undefined
-      }
+      [_ in never]: never
     }
     Enums: {
       [_ in never]: never

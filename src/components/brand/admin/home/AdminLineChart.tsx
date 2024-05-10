@@ -23,15 +23,27 @@ ChartJS.register(
 
 type LineChartProps = {
   totalOrders: BrandBranch["total_orders"];
+  weeklyTotalOrders: BrandBranch["weekly_total_orders"];
 };
 
-export default function LineChart(totalOrders: LineChartProps) {
+export default function AdminLineChart({
+  totalOrders,
+  weeklyTotalOrders,
+}: LineChartProps) {
+  const orderedDays = ["pzt", "salı", "çrş", "prş", "cuma", "cmt", "pzr"];
+  const orderedWeeklyTotalOrdersArray = orderedDays.map(
+    (day) => weeklyTotalOrders?.[day as keyof typeof weeklyTotalOrders] ?? 0
+  );
+
+  const minValue = Math.min(...orderedWeeklyTotalOrdersArray);
+  const maxValue = Math.max(...orderedWeeklyTotalOrdersArray);
+
   const data = {
     labels: ["Pzt", "Salı", "Çrş", "Prş", "Cuma", "Cmt", "Pzr"],
     datasets: [
       {
-        label: "Toplam Sipariş Sayısı",
-        data: [12, 19, 3, 5, 2, 3, 9],
+        label: "Günlük Sipariş Sayısı",
+        data: orderedWeeklyTotalOrdersArray,
         backgroundColor: "transparent",
         borderColor: "red",
         pointBorderColor: "black",
@@ -61,10 +73,11 @@ export default function LineChart(totalOrders: LineChartProps) {
         },
       },
       y: {
-        min: 2,
-        max: 20,
+        // Find the optimal min and max values for the y-axis.
+        min: minValue - 20,
+        max: maxValue + 20,
         ticks: {
-          stepSize: 5,
+          stepSize: 10,
         },
       },
     },
