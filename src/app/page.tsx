@@ -81,7 +81,8 @@ export default function Home() {
       )}
       <button>
         <Link href="/brand/brand-login" className="text-lg">
-          İşletmeyseniz Lütfen Giriş Yapmak için {"\n"}Tıklayınız
+          İşletmeyseniz Lütfen Giriş Yapmak için <br />
+          Tıklayınız
         </Link>
       </button>
     </section>

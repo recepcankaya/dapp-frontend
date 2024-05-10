@@ -24,6 +24,10 @@ export default async function Profile({
     .eq("id", user?.id)
     .single();
 
+  if (!username?.username) {
+    redirect("/user/user-info");
+  }
+
   const { data: userTotalFreeRights, error } = await supabase
     .from("user_orders")
     .select("user_total_free_rights")

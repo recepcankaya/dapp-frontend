@@ -83,7 +83,7 @@ export default function RenderBrands(brands: RenderBrandsProps) {
         onChange={(e) => setSearchedAdmin(e.target.value)}
         placeholder="Kafeni ara..."
       />
-      <div className="grid grid-cols-2 gap-y-12">
+      <div className="grid grid-cols-2 gap-y-12 gap-x-6">
         {customerLocation
           ? sortedAdmins
               .filter((item) =>
