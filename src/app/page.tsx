@@ -46,7 +46,7 @@ export default function Home() {
       } else {
         await supabase
           .from("users")
-          .update({ last_login: String(new Date()) })
+          .update({ last_login: String(new Date().toISOString()) })
           .eq("id", data.user?.id);
       }
 
@@ -77,7 +77,20 @@ export default function Home() {
           </div>
         </div>
       ) : (
-        <ConnectEmbed style={{ width: "75%" }} />
+        <>
+          <ConnectEmbed style={{ width: "75%" }} />
+          <p className="text-gray-300 text-sm">
+            Giriş yaparak{" "}
+            <a
+              href="https://gittjeqpqcmmbterylkd.supabase.co/storage/v1/object/public/agreements/ladderit-uyelik-sozlesmesivekullanim-kosullari.pdf?t=2024-05-10T11%3A08%3A20.741Z"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 underline">
+              hizmet şartlarını
+            </a>{" "}
+            kabul etmiş olursunuz.
+          </p>
+        </>
       )}
       <button>
         <Link href="/brand/brand-login" className="text-lg">
