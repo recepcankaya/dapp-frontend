@@ -38,7 +38,7 @@ export default function AdminLogin() {
         <p className="text-destructive mt-6">{state?.message}</p>
         <button
           type="submit"
-          className="mt-12 mx-4 grow text-lg font-bold font-rosarivo rounded-3xl bg-lad-pink text-lad-black py-2">
+          className="mt-12 mx-4 grow text-lg font-bold font-rosarivo rounded-3xl bg-lad-pink text-lad-black py-2 hover:bg-gradient-to-br from-lad-purple to-lad-green">
           Giriş Yap
         </button>
       </form>

@@ -32,8 +32,6 @@ const config = {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        missionBg: "hsl(var(--mission-bg))",
-        missionBorder: "hsl(var(--mission-border))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -77,10 +75,22 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        loading: {
+          "0%": { transform: "rotate(0deg)", boxShadow: "1px 5px 2px #0C0C0C" },
+          "50%": {
+            transform: "rotate(180deg)",
+            boxShadow: "1px 5px 2px #C8AFD6",
+          },
+          "100%": {
+            transform: "rotate(360deg)",
+            boxShadow: "1px 5px 2px #87A922",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        loading: "loading 2s linear infinite",
       },
     },
   },

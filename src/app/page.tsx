@@ -71,7 +71,7 @@ export default function Home() {
           <div className="text-center">
             <button
               onClick={signIn}
-              className="border-2 border-solid border-[#C8AFD6] self-center text-xl rounded-3xl p-4 w-2/3">
+              className="border-2 border-solid border-[#C8AFD6] self-center text-xl rounded-3xl p-4 w-2/3 hover:bg-gradient-to-br from-lad-purple to-lad-green hover:text-lad-black">
               Devam Et
             </button>
           </div>
@@ -79,14 +79,14 @@ export default function Home() {
       ) : (
         <>
           <ConnectEmbed style={{ width: "75%" }} />
-          <p className="text-gray-300 text-sm">
-            Giriş yaparak{" "}
+          <p className="text-gray-300 text-xs">
+            Devam ederek{" "}
             <a
               href="https://gittjeqpqcmmbterylkd.supabase.co/storage/v1/object/public/agreements/ladderit-uyelik-sozlesmesivekullanim-kosullari.pdf?t=2024-05-10T11%3A08%3A20.741Z"
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-500 underline">
-              hizmet şartlarını
+              üyelik sözleşmesi ve kullanım koşullarını <br />
             </a>{" "}
             kabul etmiş olursunuz.
           </p>
@@ -95,7 +95,9 @@ export default function Home() {
       <button>
         <Link href="/brand/brand-login" className="text-lg">
           İşletmeyseniz Lütfen Giriş Yapmak için <br />
-          Tıklayınız
+          <span className="bg-gradient-to-r from-lad-purple to-lad-green inline-block text-transparent bg-clip-text">
+            Tıklayınız
+          </span>
         </Link>
       </button>
     </section>
