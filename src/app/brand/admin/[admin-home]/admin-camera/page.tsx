@@ -61,12 +61,20 @@ export default function AdminCamera() {
       const { data: brandBranchInfo } = await supabase
         .from("brand_branch")
         .select(
-          "total_used_free_rights, daily_total_used_free_rights, total_orders, daily_total_orders, weekly_total_orders, monthly_total_orders"
+          "id, total_used_free_rights, daily_total_used_free_rights, total_orders, daily_total_orders, weekly_total_orders, monthly_total_orders"
         )
-        .eq("brand_id", adminID);
+        .eq("brand_id", adminID)
+        .eq("id", brandBranchID);
 
       if (!brandBranchInfo) {
         toast.error("Şube bilgisi bulunamadı.");
+        return;
+      }
+
+      if (brandBranchInfo[0].id !== brandBranchID) {
+        toast.error(
+          "Müşteri başka bir işletmenin QR kodunu okutmaktadır. Lütfen kendi markanızdaki qr kodunu isteyiniz."
+        );
         return;
       }
 

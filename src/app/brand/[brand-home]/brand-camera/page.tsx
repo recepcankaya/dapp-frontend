@@ -27,6 +27,13 @@ export default function BranchCamera() {
       const { userID, forNFT, brandBranchID } = JSON.parse(result);
       const branchID = await getUserID();
 
+      if (branchID !== brandBranchID) {
+        toast.error(
+          "Müşteri başka bir işletmenin QR kodunu okutmaktadır. Lütfen kendi markanızdaki qr kodunu isteyiniz."
+        );
+        return;
+      }
+
       const days = ["pzr", "pzt", "salı", "çrş", "prş", "cuma", "cmt"];
       const currentDay = days[new Date().getDay()];
 
