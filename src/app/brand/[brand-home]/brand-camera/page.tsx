@@ -36,13 +36,18 @@ export default function BranchCamera() {
         .eq("id", userID)
         .single();
 
+      console.log("user", user);
+
       const { data: userOrderInfo } = await supabase
         .from("user_orders")
         .select(
           "id, total_user_orders, total_ticket_orders, user_total_used_free_rights"
         )
         .eq("user_id", userID)
-        .eq("branch_id", branchID);
+        .eq("branch_id", branchID)
+        .single();
+
+      console.log("userOrderInfo", userOrderInfo);
 
       const { data: brandBranchInfo } = await supabase
         .from("brand_branch")
@@ -50,6 +55,8 @@ export default function BranchCamera() {
           "brand_id, total_used_free_rights, daily_total_used_free_rights, total_orders, daily_total_orders, weekly_total_orders, monthly_total_orders"
         )
         .eq("id", branchID);
+
+      console.log("brandBranchInfo", brandBranchInfo);
 
       if (!brandBranchInfo) {
         toast.error("Şube bilgisi bulunamadı.");
@@ -60,6 +67,8 @@ export default function BranchCamera() {
         .from("brand")
         .select("required_number_for_free_right, total_unused_free_rights")
         .eq("id", brandBranchInfo[0].brand_id);
+
+      console.log("brandInfo", brandInfo);
 
       if (!brandInfo) {
         toast.error("İşletme bilgisi bulunamadı.");
@@ -73,14 +82,14 @@ export default function BranchCamera() {
         .eq("user_id", userID)
         .eq("brand_id", brandBranchInfo[0].brand_id);
 
-      if (!userTotalFreeRights) {
-        return;
-      }
+      console.log("userTotalFreeRights", userTotalFreeRights);
 
-      const totalUserFreeRights = userTotalFreeRights.reduce(
-        (total, item) => total + item.user_total_free_rights,
-        0
-      );
+      const totalUserFreeRights =
+        userTotalFreeRights &&
+        userTotalFreeRights.reduce(
+          (total, item) => total + item.user_total_free_rights,
+          0
+        );
 
       if (forNFT === true) {
         if (totalUserFreeRights === 0) {
@@ -91,16 +100,17 @@ export default function BranchCamera() {
           await supabase
             .from("user_orders")
             .update({
-              user_total_free_rights: Number(totalUserFreeRights - 1),
+              user_total_free_rights: Number(
+                totalUserFreeRights && totalUserFreeRights - 1
+              ),
               user_total_used_free_rights: Number(
-                userOrderInfo &&
-                  userOrderInfo[0].user_total_used_free_rights + 1
+                userOrderInfo && userOrderInfo.user_total_used_free_rights + 1
               ),
               total_user_orders: Number(
-                userOrderInfo && userOrderInfo[0].total_user_orders + 1
+                userOrderInfo && userOrderInfo.total_user_orders + 1
               ),
             })
-            .eq("id", (userOrderInfo && userOrderInfo[0].id) || "");
+            .eq("id", (userOrderInfo && userOrderInfo.id) || "");
 
           await supabase
             .from("brand_branch")
@@ -147,10 +157,11 @@ export default function BranchCamera() {
                 <span className="font-bold">{user?.username}</span> adlı
                 müşteriniz ödülünüzü kullandı. <br />
                 Bugüne kadar verilen sipariş sayısı:{" "}
-                {userOrderInfo[0].total_user_orders + 1} <br />
-                Kalan ödül hakkı: {totalUserFreeRights - 1} <br />
+                {userOrderInfo.total_user_orders + 1} <br />
+                Kalan ödül hakkı:{" "}
+                {totalUserFreeRights && totalUserFreeRights - 1} <br />
                 Bugüne kadar kullandığı ödül sayısı:{" "}
-                {userOrderInfo[0].user_total_used_free_rights + 1}
+                {userOrderInfo.user_total_used_free_rights + 1}
               </p>
             );
           }
@@ -206,24 +217,24 @@ export default function BranchCamera() {
           }
         } else if (
           Number(brandInfo[0]?.required_number_for_free_right) - 1 >
-          userOrderInfo[0].total_ticket_orders
+          userOrderInfo.total_ticket_orders
         ) {
           // If the user has a record in the user_orders table and the ticket orders is less than the requiredNumberForFreeRight, increase the ticket orders by one
 
           try {
-            await supabase
+            const { error: userOrderError } = await supabase
               .from("user_orders")
               .update({
                 total_ticket_orders: Number(
-                  userOrderInfo[0].total_ticket_orders + 1
+                  userOrderInfo.total_ticket_orders + 1
                 ),
-                total_user_orders: Number(
-                  userOrderInfo[0].total_user_orders + 1
-                ),
+                total_user_orders: Number(userOrderInfo.total_user_orders + 1),
               })
-              .eq("id", userOrderInfo[0].id);
+              .eq("id", userOrderInfo.id);
 
-            await supabase
+            console.log(userOrderError);
+
+            const { error: brandBranchError } = await supabase
               .from("brand_branch")
               .update({
                 total_orders: Number(brandBranchInfo[0].total_orders + 1),
@@ -245,23 +256,25 @@ export default function BranchCamera() {
               })
               .eq("id", branchID);
 
+            console.log(brandBranchError);
+
             toast.success(
               <p>
                 <span className="font-bold">{user?.username}</span> adlı
                 müşterinin işlemi başarıyla gerçekleştirildi. <br />
                 Bugüne kadar sipariş edilen kahve sayısı:{""}
-                {userOrderInfo[0].total_user_orders + 1} <br />
+                {userOrderInfo.total_user_orders + 1} <br />
                 Müşterinin ödül hakkı:{""}
                 {totalUserFreeRights} <br />
                 Bugüne kadar kullandığı ödül sayısı:{" "}
-                {userOrderInfo[0].user_total_used_free_rights}
+                {userOrderInfo.user_total_used_free_rights}
               </p>
             );
           } catch (error) {
             toast.error("Müşteri siparişi alınamadı. Lütfen tekrar deneyiniz.");
           }
         } else if (
-          userOrderInfo[0].total_ticket_orders ===
+          userOrderInfo.total_ticket_orders ===
           Number(brandInfo[0]?.required_number_for_free_right) - 1
         ) {
           // If the user has a record in the user_orders table and the ticket orders will be equal to the requiredNumberForFreeRight, increase user_total_free_rights by one and make zero the total_ticket_orders
@@ -270,12 +283,12 @@ export default function BranchCamera() {
               .from("user_orders")
               .update({
                 total_ticket_orders: 0,
-                total_user_orders: Number(
-                  userOrderInfo[0].total_user_orders + 1
+                total_user_orders: Number(userOrderInfo.total_user_orders + 1),
+                user_total_free_rights: Number(
+                  totalUserFreeRights ? totalUserFreeRights + 1 : 1
                 ),
-                user_total_free_rights: Number(totalUserFreeRights + 1),
               })
-              .eq("id", userOrderInfo[0].id);
+              .eq("id", userOrderInfo.id);
 
             await supabase
               .from("brand_branch")
@@ -313,12 +326,12 @@ export default function BranchCamera() {
                 <span className="font-bold">{user?.username}</span>
                 adlı müşteriniz ödülünüzü kazandı. <br />
                 Bugüne kadar sipariş edilen kahve sayısı:{""}
-                {userOrderInfo[0].total_user_orders + 1}
+                {userOrderInfo.total_user_orders + 1}
                 <br />
                 Müşterinin ödül hakkı:{""}
-                {totalUserFreeRights + 1} <br />
+                {totalUserFreeRights ? totalUserFreeRights + 1 : 1} <br />
                 Bugüne kadar kullandığı ödül sayısı:{" "}
-                {userOrderInfo[0].user_total_used_free_rights}
+                {userOrderInfo.user_total_used_free_rights}
               </p>
             );
           } catch (error) {
