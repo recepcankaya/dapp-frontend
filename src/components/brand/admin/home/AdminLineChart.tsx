@@ -27,9 +27,12 @@ type LineChartProps = {
 
 export default function AdminLineChart({ weeklyTotalOrders }: LineChartProps) {
   const orderedDays = ["pzt", "salı", "çrş", "prş", "cuma", "cmt", "pzr"];
-  const orderedWeeklyTotalOrdersArray = orderedDays.map(
-    (day) => weeklyTotalOrders?.[day as keyof typeof weeklyTotalOrders] ?? 0
-  );
+  const dayNumber = new Date().getDay();
+  const orderedWeeklyTotalOrdersArray: Array<number> = orderedDays
+    .map(
+      (day) => weeklyTotalOrders?.[day as keyof typeof weeklyTotalOrders] ?? 0
+    )
+    .slice(0, dayNumber === 0 ? 7 : dayNumber);
 
   const minValue = Math.min(...orderedWeeklyTotalOrdersArray);
   const maxValue = Math.max(...orderedWeeklyTotalOrdersArray);

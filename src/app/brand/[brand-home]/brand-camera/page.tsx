@@ -15,7 +15,7 @@ const QrScanner = dynamic(
 import { createClient } from "@/src/lib/supabase/client";
 import getUserID from "@/src/lib/getUserID";
 
-export default function AdminCamera() {
+export default function BranchCamera() {
   const isScanned = useRef<boolean>(false);
   const supabase = createClient();
   const router = useRouter();
@@ -39,15 +39,10 @@ export default function AdminCamera() {
       const { data: userOrderInfo } = await supabase
         .from("user_orders")
         .select(
-          "id, total_user_orders, total_ticket_orders, user_total_free_rights, user_total_used_free_rights"
+          "id, total_user_orders, total_ticket_orders, user_total_used_free_rights"
         )
         .eq("user_id", userID)
         .eq("branch_id", branchID);
-
-      if (!userOrderInfo) {
-        toast.error("Kullanıcıya ait sipariş bilgisi bulunamadı.");
-        return;
-      }
 
       const { data: brandBranchInfo } = await supabase
         .from("brand_branch")
@@ -71,8 +66,24 @@ export default function AdminCamera() {
         return;
       }
 
+      // BUGLI BİR KOD. ŞUBELERE GEÇİLDİĞİNDE DÜZELTİLECEK
+      const { data: userTotalFreeRights } = await supabase
+        .from("user_orders")
+        .select("user_total_free_rights")
+        .eq("user_id", userID)
+        .eq("brand_id", brandBranchInfo[0].brand_id);
+
+      if (!userTotalFreeRights) {
+        return;
+      }
+
+      const totalUserFreeRights = userTotalFreeRights.reduce(
+        (total, item) => total + item.user_total_free_rights,
+        0
+      );
+
       if (forNFT === true) {
-        if (userOrderInfo[0]?.user_total_free_rights === 0) {
+        if (totalUserFreeRights === 0) {
           toast.error("Müşterinizin ödül hakkı kalmamıştır.");
         }
 
@@ -80,15 +91,16 @@ export default function AdminCamera() {
           await supabase
             .from("user_orders")
             .update({
-              user_total_free_rights: Number(
-                userOrderInfo[0].user_total_free_rights - 1
-              ),
+              user_total_free_rights: Number(totalUserFreeRights - 1),
               user_total_used_free_rights: Number(
-                userOrderInfo[0].user_total_used_free_rights + 1
+                userOrderInfo &&
+                  userOrderInfo[0].user_total_used_free_rights + 1
               ),
-              total_user_orders: Number(userOrderInfo[0].total_user_orders + 1),
+              total_user_orders: Number(
+                userOrderInfo && userOrderInfo[0].total_user_orders + 1
+              ),
             })
-            .eq("id", userOrderInfo[0].id);
+            .eq("id", (userOrderInfo && userOrderInfo[0].id) || "");
 
           await supabase
             .from("brand_branch")
@@ -118,7 +130,7 @@ export default function AdminCamera() {
             })
             .eq("id", branchID);
 
-          await supabase
+          const { error } = await supabase
             .from("brand")
             .update({
               total_unused_free_rights: Number(
@@ -127,28 +139,28 @@ export default function AdminCamera() {
             })
             .eq("id", brandBranchInfo[0].brand_id);
 
-          toast.success(
-            <p>
-              <span className="font-bold">{user?.username}</span> adlı
-              müşteriniz ödülünüzü kullandı. <br />
-              Bugüne kadar verilen sipariş sayısı:{" "}
-              {userOrderInfo[0].total_user_orders + 1} <br />
-              Kalan ödül hakkı:{" "}
-              {userOrderInfo[0].user_total_free_rights - 1 === 0
-                ? 0
-                : userOrderInfo[0].user_total_free_rights - 1}{" "}
-              <br />
-              Bugüne kadar kullandığı ödül sayısı:{" "}
-              {userOrderInfo[0].user_total_used_free_rights + 1}
-            </p>
-          );
+          console.log(error);
+
+          if (userOrderInfo) {
+            toast.success(
+              <p>
+                <span className="font-bold">{user?.username}</span> adlı
+                müşteriniz ödülünüzü kullandı. <br />
+                Bugüne kadar verilen sipariş sayısı:{" "}
+                {userOrderInfo[0].total_user_orders + 1} <br />
+                Kalan ödül hakkı: {totalUserFreeRights - 1} <br />
+                Bugüne kadar kullandığı ödül sayısı:{" "}
+                {userOrderInfo[0].user_total_used_free_rights + 1}
+              </p>
+            );
+          }
         } catch (error) {
           toast.error("Müşteri ödülünü kullanamadı. Lütfen tekrar deneyiniz.");
         }
       }
       // If the order is not for free, check total_ticket_orders
       else {
-        if (userOrderInfo[0] === undefined) {
+        if (!userOrderInfo) {
           // If the user does not have a record in the user_orders table, add a new record
 
           try {
@@ -240,7 +252,7 @@ export default function AdminCamera() {
                 Bugüne kadar sipariş edilen kahve sayısı:{""}
                 {userOrderInfo[0].total_user_orders + 1} <br />
                 Müşterinin ödül hakkı:{""}
-                {userOrderInfo[0].user_total_free_rights} <br />
+                {totalUserFreeRights} <br />
                 Bugüne kadar kullandığı ödül sayısı:{" "}
                 {userOrderInfo[0].user_total_used_free_rights}
               </p>
@@ -261,9 +273,7 @@ export default function AdminCamera() {
                 total_user_orders: Number(
                   userOrderInfo[0].total_user_orders + 1
                 ),
-                user_total_free_rights: Number(
-                  userOrderInfo[0].user_total_free_rights + 1
-                ),
+                user_total_free_rights: Number(totalUserFreeRights + 1),
               })
               .eq("id", userOrderInfo[0].id);
 
@@ -306,7 +316,7 @@ export default function AdminCamera() {
                 {userOrderInfo[0].total_user_orders + 1}
                 <br />
                 Müşterinin ödül hakkı:{""}
-                {userOrderInfo[0].user_total_free_rights + 1} <br />
+                {totalUserFreeRights + 1} <br />
                 Bugüne kadar kullandığı ödül sayısı:{" "}
                 {userOrderInfo[0].user_total_used_free_rights}
               </p>
