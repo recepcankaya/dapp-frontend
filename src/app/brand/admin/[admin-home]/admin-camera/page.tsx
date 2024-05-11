@@ -25,6 +25,19 @@ export default function AdminCamera() {
     isScanned.current = true;
     try {
       const { userID, forNFT, brandBranchID } = JSON.parse(result);
+
+      if (!brandBranchID) {
+        toast.error(
+          "Marka bilgisi bulunamadı. Lütfen müşterinizden markayı seçmesini isteyin."
+        );
+        return;
+      }
+
+      if (!userID) {
+        toast.error("Müşteri bilgisi bulunamadı.");
+        return;
+      }
+
       const adminID = await getUserID();
 
       const days = ["pzr", "pzt", "salı", "çrş", "prş", "cuma", "cmt"];
