@@ -42,7 +42,8 @@ export default function AdminCamera() {
           "id, total_user_orders, total_ticket_orders, user_total_used_free_rights"
         )
         .eq("user_id", userID)
-        .eq("branch_id", brandBranchID);
+        .eq("branch_id", brandBranchID)
+        .single();
 
       const { data: brandBranchInfo } = await supabase
         .from("brand_branch")
@@ -66,20 +67,21 @@ export default function AdminCamera() {
         return;
       }
 
+      // BUGLI BİR KOD. ŞUBELERE GEÇİLDİĞİNDE DÜZELTİLECEK
       const { data: userTotalFreeRights } = await supabase
         .from("user_orders")
         .select("user_total_free_rights")
         .eq("user_id", userID)
         .eq("brand_id", adminID);
 
-      if (!userTotalFreeRights) {
-        return;
-      }
+      console.log("userTotalFreeRights", userTotalFreeRights);
 
-      const totalUserFreeRights = userTotalFreeRights.reduce(
-        (total, item) => total + item.user_total_free_rights,
-        0
-      );
+      const totalUserFreeRights =
+        userTotalFreeRights &&
+        userTotalFreeRights.reduce(
+          (total, item) => total + item.user_total_free_rights,
+          0
+        );
 
       if (forNFT === true) {
         if (totalUserFreeRights === 0) {
@@ -90,16 +92,17 @@ export default function AdminCamera() {
           await supabase
             .from("user_orders")
             .update({
-              user_total_free_rights: Number(totalUserFreeRights - 1),
+              user_total_free_rights: Number(
+                userOrderInfo && userOrderInfo.user_total_used_free_rights + 1
+              ),
               user_total_used_free_rights: Number(
-                userOrderInfo &&
-                  userOrderInfo[0].user_total_used_free_rights + 1
+                userOrderInfo && userOrderInfo.user_total_used_free_rights + 1
               ),
               total_user_orders: Number(
-                userOrderInfo && userOrderInfo[0].total_user_orders + 1
+                userOrderInfo && userOrderInfo.total_user_orders + 1
               ),
             })
-            .eq("id", (userOrderInfo && userOrderInfo[0].id) || "");
+            .eq("id", (userOrderInfo && userOrderInfo.id) || "");
 
           await supabase
             .from("brand_branch")
@@ -144,10 +147,11 @@ export default function AdminCamera() {
                 <span className="font-bold">{user?.username}</span> adlı
                 müşteriniz ödülünüzü kullandı. <br />
                 Bugüne kadar verilen sipariş sayısı:{" "}
-                {userOrderInfo[0].total_user_orders + 1} <br />
-                Kalan ödül hakkı: {totalUserFreeRights - 1} <br />
+                {userOrderInfo.total_user_orders + 1} <br />
+                Kalan ödül hakkı:{" "}
+                {totalUserFreeRights && totalUserFreeRights - 1} <br />
                 Bugüne kadar kullandığı ödül sayısı:{" "}
-                {userOrderInfo[0].user_total_used_free_rights + 1}
+                {userOrderInfo.user_total_used_free_rights + 1}
               </p>
             );
           }
@@ -203,7 +207,7 @@ export default function AdminCamera() {
           }
         } else if (
           Number(brandInfo[0]?.required_number_for_free_right) - 1 >
-          userOrderInfo[0].total_ticket_orders
+          userOrderInfo.total_ticket_orders
         ) {
           // If the user has a record in the user_orders table and the ticket orders is less than the requiredNumberForFreeRight, increase the ticket orders by one
 
@@ -212,13 +216,11 @@ export default function AdminCamera() {
               .from("user_orders")
               .update({
                 total_ticket_orders: Number(
-                  userOrderInfo[0].total_ticket_orders + 1
+                  userOrderInfo.total_ticket_orders + 1
                 ),
-                total_user_orders: Number(
-                  userOrderInfo[0].total_user_orders + 1
-                ),
+                total_user_orders: Number(userOrderInfo.total_user_orders + 1),
               })
-              .eq("id", userOrderInfo[0].id);
+              .eq("id", userOrderInfo.id);
 
             await supabase
               .from("brand_branch")
@@ -247,18 +249,18 @@ export default function AdminCamera() {
                 <span className="font-bold">{user?.username}</span> adlı
                 müşterinin işlemi başarıyla gerçekleştirildi. <br />
                 Bugüne kadar sipariş edilen kahve sayısı:{""}
-                {userOrderInfo[0].total_user_orders + 1} <br />
+                {userOrderInfo.total_user_orders + 1} <br />
                 Müşterinin ödül hakkı:{""}
                 {totalUserFreeRights} <br />
                 Bugüne kadar kullandığı ödül sayısı:{" "}
-                {userOrderInfo[0].user_total_used_free_rights}
+                {userOrderInfo.user_total_used_free_rights}
               </p>
             );
           } catch (error) {
             toast.error("Müşteri siparişi alınamadı. Lütfen tekrar deneyiniz.");
           }
         } else if (
-          userOrderInfo[0].total_ticket_orders ===
+          userOrderInfo.total_ticket_orders ===
           Number(brandInfo[0]?.required_number_for_free_right) - 1
         ) {
           // If the user has a record in the user_orders table and the ticket orders is equal to the requiredNumberForFreeRight, make a request
@@ -267,12 +269,12 @@ export default function AdminCamera() {
               .from("user_orders")
               .update({
                 total_ticket_orders: 0,
-                total_user_orders: Number(
-                  userOrderInfo[0].total_user_orders + 1
+                total_user_orders: Number(userOrderInfo.total_user_orders + 1),
+                user_total_free_rights: Number(
+                  totalUserFreeRights ? totalUserFreeRights + 1 : 1
                 ),
-                user_total_free_rights: Number(totalUserFreeRights + 1),
               })
-              .eq("id", userOrderInfo[0].id);
+              .eq("id", userOrderInfo.id);
 
             await supabase
               .from("brand_branch")
@@ -310,12 +312,12 @@ export default function AdminCamera() {
                 <span className="font-bold">{user?.username}</span>
                 adlı müşteriniz ödülünüzü kazandı. <br />
                 Bugüne kadar sipariş edilen kahve sayısı:{""}
-                {userOrderInfo[0].total_user_orders + 1}
+                {userOrderInfo.total_user_orders + 1}
                 <br />
                 Müşterinin ödül hakkı:{""}
-                {totalUserFreeRights + 1} <br />
+                {totalUserFreeRights ? totalUserFreeRights + 1 : 1} <br />
                 Bugüne kadar kullandığı ödül sayısı:{" "}
-                {userOrderInfo[0].user_total_used_free_rights}
+                {userOrderInfo.user_total_used_free_rights}
               </p>
             );
           } catch (error) {
