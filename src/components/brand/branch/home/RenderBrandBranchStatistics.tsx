@@ -11,10 +11,7 @@ export default function RenderBrandBranchStatistics({
   return (
     <main className="flex flex-col gap-8 p-8 md:p-12 lg:p-16 text-[#000101]">
       <HomeCards brandBranchData={brandBranchData} />
-      <LineChart
-        totalOrders={brandBranchData.total_orders}
-        weeklyTotalOrders={brandBranchData.weekly_total_orders}
-      />
+      <LineChart weeklyTotalOrders={brandBranchData.weekly_total_orders} />
     </main>
   );
 }

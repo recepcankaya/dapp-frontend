@@ -9,6 +9,11 @@ export default function BranchHomeCards({
 }) {
   const statistics = [
     {
+      id: 0,
+      number: brandBranchData.total_orders,
+      text: "Toplam sipariş sayısı",
+    },
+    {
       id: 1,
       number: brandBranchData.monthly_total_orders,
       text: "Bu ay verilen sipariş sayısı",

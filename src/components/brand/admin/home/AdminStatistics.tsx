@@ -23,10 +23,7 @@ export default function RenderAdminStatistics({
         totalUnusedFreeRights={totalUnusedFreeRights}
         adminData={calculatedData}
       />
-      <AdminLineChart
-        totalOrders={calculatedData.total_orders}
-        weeklyTotalOrders={weeklyTotalOrders}
-      />
+      <AdminLineChart weeklyTotalOrders={weeklyTotalOrders} />
     </main>
   );
 }

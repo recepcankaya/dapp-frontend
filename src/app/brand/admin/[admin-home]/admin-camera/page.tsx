@@ -25,7 +25,7 @@ export default function AdminCamera() {
     isScanned.current = true;
     try {
       const { userID, forNFT, brandBranchID } = JSON.parse(result);
-      const branchID = await getUserID();
+      const adminID = await getUserID();
 
       const days = ["pzr", "pzt", "salı", "çrş", "prş", "cuma", "cmt"];
       const currentDay = days[new Date().getDay()];
@@ -42,19 +42,14 @@ export default function AdminCamera() {
           "id, total_user_orders, total_ticket_orders, user_total_free_rights, user_total_used_free_rights"
         )
         .eq("user_id", userID)
-        .eq("branch_id", branchID);
-
-      if (!userOrderInfo) {
-        toast.error("Kullanıcıya ait sipariş bilgisi bulunamadı.");
-        return;
-      }
+        .eq("branch_id", brandBranchID);
 
       const { data: brandBranchInfo } = await supabase
         .from("brand_branch")
         .select(
-          "brand_id, total_used_free_rights, daily_total_used_free_rights, total_orders, daily_total_orders, weekly_total_orders, monthly_total_orders"
+          "total_used_free_rights, daily_total_used_free_rights, total_orders, daily_total_orders, weekly_total_orders, monthly_total_orders"
         )
-        .eq("id", branchID);
+        .eq("brand_id", adminID);
 
       if (!brandBranchInfo) {
         toast.error("Şube bilgisi bulunamadı.");
@@ -64,13 +59,12 @@ export default function AdminCamera() {
       const { data: brandInfo } = await supabase
         .from("brand")
         .select("required_number_for_free_right, total_unused_free_rights")
-        .eq("id", brandBranchInfo[0].brand_id);
+        .eq("id", adminID);
 
-      if (!brandInfo) {
-        toast.error("İşletme bilgisi bulunamadı.");
+      if (!userOrderInfo || !brandInfo) {
+        toast.error("Kullanıcıya ait sipariş bilgisi bulunamadı.");
         return;
       }
-
       if (forNFT === true) {
         if (userOrderInfo[0]?.user_total_free_rights === 0) {
           toast.error("Müşterinizin ödül hakkı kalmamıştır.");
@@ -116,7 +110,7 @@ export default function AdminCamera() {
                 brandBranchInfo[0].monthly_total_orders + 1
               ),
             })
-            .eq("id", branchID);
+            .eq("id", brandBranchID);
 
           await supabase
             .from("brand")
@@ -125,7 +119,7 @@ export default function AdminCamera() {
                 brandInfo[0].total_unused_free_rights - 1
               ),
             })
-            .eq("id", brandBranchInfo[0].brand_id);
+            .eq("id", adminID);
 
           toast.success(
             <p>
@@ -146,7 +140,7 @@ export default function AdminCamera() {
           toast.error("Müşteri ödülünü kullanamadı. Lütfen tekrar deneyiniz.");
         }
       }
-      // If the order is not for free, check total_ticket_orders
+      // If the order is not for free, check the number of orders
       else {
         if (userOrderInfo[0] === undefined) {
           // If the user does not have a record in the user_orders table, add a new record
@@ -154,8 +148,8 @@ export default function AdminCamera() {
           try {
             await supabase.from("user_orders").insert({
               user_id: String(userID),
-              branch_id: String(branchID),
-              brand_id: String(brandBranchInfo[0].brand_id),
+              branch_id: String(brandBranchID),
+              brand_id: String(adminID),
               total_user_orders: 1,
               total_ticket_orders: 1,
             });
@@ -180,7 +174,7 @@ export default function AdminCamera() {
                   brandBranchInfo[0].monthly_total_orders + 1
                 ),
               })
-              .eq("id", branchID);
+              .eq("id", brandBranchID);
 
             toast.success(
               <p>
@@ -231,7 +225,7 @@ export default function AdminCamera() {
                   brandBranchInfo[0].monthly_total_orders + 1
                 ),
               })
-              .eq("id", branchID);
+              .eq("id", brandBranchID);
 
             toast.success(
               <p>
@@ -252,7 +246,7 @@ export default function AdminCamera() {
           userOrderInfo[0].total_ticket_orders ===
           Number(brandInfo[0]?.required_number_for_free_right) - 1
         ) {
-          // If the user has a record in the user_orders table and the ticket orders will be equal to the requiredNumberForFreeRight, increase user_total_free_rights by one and make zero the total_ticket_orders
+          // If the user has a record in the user_orders table and the ticket orders is equal to the requiredNumberForFreeRight, make a request
           try {
             await supabase
               .from("user_orders")
@@ -287,7 +281,7 @@ export default function AdminCamera() {
                   brandBranchInfo[0].monthly_total_orders + 1
                 ),
               })
-              .eq("id", branchID);
+              .eq("id", brandBranchID);
 
             await supabase
               .from("brand")
@@ -296,7 +290,7 @@ export default function AdminCamera() {
                   brandInfo[0].total_unused_free_rights + 1
                 ),
               })
-              .eq("id", brandBranchInfo[0].brand_id);
+              .eq("id", adminID);
 
             toast.success(
               <p>

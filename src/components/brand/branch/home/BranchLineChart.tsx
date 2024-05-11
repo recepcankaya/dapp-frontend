@@ -22,32 +22,36 @@ ChartJS.register(
 );
 
 type LineChartProps = {
-  totalOrders: BrandBranch["total_orders"];
   weeklyTotalOrders: BrandBranch["weekly_total_orders"];
 };
 
-export default function BranchLineChart({
-  totalOrders,
-  weeklyTotalOrders,
-}: LineChartProps) {
+export default function BranchLineChart({ weeklyTotalOrders }: LineChartProps) {
+  const orderedDays = ["pzt", "salı", "çrş", "prş", "cuma", "cmt", "pzr"];
+  const dayNumber = new Date().getDay();
+  const orderedWeeklyTotalOrdersArray: Array<number> = orderedDays
+    .map(
+      (day) => weeklyTotalOrders?.[day as keyof typeof weeklyTotalOrders] ?? 0
+    )
+    .slice(0, dayNumber === 0 ? 7 : dayNumber);
+
+  const minValue = Math.min(...orderedWeeklyTotalOrdersArray);
+  const maxValue = Math.max(...orderedWeeklyTotalOrdersArray);
+
   const data = {
     labels: ["Pzt", "Salı", "Çrş", "Prş", "Cuma", "Cmt", "Pzr"],
     datasets: [
       {
-        label: "Toplam Sipariş Sayısı",
-        data: [12, 19, 3, 5, 2, 3, 9],
+        label: "Günlük Sipariş Sayısı",
+        data: orderedWeeklyTotalOrdersArray,
         backgroundColor: "transparent",
-        borderColor: "red",
-        pointBorderColor: "black",
-        pointBackgroundColor: "black",
+        borderColor: "#7B5240",
+        pointBorderColor: "#7B5240",
+        pointBackgroundColor: "#7B5240",
         borderWidth: 2,
         tension: 0.7,
       },
     ],
   };
-
-  // console.log(totalOrders);
-  // console.log(weeklyTotalOrders);
 
   const options = {
     responsive: true,
@@ -68,10 +72,10 @@ export default function BranchLineChart({
         },
       },
       y: {
-        min: 2,
-        max: 20,
+        min: minValue - 20,
+        max: maxValue + 20,
         ticks: {
-          stepSize: 5,
+          stepSize: 10,
         },
       },
     },

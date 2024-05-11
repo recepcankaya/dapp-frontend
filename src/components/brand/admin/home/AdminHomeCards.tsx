@@ -16,31 +16,36 @@ export default function AdminHomeCards({
   const statistics = [
     {
       id: 0,
+      number: adminData.total_orders,
+      text: "Toplam sipariş sayısı",
+    },
+    {
+      id: 1,
       number: adminData.monthly_total_orders,
       text: "Bu ay verilen sipariş sayısı",
     },
     {
-      id: 1,
+      id: 2,
       number: adminData.daily_total_orders,
       text: "Bugün verilen sipariş sayısı",
     },
     {
-      id: 2,
+      id: 3,
       number: adminData.daily_total_used_free_rights,
       text: "Bugün kullanılan ödül sayısı",
     },
     {
-      id: 3,
+      id: 4,
       number: adminData.total_used_free_rights,
       text: "Bugüne kadar kullanılmış ödüller",
     },
     {
-      id: 4,
+      id: 5,
       number: totalUnusedFreeRights,
       text: "Bekleyen ödüllerin sayısı",
     },
     {
-      id: 5,
+      id: 6,
       number: requiredNumberForFreeRight,
       text: "Ödül için sipariş sayısı",
     },

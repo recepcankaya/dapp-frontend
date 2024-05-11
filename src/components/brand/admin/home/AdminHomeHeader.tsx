@@ -30,7 +30,7 @@ export default function AdminHomeHeader({
         <div className="text-lg font-semibold text-black">{brandName}</div>
       </div>
       <Button asChild className="">
-        <Link href={`${pathname}/brand-camera`}>Qr Kodu Okut</Link>
+        <Link href={`${pathname}/admin-camera`}>Qr Kodu Okut</Link>
       </Button>
       <div className="flex items-center gap-4">
         <DropdownMenu>

@@ -22,14 +22,10 @@ ChartJS.register(
 );
 
 type LineChartProps = {
-  totalOrders: BrandBranch["total_orders"];
   weeklyTotalOrders: BrandBranch["weekly_total_orders"];
 };
 
-export default function AdminLineChart({
-  totalOrders,
-  weeklyTotalOrders,
-}: LineChartProps) {
+export default function AdminLineChart({ weeklyTotalOrders }: LineChartProps) {
   const orderedDays = ["pzt", "salı", "çrş", "prş", "cuma", "cmt", "pzr"];
   const orderedWeeklyTotalOrdersArray = orderedDays.map(
     (day) => weeklyTotalOrders?.[day as keyof typeof weeklyTotalOrders] ?? 0
@@ -45,9 +41,9 @@ export default function AdminLineChart({
         label: "Günlük Sipariş Sayısı",
         data: orderedWeeklyTotalOrdersArray,
         backgroundColor: "transparent",
-        borderColor: "red",
-        pointBorderColor: "black",
-        pointBackgroundColor: "black",
+        borderColor: "#7B5240",
+        pointBorderColor: "#7B5240",
+        pointBackgroundColor: "#7B5240",
         borderWidth: 2,
         tension: 0.7,
       },
