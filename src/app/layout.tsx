@@ -5,9 +5,6 @@ import "./globals.css";
 
 const activeChain = "polygon";
 
-const CLIENT_ID = process.env.NEXT_PUBLIC_CLIENT_ID as string;
-
-
 export default function RootLayout({
   // Layouts must accept a children prop.
   // This will be populated with nested layouts or pages
@@ -18,7 +15,7 @@ export default function RootLayout({
   return (
     <ThirdwebProvider
       activeChain={activeChain}
-      clientId={CLIENT_ID}
+      clientId={process.env.NEXT_PUBLIC_TEMPLATE_CLIENT_ID}
       supportedWallets={[
         embeddedWallet({
           auth: {
