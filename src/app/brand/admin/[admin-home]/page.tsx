@@ -14,10 +14,10 @@ export default async function AdminHome() {
       `brand_name, 
       brand_logo_ipfs_url, 
       required_number_for_free_right, 
-      total_unused_free_rights, 
       brand_branch(
         total_orders, 
         total_used_free_rights, 
+        total_unused_free_rights, 
         daily_total_orders, 
         daily_total_used_free_rights, 
         monthly_total_orders,
@@ -38,6 +38,7 @@ export default async function AdminHome() {
   const calculateData = data[0].brand_branch.map((item) => ({
     total_orders: item.total_orders,
     total_used_free_rights: item.total_used_free_rights,
+    total_unused_free_rights: item.total_unused_free_rights,
     daily_total_orders: item.daily_total_orders,
     daily_total_used_free_rights: item.daily_total_used_free_rights,
     monthly_total_orders: item.monthly_total_orders,
@@ -53,6 +54,7 @@ export default async function AdminHome() {
     (acc, item) => {
       acc.total_orders += item.total_orders;
       acc.total_used_free_rights += item.total_used_free_rights;
+      acc.total_unused_free_rights += item.total_unused_free_rights;
       acc.daily_total_orders += item.daily_total_orders;
       acc.daily_total_used_free_rights += item.daily_total_used_free_rights;
       acc.monthly_total_orders += item.monthly_total_orders;
@@ -62,6 +64,7 @@ export default async function AdminHome() {
     {
       total_orders: 0,
       total_used_free_rights: 0,
+      total_unused_free_rights: 0,
       daily_total_orders: 0,
       daily_total_used_free_rights: 0,
       monthly_total_orders: 0,
@@ -100,7 +103,6 @@ export default async function AdminHome() {
       />
       <RenderAdminStatistics
         requiredNumberForFreeRight={data[0].required_number_for_free_right}
-        totalUnusedFreeRights={data[0].total_unused_free_rights}
         weeklyTotalOrders={weeklyTotalOrders}
         calculatedData={calculatedData}
       />

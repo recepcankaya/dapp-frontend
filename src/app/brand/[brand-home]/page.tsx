@@ -20,11 +20,11 @@ export default async function BranchHome() {
         daily_total_used_free_rights,
         monthly_total_orders,
         weekly_total_orders,
+        total_unused_free_rights,
         brand (
           brand_name,
           brand_logo_ipfs_url,
-          required_number_for_free_right,
-          total_unused_free_rights
+          required_number_for_free_right
     )
     `
     )
@@ -39,12 +39,12 @@ export default async function BranchHome() {
     branch_name: data.branch_name,
     total_orders: data.total_orders,
     total_used_free_rights: data.total_used_free_rights,
+    total_unused_free_rights: data.total_unused_free_rights,
     daily_total_orders: data.daily_total_orders,
     daily_total_used_free_rights: data.daily_total_used_free_rights,
     weekly_total_orders: data.weekly_total_orders,
     monthly_total_orders: data.monthly_total_orders,
     required_number_for_free_right: data.brand.required_number_for_free_right,
-    total_unused_free_rights: data.brand.total_unused_free_rights,
   };
 
   return (

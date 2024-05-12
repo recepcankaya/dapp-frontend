@@ -7,6 +7,14 @@ export interface AdminCampaigns extends Omit<BrandBranchInfo, "campaigns"> {
   campaigns: Campaign[] | null;
 }
 
+export interface MonthlyOrdersJustMonth {
+  [key: string]: number;
+}
+
+export interface MonthlyOrdersWithYear {
+  [key: string]: MonthlyOrdersJustMonth;
+}
+
 export type Campaign = {
   campaign_id: string;
   campaign_image: string;
@@ -29,6 +37,7 @@ export type AdminHomeStatistics = Pick<
   BrandInfo & BrandBranchInfo,
   | "total_orders"
   | "total_used_free_rights"
+  | "total_unused_free_rights"
   | "daily_total_orders"
   | "daily_total_used_free_rights"
   | "monthly_total_orders"

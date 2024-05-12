@@ -4,13 +4,11 @@ import type { AdminHomeStatistics } from "@/src/lib/types/jsonQuery.types";
 
 type AdminHomeCardsProps = {
   requiredNumberForFreeRight: Brand["required_number_for_free_right"];
-  totalUnusedFreeRights: Brand["total_unused_free_rights"];
   adminData: AdminHomeStatistics;
 };
 
 export default function AdminHomeCards({
   requiredNumberForFreeRight,
-  totalUnusedFreeRights,
   adminData,
 }: AdminHomeCardsProps) {
   const statistics = [
@@ -41,7 +39,7 @@ export default function AdminHomeCards({
     },
     {
       id: 5,
-      number: totalUnusedFreeRights,
+      number: adminData.total_unused_free_rights,
       text: "Bekleyen ödüllerin sayısı",
     },
     {

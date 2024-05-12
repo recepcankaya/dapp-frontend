@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef } from "react";
-import { useRouter } from "next/navigation";
 import { Bounce, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import dynamic from "next/dynamic";
@@ -14,11 +13,14 @@ const QrScanner = dynamic(
 
 import { createClient } from "@/src/lib/supabase/client";
 import getUserID from "@/src/lib/getUserID";
+import {
+  MonthlyOrdersWithYear,
+  MonthlyOrdersJustMonth,
+} from "@/src/lib/types/jsonQuery.types";
 
 export default function BranchCamera() {
   const isScanned = useRef<boolean>(false);
   const supabase = createClient();
-  const router = useRouter();
 
   const handleScan = async (result: any) => {
     if (!result || isScanned.current) return;
@@ -26,6 +28,18 @@ export default function BranchCamera() {
     try {
       const { userID, forNFT, brandBranchID } = JSON.parse(result);
       const branchID = await getUserID();
+
+      if (!brandBranchID) {
+        toast.error(
+          "Marka bilgisi bulunamadı. Lütfen müşterinizden markayı seçmesini isteyin."
+        );
+        return;
+      }
+
+      if (!userID) {
+        toast.error("Müşteri bilgisi bulunamadı.");
+        return;
+      }
 
       if (branchID !== brandBranchID) {
         toast.error(
@@ -36,6 +50,22 @@ export default function BranchCamera() {
 
       const days = ["pzr", "pzt", "salı", "çrş", "prş", "cuma", "cmt"];
       const currentDay = days[new Date().getDay()];
+      const months = [
+        "ocak",
+        "şubat",
+        "mart",
+        "nisan",
+        "mayıs",
+        "haziran",
+        "temmuz",
+        "ağustos",
+        "eylül",
+        "ekim",
+        "kasım",
+        "aralık",
+      ];
+      const currentMonth = months[new Date().getMonth()];
+      const currentYear = new Date().getFullYear();
 
       const { data: user } = await supabase
         .from("users")
@@ -43,27 +73,21 @@ export default function BranchCamera() {
         .eq("id", userID)
         .single();
 
-      console.log("user", user);
-
       const { data: userOrderInfo } = await supabase
         .from("user_orders")
         .select(
-          "id, total_user_orders, total_ticket_orders, user_total_used_free_rights"
+          "id, total_user_orders, total_ticket_orders, user_total_used_free_rights, user_total_free_rights"
         )
         .eq("user_id", userID)
         .eq("branch_id", branchID)
         .single();
 
-      console.log("userOrderInfo", userOrderInfo);
-
       const { data: brandBranchInfo } = await supabase
         .from("brand_branch")
         .select(
-          "brand_id, total_used_free_rights, daily_total_used_free_rights, total_orders, daily_total_orders, weekly_total_orders, monthly_total_orders"
+          "brand_id, total_used_free_rights,total_unused_free_rights, daily_total_used_free_rights, total_orders, daily_total_orders, weekly_total_orders, monthly_total_orders, monthly_total_orders_with_years"
         )
         .eq("id", branchID);
-
-      console.log("brandBranchInfo", brandBranchInfo);
 
       if (!brandBranchInfo) {
         toast.error("Şube bilgisi bulunamadı.");
@@ -72,24 +96,19 @@ export default function BranchCamera() {
 
       const { data: brandInfo } = await supabase
         .from("brand")
-        .select("required_number_for_free_right, total_unused_free_rights")
+        .select("required_number_for_free_right")
         .eq("id", brandBranchInfo[0].brand_id);
-
-      console.log("brandInfo", brandInfo);
 
       if (!brandInfo) {
         toast.error("İşletme bilgisi bulunamadı.");
         return;
       }
 
-      // BUGLI BİR KOD. ŞUBELERE GEÇİLDİĞİNDE DÜZELTİLECEK
       const { data: userTotalFreeRights } = await supabase
         .from("user_orders")
         .select("user_total_free_rights")
         .eq("user_id", userID)
         .eq("brand_id", brandBranchInfo[0].brand_id);
-
-      console.log("userTotalFreeRights", userTotalFreeRights);
 
       const totalUserFreeRights =
         userTotalFreeRights &&
@@ -129,10 +148,16 @@ export default function BranchCamera() {
               total_used_free_rights: Number(
                 brandBranchInfo[0].total_used_free_rights + 1
               ),
+              total_unused_free_rights: Number(
+                brandBranchInfo[0].total_unused_free_rights - 1
+              ),
               daily_total_used_free_rights: Number(
                 brandBranchInfo[0].daily_total_used_free_rights + 1
               ),
               weekly_total_orders: {
+                ...(brandBranchInfo[0].weekly_total_orders as {
+                  [key: string]: number;
+                }),
                 [currentDay]: Number(
                   (
                     brandBranchInfo[0].weekly_total_orders as {
@@ -144,19 +169,26 @@ export default function BranchCamera() {
               monthly_total_orders: Number(
                 brandBranchInfo[0].monthly_total_orders + 1
               ),
+              monthly_total_orders_with_years: {
+                ...(brandBranchInfo[0]
+                  .monthly_total_orders_with_years as MonthlyOrdersWithYear),
+                [currentYear]: {
+                  ...((
+                    brandBranchInfo[0]?.monthly_total_orders_with_years as {
+                      [key: string]: { [key: string]: number };
+                    }
+                  )[currentYear] || {}),
+                  [currentMonth]: Number(
+                    (
+                      brandBranchInfo[0]?.monthly_total_orders_with_years as {
+                        [key: string]: { [key: string]: number };
+                      }
+                    )[currentYear]?.[currentMonth] + 1
+                  ),
+                },
+              },
             })
             .eq("id", branchID);
-
-          const { error } = await supabase
-            .from("brand")
-            .update({
-              total_unused_free_rights: Number(
-                brandInfo[0].total_unused_free_rights - 1
-              ),
-            })
-            .eq("id", brandBranchInfo[0].brand_id);
-
-          console.log(error);
 
           if (userOrderInfo) {
             toast.success(
@@ -198,6 +230,9 @@ export default function BranchCamera() {
                   brandBranchInfo[0].daily_total_orders + 1
                 ),
                 weekly_total_orders: {
+                  ...(brandBranchInfo[0].weekly_total_orders as {
+                    [key: string]: number;
+                  }),
                   [currentDay]: Number(
                     (
                       brandBranchInfo[0].weekly_total_orders as {
@@ -209,6 +244,24 @@ export default function BranchCamera() {
                 monthly_total_orders: Number(
                   brandBranchInfo[0].monthly_total_orders + 1
                 ),
+                monthly_total_orders_with_years: {
+                  ...(brandBranchInfo[0]
+                    .monthly_total_orders_with_years as MonthlyOrdersWithYear),
+                  [currentYear]: {
+                    ...((
+                      brandBranchInfo[0]?.monthly_total_orders_with_years as {
+                        [key: string]: { [key: string]: number };
+                      }
+                    )[currentYear] || {}),
+                    [currentMonth]: Number(
+                      (
+                        brandBranchInfo[0]?.monthly_total_orders_with_years as {
+                          [key: string]: { [key: string]: number };
+                        }
+                      )[currentYear]?.[currentMonth] + 1
+                    ),
+                  },
+                },
               })
               .eq("id", branchID);
 
@@ -229,7 +282,7 @@ export default function BranchCamera() {
           // If the user has a record in the user_orders table and the ticket orders is less than the requiredNumberForFreeRight, increase the ticket orders by one
 
           try {
-            const { error: userOrderError } = await supabase
+            await supabase
               .from("user_orders")
               .update({
                 total_ticket_orders: Number(
@@ -239,9 +292,7 @@ export default function BranchCamera() {
               })
               .eq("id", userOrderInfo.id);
 
-            console.log(userOrderError);
-
-            const { error: brandBranchError } = await supabase
+            await supabase
               .from("brand_branch")
               .update({
                 total_orders: Number(brandBranchInfo[0].total_orders + 1),
@@ -249,6 +300,9 @@ export default function BranchCamera() {
                   brandBranchInfo[0].daily_total_orders + 1
                 ),
                 weekly_total_orders: {
+                  ...(brandBranchInfo[0].weekly_total_orders as {
+                    [key: string]: number;
+                  }),
                   [currentDay]: Number(
                     (
                       brandBranchInfo[0].weekly_total_orders as {
@@ -260,16 +314,32 @@ export default function BranchCamera() {
                 monthly_total_orders: Number(
                   brandBranchInfo[0].monthly_total_orders + 1
                 ),
+                monthly_total_orders_with_years: {
+                  ...(brandBranchInfo[0]
+                    .monthly_total_orders_with_years as MonthlyOrdersWithYear),
+                  [currentYear]: {
+                    ...((
+                      brandBranchInfo[0]?.monthly_total_orders_with_years as {
+                        [key: string]: { [key: string]: number };
+                      }
+                    )[currentYear] || {}),
+                    [currentMonth]: Number(
+                      (
+                        brandBranchInfo[0]?.monthly_total_orders_with_years as {
+                          [key: string]: { [key: string]: number };
+                        }
+                      )[currentYear]?.[currentMonth] + 1
+                    ),
+                  },
+                },
               })
               .eq("id", branchID);
-
-            console.log(brandBranchError);
 
             toast.success(
               <p>
                 <span className="font-bold">{user?.username}</span> adlı
                 müşterinin işlemi başarıyla gerçekleştirildi. <br />
-                Bugüne kadar sipariş edilen kahve sayısı:{""}
+                Bugüne kadar verilen sipariş sayısı:{" "}
                 {userOrderInfo.total_user_orders + 1} <br />
                 Müşterinin ödül hakkı:{""}
                 {totalUserFreeRights} <br />
@@ -301,10 +371,16 @@ export default function BranchCamera() {
               .from("brand_branch")
               .update({
                 total_orders: Number(brandBranchInfo[0].total_orders + 1),
+                total_unused_free_rights: Number(
+                  brandBranchInfo[0].total_unused_free_rights + 1
+                ),
                 daily_total_orders: Number(
                   brandBranchInfo[0].daily_total_orders + 1
                 ),
                 weekly_total_orders: {
+                  ...(brandBranchInfo[0].weekly_total_orders as {
+                    [key: string]: number;
+                  }),
                   [currentDay]: Number(
                     (
                       brandBranchInfo[0].weekly_total_orders as {
@@ -316,23 +392,32 @@ export default function BranchCamera() {
                 monthly_total_orders: Number(
                   brandBranchInfo[0].monthly_total_orders + 1
                 ),
+                monthly_total_orders_with_years: {
+                  ...(brandBranchInfo[0]
+                    .monthly_total_orders_with_years as MonthlyOrdersWithYear),
+                  [currentYear]: {
+                    ...((
+                      brandBranchInfo[0]?.monthly_total_orders_with_years as {
+                        [key: string]: { [key: string]: number };
+                      }
+                    )[currentYear] || {}),
+                    [currentMonth]: Number(
+                      (
+                        brandBranchInfo[0]?.monthly_total_orders_with_years as {
+                          [key: string]: { [key: string]: number };
+                        }
+                      )[currentYear]?.[currentMonth] + 1
+                    ),
+                  },
+                },
               })
               .eq("id", branchID);
-
-            await supabase
-              .from("brand")
-              .update({
-                total_unused_free_rights: Number(
-                  brandInfo[0].total_unused_free_rights + 1
-                ),
-              })
-              .eq("id", brandBranchInfo[0].brand_id);
 
             toast.success(
               <p>
                 <span className="font-bold">{user?.username}</span>
                 adlı müşteriniz ödülünüzü kazandı. <br />
-                Bugüne kadar sipariş edilen kahve sayısı:{""}
+                Bugüne kadar verilen sipariş sayısı:{" "}
                 {userOrderInfo.total_user_orders + 1}
                 <br />
                 Müşterinin ödül hakkı:{""}

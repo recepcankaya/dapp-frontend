@@ -22,7 +22,6 @@ export type Database = {
           nft_src: string | null
           required_number_for_free_right: number
           ticket_ipfs_url: string
-          total_unused_free_rights: number
         }
         Insert: {
           brand_logo_ipfs_url?: string
@@ -36,7 +35,6 @@ export type Database = {
           nft_src?: string | null
           required_number_for_free_right?: number
           ticket_ipfs_url?: string
-          total_unused_free_rights?: number
         }
         Update: {
           brand_logo_ipfs_url?: string
@@ -50,7 +48,6 @@ export type Database = {
           nft_src?: string | null
           required_number_for_free_right?: number
           ticket_ipfs_url?: string
-          total_unused_free_rights?: number
         }
         Relationships: [
           {
@@ -73,10 +70,12 @@ export type Database = {
           email: string
           id: string
           monthly_total_orders: number
+          monthly_total_orders_with_years: Json
           total_orders: number
+          total_unused_free_rights: number
           total_used_free_rights: number
           video_url: string | null
-          weekly_total_orders: Json | null
+          weekly_total_orders: Json
         }
         Insert: {
           branch_name?: string
@@ -88,10 +87,12 @@ export type Database = {
           email?: string
           id?: string
           monthly_total_orders?: number
+          monthly_total_orders_with_years?: Json
           total_orders?: number
+          total_unused_free_rights?: number
           total_used_free_rights?: number
           video_url?: string | null
-          weekly_total_orders?: Json | null
+          weekly_total_orders?: Json
         }
         Update: {
           branch_name?: string
@@ -103,10 +104,12 @@ export type Database = {
           email?: string
           id?: string
           monthly_total_orders?: number
+          monthly_total_orders_with_years?: Json
           total_orders?: number
+          total_unused_free_rights?: number
           total_used_free_rights?: number
           video_url?: string | null
-          weekly_total_orders?: Json | null
+          weekly_total_orders?: Json
         }
         Relationships: [
           {

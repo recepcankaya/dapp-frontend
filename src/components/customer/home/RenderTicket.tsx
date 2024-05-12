@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter, useParams } from "next/navigation";
 
@@ -35,9 +35,7 @@ export default function RenderTicket({
   userID,
   totalTicketOrders,
 }: RenderTicketProps) {
-  const userOrderNumberRef = useRef<number>(
-    totalTicketOrders
-  ) as React.MutableRefObject<number>;
+  const [userOrderNumber, setUserOrderNumber] = useState(totalTicketOrders);
   const supabase = createClient();
   const router = useRouter();
   const ticketCircles = branchInfo
@@ -67,8 +65,7 @@ export default function RenderTicket({
           filter: `user_id=eq.${userID}`,
         },
         (payload: any) => {
-          userOrderNumberRef.current = payload.new.total_ticket_orders;
-          router.refresh();
+          setUserOrderNumber(payload.new.total_ticket_orders);
         }
       )
       .subscribe();
@@ -114,14 +111,10 @@ export default function RenderTicket({
               style={{
                 background:
                   index < totalTicketOrders
-                    ? `url(${
-                        branchInfo &&
-                        branchInfo.brand?.brand_logo_ipfs_url &&
-                        branchInfo.brand?.brand_logo_ipfs_url.replace(
-                          "ipfs://",
-                          "https://ipfs.io/ipfs/"
-                        )
-                      }) no-repeat center center / contain`
+                    ? `url(${branchInfo.brand?.brand_logo_ipfs_url.replace(
+                        "ipfs://",
+                        "https://ipfs.io/ipfs/"
+                      )}) no-repeat center center / contain`
                     : "#7B3501",
                 transform: "rotate(-45deg)",
               }}></li>
