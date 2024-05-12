@@ -1,9 +1,9 @@
 "use client";
 import Link from "next/link";
 import { ConnectEmbed, useAddress } from "@thirdweb-dev/react";
-import { sha512 } from "js-sha512";
+import bcrypt from "bcryptjs";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
+import { Bounce, ToastContainer, toast } from "react-toastify";
 
 import { createClient } from "../lib/supabase/client";
 
@@ -16,10 +16,11 @@ export default function Home() {
     try {
       let isNewUser = false;
       if (!walletAddr) {
-        throw new Error("Wallet address is undefined");
+        throw new Error("Lütfen giriş yapınız.");
       }
 
-      const passwordHash = sha512(`${walletAddr}l4dder1t`).slice(0, 50);
+      const salt = bcrypt.genSaltSync(10);
+      const passwordHash = bcrypt.hashSync(walletAddr, salt);
       const { data, error } = await supabase.auth.signInWithPassword({
         email: `${walletAddr}@ladderuser.com`,
         password: passwordHash,

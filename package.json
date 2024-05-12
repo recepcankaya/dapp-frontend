@@ -21,6 +21,7 @@
     "@supabase/supabase-js": "^2.39.8",
     "@thirdweb-dev/react": "^4.6.11",
     "@yudiel/react-qr-scanner": "^1.2.10",
+    "bcryptjs": "^2.4.3",
     "chart.js": "^4.4.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
@@ -46,6 +47,7 @@
     "zustand": "^4.5.2"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^18.11.11",
     "@types/react": "^18",
     "@types/react-dom": "^18.3.0",

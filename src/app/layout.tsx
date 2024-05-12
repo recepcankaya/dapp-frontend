@@ -15,8 +15,14 @@ export default function RootLayout({
   return (
     <ThirdwebProvider
       activeChain={activeChain}
-      clientId="9cf2156f9e78bdaaecbcef17707d78ad"
-      supportedWallets={[embeddedWallet({})]}>
+      clientId={process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID}
+      supportedWallets={[
+        embeddedWallet({
+          auth: {
+            options: ["email", "google"],
+          },
+        }),
+      ]}>
       <html lang="en">
         <body>{children}</body>
       </html>
