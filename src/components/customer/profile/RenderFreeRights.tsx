@@ -1,9 +1,9 @@
 "use client";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 import { createClient } from "@/src/lib/supabase/client";
-import { useEffect, useRef } from "react";
 
 type RenderFreeRightsProps = {
   selectedTab: string;

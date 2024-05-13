@@ -1,6 +1,5 @@
 "use client";
-
-import type { BrandBranchStatistics } from "@/src/lib/types/jsonQuery.types";
+import { type BrandBranchStatistics } from "@/src/lib/types/jsonQuery.types";
 
 export default function BranchHomeCards({
   brandBranchData,

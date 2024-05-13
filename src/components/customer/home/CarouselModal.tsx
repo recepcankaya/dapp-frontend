@@ -1,6 +1,7 @@
 "use client";
-import { Campaign } from "@/src/lib/types/jsonQuery.types";
 import Image from "next/image";
+
+import { Campaign } from "@/src/lib/types/jsonQuery.types";
 
 type CarouselModalProps = {
   campaign: Campaign;

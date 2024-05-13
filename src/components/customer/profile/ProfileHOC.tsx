@@ -1,10 +1,10 @@
 "use client";
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 import RenderFreeRights from "./RenderFreeRights";
 import RenderCustomerNFTs from "./RenderCustomerNFTs";
 import QrCodeModal from "@/src/components/QrCodeModal";
-import { useSearchParams } from "next/navigation";
 
 type ProfileHOCProps = {
   userID: User["id"];

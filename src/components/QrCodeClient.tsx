@@ -1,6 +1,5 @@
 "use client";
 import { useSearchParams } from "next/navigation";
-
 import QRCode from "react-qr-code";
 
 export default function QrCodeClient({ userID }: { userID: User["id"] }) {

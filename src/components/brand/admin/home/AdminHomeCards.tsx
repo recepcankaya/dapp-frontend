@@ -1,5 +1,4 @@
 "use client";
-
 import type { AdminHomeStatistics } from "@/src/lib/types/jsonQuery.types";
 
 type AdminHomeCardsProps = {

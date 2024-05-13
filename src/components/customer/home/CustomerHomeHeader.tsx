@@ -1,6 +1,7 @@
 "use client";
-import Image from "next/image";
 import logo from "@/src/public/LadderLogo.png";
+
+import Image from "next/image";
 
 export default function CustomerHomeHeader({
   brandLogo,

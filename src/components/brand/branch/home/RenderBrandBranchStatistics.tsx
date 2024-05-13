@@ -1,5 +1,5 @@
 "use client";
-import type { BrandBranchStatistics } from "@/src/lib/types/jsonQuery.types";
+import { type BrandBranchStatistics } from "@/src/lib/types/jsonQuery.types";
 import HomeCards from "./BranchHomeCards";
 import LineChart from "./BranchLineChart";
 
