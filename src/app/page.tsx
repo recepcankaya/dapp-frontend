@@ -1,9 +1,8 @@
 "use client";
 import Link from "next/link";
 import { ConnectEmbed, useAddress } from "@thirdweb-dev/react";
-import bcrypt from "bcryptjs";
+import { sha512 } from "js-sha512";
 import { useRouter } from "next/navigation";
-import { Bounce, ToastContainer, toast } from "react-toastify";
 
 import { createClient } from "../lib/supabase/client";
 
@@ -19,8 +18,10 @@ export default function Home() {
         throw new Error("Lütfen giriş yapınız.");
       }
 
-      const salt = bcrypt.genSaltSync(10);
-      const passwordHash = bcrypt.hashSync(walletAddr, salt);
+      const passwordHash = sha512(
+        `${walletAddr}${process.env.HASH_SALT}`
+      ).slice(0, 50);
+
       const { data, error } = await supabase.auth.signInWithPassword({
         email: `${walletAddr}@ladderuser.com`,
         password: passwordHash,
@@ -36,7 +37,6 @@ export default function Home() {
         });
 
         if (!user) {
-          toast.error("Kullanıcı oluşturulamadı. Lütfen tekrar deneyiniz.");
           return;
         }
 
