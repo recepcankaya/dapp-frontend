@@ -95,7 +95,7 @@ export default function Home() {
       )}
       <button>
         <Link href="/brand/brand-login" className="text-lg">
-          İşletmeyseniz Lütfen Giriş Yapmak için <br />
+          Üye İş Yeriyseniz Lütfen Giriş Yapmak için <br />
           <span className="bg-gradient-to-r from-lad-purple to-lad-green inline-block text-transparent bg-clip-text">
             Tıklayınız
           </span>
