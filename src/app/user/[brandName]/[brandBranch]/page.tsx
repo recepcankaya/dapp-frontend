@@ -8,6 +8,7 @@ import RenderTicket from "@/src/components/customer/home/RenderTicket";
 import BrandVideo from "@/src/components/customer/BrandVideo";
 
 import { AdminCampaigns } from "@/src/lib/types/jsonQuery.types";
+import CampaignModal from "@/src/components/customer/home/CampaignModal";
 
 export default async function CustomerHome({
   searchParams,
@@ -50,6 +51,10 @@ export default async function CustomerHome({
     redirect("/user/brands");
   }
 
+  const favouriteCampaign = (
+    branchInfo.campaigns as AdminCampaigns["campaigns"]
+  )?.find((campaign) => campaign.favourite);
+
   return (
     <section className="h-screen w-screen">
       <CustomerHomeHeader
@@ -59,6 +64,7 @@ export default async function CustomerHome({
         brandID={searchParams.brandID}
         branchID={searchParams.branchID}
       />
+      <CampaignModal favouriteCampaign={favouriteCampaign ?? null} />
       <RenderTicket
         branchInfo={branchInfo}
         totalTicketOrders={totalTicketOrders?.total_ticket_orders ?? 0}

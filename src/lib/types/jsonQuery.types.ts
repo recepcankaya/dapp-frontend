@@ -19,6 +19,7 @@ export type Campaign = {
   campaign_id: string;
   campaign_image: string;
   campaign_name?: string;
+  favourite: boolean;
 };
 
 export type BrandBranchStatistics = Pick<
