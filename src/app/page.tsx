@@ -82,13 +82,9 @@ export default function Home() {
           <ConnectEmbed style={{ width: "75%" }} />
           <p className="text-gray-300 text-xs">
             Devam ederek{" "}
-            <a
-              href="https://gittjeqpqcmmbterylkd.supabase.co/storage/v1/object/public/agreements/ladderit-uyelik-sozlesmesivekullanim-kosullari.pdf?t=2024-05-10T11%3A08%3A20.741Z"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-500 underline">
+            <Link href="/terms-of-use" className="text-blue-500 underline">
               üyelik sözleşmesi ve kullanım koşullarını <br />
-            </a>{" "}
+            </Link>{" "}
             kabul etmiş olursunuz.
           </p>
         </>

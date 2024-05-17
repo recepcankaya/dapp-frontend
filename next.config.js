@@ -1,4 +1,4 @@
-const { withNextVideo } = require('next-video/process')
+const { withNextVideo } = require("next-video/process");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -20,6 +20,11 @@ const nextConfig = {
       },
     ],
   },
+  webpack: (config) => {
+    config.resolve.alias.canvas = false;
+
+    return config;
+  },
 };
 
-module.exports = withNextVideo(nextConfig, { folder: 'y' });
+module.exports = withNextVideo(nextConfig, { folder: "y" });
