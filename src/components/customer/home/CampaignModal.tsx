@@ -1,8 +1,9 @@
 "use client";
 
-import { Campaign } from "@/src/lib/types/jsonQuery.types";
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import { useState } from "react";
+
+import { Campaign } from "@/src/lib/types/jsonQuery.types";
 
 export default function CampaignModal({
   favouriteCampaign,
@@ -10,6 +11,33 @@ export default function CampaignModal({
   favouriteCampaign: Campaign | null;
 }) {
   const [isModalOpen, setIsModalOpen] = useState(true);
+
+  const hasShownCampaignModal = window.localStorage.getItem(
+    "hasShownCampaignModal"
+  );
+
+  useEffect(() => {
+    // Set to true initially
+    window.localStorage.setItem("hasShownCampaignModal", "true");
+
+    // Set to false when window is closed
+    window.onbeforeunload = () => {
+      window.localStorage.setItem("hasShownCampaignModal", "false");
+    };
+
+    // Cleanup function to remove the event listener
+    return () => {
+      window.onbeforeunload = null;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (hasShownCampaignModal === "false") {
+      setIsModalOpen(true);
+    } else {
+      setIsModalOpen(false);
+    }
+  }, [hasShownCampaignModal]);
 
   if (!favouriteCampaign) {
     return null;

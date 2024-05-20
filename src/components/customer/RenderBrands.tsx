@@ -52,6 +52,7 @@ export default function RenderBrands(brands: RenderBrandsProps) {
         long: position.coords.longitude,
       });
     });
+    window.localStorage.setItem("hasShownCampaignModal", "false");
   }, []);
 
   useEffect(() => {
