@@ -5,6 +5,7 @@ import { useRouter, useParams } from "next/navigation";
 
 import { createClient } from "@/src/lib/supabase/client";
 import { Button } from "../../ui/button";
+import { useQuery } from "@tanstack/react-query";
 
 type RenderTicketProps = {
   branchInfo: {
@@ -36,12 +37,14 @@ export default function RenderTicket({
   totalTicketOrders,
 }: RenderTicketProps) {
   const [userOrderNumber, setUserOrderNumber] = useState(totalTicketOrders);
-  const supabase = createClient();
+  const [menuURL, setMenuURL] = useState("");
+  const params = useParams<{ brandName: string; brandBranch: string }>();
   const router = useRouter();
+  const supabase = createClient();
+
   const ticketCircles = branchInfo
     ? new Array(branchInfo.brand?.required_number_for_free_right).fill(0)
     : [];
-  const params = useParams<{ brandName: string; brandBranch: string }>();
   const convertedBrandName = decodeTurkishCharacters(
     decodeURIComponent(params.brandName.toString())
   );
@@ -49,7 +52,30 @@ export default function RenderTicket({
     decodeURIComponent(params.brandBranch.toString())
   );
 
-  const { data: menuURL } = supabase.storage
+  /**
+   * HATA - TOO MANY RE-RENDERS
+  const { data: menu } = useQuery({
+    queryKey: ["menus"],
+    queryFn: async () =>
+      await supabase.storage.from("menus").list("", {
+        limit: 1,
+        offset: 0,
+        sortBy: { column: "name", order: "asc" },
+        search: `${convertedBrandName}-${convertedBrandBranch}-menu.pdf`,
+      }),
+    });
+    
+    console.log(menu?.data);
+    
+    if (menu?.data?.length ?? 0 > 0) {
+      const { data } = supabase.storage
+      .from("menus")
+      .getPublicUrl(`${convertedBrandName}-${convertedBrandBranch}-menu.pdf`);
+      setMenuURL(data.publicUrl);
+    }
+    */
+
+  const { data } = supabase.storage
     .from("menus")
     .getPublicUrl(`${convertedBrandName}-${convertedBrandBranch}-menu.pdf`);
 
@@ -75,7 +101,6 @@ export default function RenderTicket({
     };
   }, [userID, supabase, router]);
 
-  // @todo - TICKETIN DÜZELTİLMESİ LAZIM
   return (
     <section className="pt-16 w-full grid justify-items-center items-center">
       <div className="w-full min-[525px]:w-5/6 min-[320px]:h-40 min-[375px]:h-44 min-[425px]:h-48 min-[475px]:h-52 min-[525px]:h-56 min-[600px]:h-60 min-[675px]:h-72 relative">
@@ -125,7 +150,7 @@ export default function RenderTicket({
         asChild
         className="mt-16 px-16 py-6 mb-8 mx-auto flex text-lg font-bold font-rosarivo rounded-xl border-2 border-lad-pink text-lad-white"
         type="submit">
-        <a href={menuURL.publicUrl} target="_blank" rel="noopener noreferrer">
+        <a href={data.publicUrl} target="_blank" rel="noopener noreferrer">
           Menü
         </a>
       </Button>

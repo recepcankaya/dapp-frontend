@@ -30,6 +30,7 @@ export default function CampaignModal({
               alt="campaign image"
               fill
               sizes="100vw"
+              priority
               style={{
                 objectFit: "contain",
               }}

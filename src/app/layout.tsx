@@ -1,5 +1,6 @@
 "use client";
 import { ThirdwebProvider, embeddedWallet } from "@thirdweb-dev/react";
+import TanstackQueryProvider from "../lib/tanstackQuery/TanstackQueryProvider";
 
 import "./globals.css";
 
@@ -23,9 +24,11 @@ export default function RootLayout({
           },
         }),
       ]}>
-      <html lang="en">
-        <body>{children}</body>
-      </html>
+      <TanstackQueryProvider>
+        <html lang="en">
+          <body>{children}</body>
+        </html>
+      </TanstackQueryProvider>
     </ThirdwebProvider>
   );
 }

@@ -5,10 +5,11 @@ import CustomerHomeHeader from "@/src/components/customer/home/CustomerHomeHeade
 import CustomerHomeLinks from "@/src/components/customer/home/CustomerHomeLinks";
 import CampaignCarousel from "@/src/components/customer/home/CampaignCarousel";
 import RenderTicket from "@/src/components/customer/home/RenderTicket";
+import CampaignModal from "@/src/components/customer/home/CampaignModal";
 import BrandVideo from "@/src/components/customer/BrandVideo";
 
-import { AdminCampaigns } from "@/src/lib/types/jsonQuery.types";
-import CampaignModal from "@/src/components/customer/home/CampaignModal";
+import getUserID from "@/src/lib/getUserID";
+import { type AdminCampaigns } from "@/src/lib/types/jsonQuery.types";
 
 export default async function CustomerHome({
   searchParams,
@@ -16,18 +17,12 @@ export default async function CustomerHome({
   searchParams: { brandID: Brand["id"]; branchID: BrandBranch["id"] };
 }) {
   const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/");
-  }
+  const userID = await getUserID();
 
   const { data: totalTicketOrders } = await supabase
     .from("user_orders")
     .select("total_ticket_orders")
-    .eq("user_id", user?.id)
+    .eq("user_id", userID)
     .eq("branch_id", searchParams.branchID)
     .single();
 
@@ -68,7 +63,7 @@ export default async function CustomerHome({
       <RenderTicket
         branchInfo={branchInfo}
         totalTicketOrders={totalTicketOrders?.total_ticket_orders ?? 0}
-        userID={user?.id}
+        userID={userID}
       />
       <CampaignCarousel
         campaigns={(branchInfo.campaigns as AdminCampaigns["campaigns"]) ?? []}
