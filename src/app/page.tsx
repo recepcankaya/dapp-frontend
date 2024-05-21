@@ -47,7 +47,10 @@ export default function Home() {
       } else {
         await supabase
           .from("users")
-          .update({ last_login: String(new Date().toISOString()) })
+          .update({
+            last_login: String(new Date().toISOString()),
+            wallet_addr: walletAddr,
+          })
           .eq("id", data.user?.id);
       }
 
