@@ -82,7 +82,7 @@ export default function RenderBrands(brands: RenderBrandsProps) {
         className="mb-12 w-4/5"
         value={searchedAdmin}
         onChange={(e) => setSearchedAdmin(e.target.value)}
-        placeholder="Kafeni ara..."
+        placeholder="Mekanını ara..."
       />
       <div className="grid grid-cols-2 gap-y-12 gap-x-6">
         {customerLocation

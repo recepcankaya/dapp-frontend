@@ -6,7 +6,6 @@ const errorMessage = {
   message: "",
 };
 
-// @todo - Tasarım açısından eksikler var, düzeltilecek.
 export default function AdminLogin() {
   const [state, formAction] = useFormState(login, errorMessage);
 

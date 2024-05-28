@@ -15,9 +15,17 @@ export default async function Brands() {
       )
     `);
 
+  if (!brands) {
+    return (
+      <div className="flex justify-center items-center">
+        İşletmeler bulunamadı. Lütfen tekrar deneyiniz.
+      </div>
+    );
+  }
+
   return (
     <section className="flex justify-center pt-16">
-      <RenderBrands brands={brands || []} />
+      <RenderBrands brands={brands} />
     </section>
   );
 }
