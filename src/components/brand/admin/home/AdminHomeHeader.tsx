@@ -12,6 +12,7 @@ import {
   DropdownMenuContent,
   DropdownMenu,
 } from "@/src/components/ui/dropdown-menu";
+import useScreenSize from "@/src/hooks/useScreenSize";
 
 type AdminHomeHeaderProps = {
   brandName: Brand["brand_name"];
@@ -23,57 +24,73 @@ export default function AdminHomeHeader({
   brandLogo,
 }: AdminHomeHeaderProps) {
   const pathname = usePathname();
+  const { containerWidth, setContainerRef } = useScreenSize();
 
   return (
-    <header className="flex items-center justify-between px-8 py-4 shadow-md text-[#000101]">
-      <div className="flex items-center gap-4">
-        <Package2Icon className="h-6 w-6" />
-        <div className="text-lg font-semibold text-black">{brandName}</div>
+    <header ref={setContainerRef}>
+      <div className="flex items-center justify-around py-4 shadow-md text-[#000101]">
+        <div className="flex items-center gap-2">
+          <Package2Icon className="h-6 w-6" />
+          <p className="text-md sm:text-lg font-semibold text-black">
+            {brandName}
+          </p>
+        </div>
+        {containerWidth > 450 && (
+          <Button asChild>
+            <Link href={`${pathname}/admin-camera`}>Qr Kodu Okut</Link>
+          </Button>
+        )}
+        <div className="flex items-center gap-4">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                className="rounded-full border border-black w-8 h-8"
+                size="icon"
+                variant="ghost">
+                <Image
+                  alt="Avatar"
+                  className="rounded-full"
+                  height="32"
+                  src={
+                    brandLogo
+                      ? brandLogo.replace("ipfs://", "https://ipfs.io/ipfs/")
+                      : ""
+                  }
+                  style={{
+                    aspectRatio: "32/32",
+                    objectFit: "cover",
+                  }}
+                  width="32"
+                />
+                <span className="sr-only">Toggle user menu</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="bg-[#d8d0c3]">
+              <DropdownMenuLabel>Hesabım</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="hover:cursor-pointer">
+                Ayarlar
+              </DropdownMenuItem>
+              <DropdownMenuItem className="hover:cursor-pointer">
+                Destek
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="hover:cursor-pointer">
+                Çıkış Yap
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
-      <Button asChild className="">
-        <Link href={`${pathname}/admin-camera`}>Qr Kodu Okut</Link>
-      </Button>
-      <div className="flex items-center gap-4">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              className="rounded-full border border-black w-8 h-8"
-              size="icon"
-              variant="ghost">
-              <Image
-                alt="Avatar"
-                className="rounded-full"
-                height="32"
-                src={
-                  brandLogo
-                    ? brandLogo.replace("ipfs://", "https://ipfs.io/ipfs/")
-                    : ""
-                }
-                style={{
-                  aspectRatio: "32/32",
-                  objectFit: "cover",
-                }}
-                width="32"
-              />
-              <span className="sr-only">Toggle user menu</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="bg-[#d8d0c3]">
-            <DropdownMenuLabel>Hesabım</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="hover:cursor-pointer">
-              Ayarlar
-            </DropdownMenuItem>
-            <DropdownMenuItem className="hover:cursor-pointer">
-              Destek
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="hover:cursor-pointer">
-              Çıkış Yap
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+      {containerWidth <= 450 && (
+        <div className="flex justify-center mt-5">
+          <Button asChild className="">
+            <Link href={`${pathname}/admin-camera`} className="text-balance">
+              Qr Kodu Okut
+            </Link>
+          </Button>
+        </div>
+      )}
     </header>
   );
 }
