@@ -12,9 +12,12 @@ export default function CampaignModal({
 }) {
   const [isModalOpen, setIsModalOpen] = useState(true);
 
-  const hasShownCampaignModal = window.localStorage.getItem(
-    "hasShownCampaignModal"
-  );
+  let hasShownCampaignModal: unknown;
+  if (typeof window !== "undefined") {
+    hasShownCampaignModal = window.localStorage.getItem(
+      "hasShownCampaignModal"
+    );
+  }
 
   useEffect(() => {
     // Set to true initially

@@ -69,7 +69,7 @@ export default function AdminHomeHeader({
               <DropdownMenuLabel>Hesabım</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="hover:cursor-pointer">
-                Ayarlar
+                <Link href={`${pathname}/settings`}>Ayarlar</Link>
               </DropdownMenuItem>
               <DropdownMenuItem className="hover:cursor-pointer">
                 Destek

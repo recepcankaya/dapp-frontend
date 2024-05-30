@@ -18,6 +18,7 @@ export default async function login(prevState: any, formData: FormData) {
     email: formData.get("email"),
     password: formData.get("password"),
   });
+  
   if (!result.success) {
     return { message: result.error.errors[0].message };
   }
@@ -42,7 +43,7 @@ export default async function login(prevState: any, formData: FormData) {
 
   if (!brandError) {
     const brandName = encodeURIComponent(brandInfo.brand_name.toLowerCase());
-    redirect(`/brand/admin/${brandName}/`);
+    redirect(`/brand/admin/${brandName}/`.replace(/%20/g, "-"));
   } else {
     const { data: branchInfo, error: branchError } = await supabase
       .from("brand_branch")
@@ -64,7 +65,7 @@ export default async function login(prevState: any, formData: FormData) {
       const brandBranch = encodeURIComponent(
         branchInfo.branch_name.toLowerCase()
       );
-      redirect(`/brand/${brandName}-${brandBranch}/`);
+      redirect(`/brand/${brandName}-${brandBranch}/`.replace(/%20/g, "-"))  ;
     } else {
       return {
         message: "Böyle bir marka bulunamadı.",
