@@ -42,7 +42,7 @@ export default function BranchHomeHeader({
         </div>
         {containerWidth > 450 && (
           <Button asChild>
-            <Link href={`${pathname}/admin-camera`}>Qr Kodu Okut</Link>
+            <Link href={`${pathname}/brand-camera`}>Qr Kodu Okut</Link>
           </Button>
         )}
         <div className="flex items-center gap-4">
@@ -90,7 +90,7 @@ export default function BranchHomeHeader({
       {containerWidth <= 450 && (
         <div className="flex justify-center mt-5">
           <Button asChild className="">
-            <Link href={`${pathname}/admin-camera`} className="text-balance">
+            <Link href={`${pathname}/brand-camera`} className="text-balance">
               Qr Kodu Okut
             </Link>
           </Button>

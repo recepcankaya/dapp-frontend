@@ -13,6 +13,7 @@ export type Database = {
         Row: {
           brand_logo_ipfs_url: string
           brand_name: string
+          category: string
           collection_metadata: Json | null
           contract_address: string | null
           created_at: string | null
@@ -26,6 +27,7 @@ export type Database = {
         Insert: {
           brand_logo_ipfs_url?: string
           brand_name?: string
+          category?: string
           collection_metadata?: Json | null
           contract_address?: string | null
           created_at?: string | null
@@ -39,6 +41,7 @@ export type Database = {
         Update: {
           brand_logo_ipfs_url?: string
           brand_name?: string
+          category?: string
           collection_metadata?: Json | null
           contract_address?: string | null
           created_at?: string | null
@@ -64,6 +67,7 @@ export type Database = {
           branch_name: string
           brand_id: string
           campaigns: Json[] | null
+          city: string
           coords: Json | null
           daily_total_orders: number
           daily_total_used_free_rights: number
@@ -81,6 +85,7 @@ export type Database = {
           branch_name?: string
           brand_id?: string
           campaigns?: Json[] | null
+          city?: string
           coords?: Json | null
           daily_total_orders?: number
           daily_total_used_free_rights?: number
@@ -98,6 +103,7 @@ export type Database = {
           branch_name?: string
           brand_id?: string
           campaigns?: Json[] | null
+          city?: string
           coords?: Json | null
           daily_total_orders?: number
           daily_total_used_free_rights?: number
@@ -240,7 +246,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      delete_spesific_campaign: {
+        Args: {
+          row_id: string
+          object_id: number
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
