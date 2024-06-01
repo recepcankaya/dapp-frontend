@@ -72,7 +72,7 @@ export default function AdminHomeHeader({
                 <Link href={`${pathname}/settings`}>Ayarlar</Link>
               </DropdownMenuItem>
               <DropdownMenuItem className="hover:cursor-pointer">
-                <Link href={`${pathname}/admin-contact`}> Destek </Link>
+                 Destek
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="hover:cursor-pointer">

@@ -24,8 +24,6 @@ export default async function Profile({
     .eq("id", user?.id)
     .single();
   
-  console.log(username);
-  console.log(username?.username);
   if (!username?.username) {
     redirect("/user/user-info");
   }
