@@ -246,6 +246,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      add_campaign: {
+        Args: {
+          row_id: string
+          name: string
+          image: string
+          favourite: boolean
+        }
+        Returns: undefined
+      }
       delete_spesific_campaign: {
         Args: {
           row_id: string

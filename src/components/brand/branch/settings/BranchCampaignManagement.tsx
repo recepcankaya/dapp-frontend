@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import deleteCampaign, {
   FormState,
 } from "@/src/server-actions/brand/branch-delete-campaign";
+import type { AdminCampaigns } from "@/src/lib/types/jsonQuery.types";
 
 import {
   CardTitle,
@@ -26,9 +27,22 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/src/components/ui/alert-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/src/components/ui/dialog";
 import { Label } from "@/src/components/ui/label";
 import { RedBinIcon } from "@/src/components/ui/bin";
-import type { AdminCampaigns } from "@/src/lib/types/jsonQuery.types";
+import AddIcon from "@/src/components/ui/add";
+import { Input } from "@/src/components/ui/input";
+import { Button } from "@/src/components/ui/button";
+import { Checkbox } from "@/src/components/ui/checkbox";
+import addCampaign from "@/src/server-actions/brand/branch-add-campaign";
 
 type BranchCampaignManagementProps = {
   campaigns: AdminCampaigns["campaigns"];
@@ -46,6 +60,10 @@ export default function BranchCampaignManagement(
     deleteCampaign,
     message as FormState
   );
+  const [addState, addFormAction] = useFormState(
+    addCampaign,
+    message as FormState
+  );
 
   useEffect(() => {
     if (state?.success === true) {
@@ -56,6 +74,16 @@ export default function BranchCampaignManagement(
       toast.error(state?.message);
     }
   }, [state]);
+
+  useEffect(() => {
+    if (addState?.success === true) {
+      toast.success(addState.message);
+    }
+
+    if (addState?.success === false) {
+      toast.error(addState?.message);
+    }
+  }, [addState]);
 
   return (
     <section className="grid gap-6">
@@ -74,7 +102,56 @@ export default function BranchCampaignManagement(
       />
       <Card className="pt-12">
         <CardHeader>
-          <CardTitle>Kampanya Yönetimi</CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle>Kampanya Yönetimi</CardTitle>
+            <Dialog>
+              <DialogTrigger>
+                <AddIcon />
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Kampanya Ekle</DialogTitle>
+                  <DialogDescription>
+                    Müşterilerine göstermek istediğiniz kampanyayı ekleyin.
+                  </DialogDescription>
+                </DialogHeader>
+                <form action={addFormAction} className="grid gap-4 py-4">
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="name" className="text-right">
+                      İsmi
+                    </Label>
+                    <Input
+                      id="name"
+                      name="campaignName"
+                      className="col-span-3"
+                    />
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="banner" className="text-right">
+                      Afişi
+                    </Label>
+                    <Input
+                      id="banner"
+                      type="file"
+                      name="banner"
+                      className="col-span-3"
+                    />
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox id="favourite" name="favourite" />
+                    <Label
+                      htmlFor="favourite"
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                      Favori afiş
+                    </Label>
+                  </div>
+                  <DialogFooter>
+                    <Button type="submit">Kaydet</Button>
+                  </DialogFooter>
+                </form>
+              </DialogContent>
+            </Dialog>
+          </div>
         </CardHeader>
         <CardContent className="space-y-8">
           {campaigns.campaigns && campaigns.campaigns.length > 0 ? (
