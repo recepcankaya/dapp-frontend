@@ -1,13 +1,15 @@
 "use client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { useRouter, useParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import { createClient } from "@/src/lib/supabase/client";
 import { Button } from "../../ui/button";
-import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
 
 type RenderTicketProps = {
+  brandID: Brand["id"];
+  branchID: BrandBranch["id"];
   branchInfo: {
     campaigns: BrandBranch["campaigns"];
     video_url: BrandBranch["video_url"];
@@ -21,63 +23,21 @@ type RenderTicketProps = {
   userID: User["id"];
 };
 
-function decodeTurkishCharacters(text: string) {
-  return text
-    .replace(/\ğ/g, "g")
-    .replace(/\ü/g, "u")
-    .replace(/\ş/g, "s")
-    .replace(/\ı/g, "i")
-    .replace(/\ö/g, "o")
-    .replace(/\ç/g, "c");
-}
-
 export default function RenderTicket({
+  brandID,
+  branchID,
   branchInfo,
   userID,
   totalTicketOrders,
 }: RenderTicketProps) {
   const [userOrderNumber, setUserOrderNumber] = useState(totalTicketOrders);
-  const [menuURL, setMenuURL] = useState("");
-  const params = useParams<{ brandName: string; brandBranch: string }>();
   const router = useRouter();
+  const pathname = usePathname();
   const supabase = createClient();
 
   const ticketCircles = branchInfo
     ? new Array(branchInfo.brand?.required_number_for_free_right).fill(0)
     : [];
-  const convertedBrandName = decodeTurkishCharacters(
-    decodeURIComponent(params.brandName.toString())
-  );
-  const convertedBrandBranch = decodeTurkishCharacters(
-    decodeURIComponent(params.brandBranch.toString())
-  );
-
-  /**
-   * HATA - TOO MANY RE-RENDERS
-  const { data: menu } = useQuery({
-    queryKey: ["menus"],
-    queryFn: async () =>
-      await supabase.storage.from("menus").list("", {
-        limit: 1,
-        offset: 0,
-        sortBy: { column: "name", order: "asc" },
-        search: `${convertedBrandName}-${convertedBrandBranch}-menu.pdf`,
-      }),
-    });
-    
-    console.log(menu?.data);
-    
-    if (menu?.data?.length ?? 0 > 0) {
-      const { data } = supabase.storage
-      .from("menus")
-      .getPublicUrl(`${convertedBrandName}-${convertedBrandBranch}-menu.pdf`);
-      setMenuURL(data.publicUrl);
-    }
-    */
-
-  const { data } = supabase.storage
-    .from("menus")
-    .getPublicUrl(`${convertedBrandName}-${convertedBrandBranch}-menu.pdf`);
 
   useEffect(() => {
     const orders = supabase
@@ -148,11 +108,10 @@ export default function RenderTicket({
       </div>
       <Button
         asChild
-        className="mt-16 px-16 py-6 mb-8 mx-auto flex text-lg font-bold font-rosarivo rounded-xl border-2 border-lad-pink text-lad-white"
-        type="submit">
-        <a href={data.publicUrl} target="_blank" rel="noopener noreferrer">
+        className="mt-16 px-16 py-6 mb-8 mx-auto flex text-lg font-bold font-rosarivo rounded-xl border-2 border-lad-pink text-lad-white">
+        <Link href={`${pathname}/menu?brandID=${brandID}&branchID=${branchID}`}>
           Menü
-        </a>
+        </Link>
       </Button>
     </section>
   );

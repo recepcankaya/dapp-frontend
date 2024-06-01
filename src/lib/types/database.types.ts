@@ -73,6 +73,7 @@ export type Database = {
           daily_total_used_free_rights: number
           email: string
           id: string
+          menu: Json[] | null
           monthly_total_orders: number
           monthly_total_orders_with_years: Json
           total_orders: number
@@ -91,6 +92,7 @@ export type Database = {
           daily_total_used_free_rights?: number
           email?: string
           id?: string
+          menu?: Json[] | null
           monthly_total_orders?: number
           monthly_total_orders_with_years?: Json
           total_orders?: number
@@ -109,6 +111,7 @@ export type Database = {
           daily_total_used_free_rights?: number
           email?: string
           id?: string
+          menu?: Json[] | null
           monthly_total_orders?: number
           monthly_total_orders_with_years?: Json
           total_orders?: number

@@ -61,6 +61,8 @@ export default async function CustomerHome({
       />
       <CampaignModal favouriteCampaign={favouriteCampaign ?? null} />
       <RenderTicket
+        brandID={searchParams.brandID}
+        branchID={searchParams.branchID}
         branchInfo={branchInfo}
         totalTicketOrders={totalTicketOrders?.total_ticket_orders ?? 0}
         userID={userID}
