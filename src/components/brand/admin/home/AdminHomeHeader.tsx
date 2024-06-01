@@ -25,7 +25,7 @@ export default function AdminHomeHeader({
 }: AdminHomeHeaderProps) {
   const pathname = usePathname();
   const { containerWidth, setContainerRef } = useScreenSize();
-
+  
   return (
     <header ref={setContainerRef}>
       <div className="flex items-center justify-around py-4 shadow-md text-[#000101]">
@@ -72,7 +72,7 @@ export default function AdminHomeHeader({
                 <Link href={`${pathname}/settings`}>Ayarlar</Link>
               </DropdownMenuItem>
               <DropdownMenuItem className="hover:cursor-pointer">
-                Destek
+                <Link href={`${pathname}/admin-contact`}> Destek </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="hover:cursor-pointer">
