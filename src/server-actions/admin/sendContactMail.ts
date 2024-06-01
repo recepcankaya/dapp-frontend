@@ -22,7 +22,7 @@ export default async function sendMail(
     try{
         await resend.emails.send({
             from: "contact@ladderit.app", // domain for mail system
-            to: "fika61ts@gmail.com", // receiver email
+            to: "contact@ladderit.app", // receiver email
             subject: title,
             reply_to: senderEmail,
             text: "",
