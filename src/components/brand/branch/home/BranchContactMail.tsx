@@ -1,14 +1,10 @@
-import * as React from 'react';
-
-interface EmailTemplateProps {
-  senderEmail: string;
+type EmailTemplateProps = {
   brandName: string;
   branchName: string;
   message: string;
 }
 
-export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
-    senderEmail,
+const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
     brandName,
     branchName,
     message
@@ -20,3 +16,5 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
         <p style={{ fontSize: '16px', marginTop: '10px', whiteSpace: 'pre-wrap' }}>{message}</p>
   </div>
 );
+
+export default EmailTemplate;
