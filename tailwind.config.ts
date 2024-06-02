@@ -19,7 +19,6 @@ const config = {
     },
     extend: {
       fontFamily: {
-        rosarivo: ["Rosarivo", "cursive"],
       },
       colors: {
         "lad-black": "#0C0C0C",
