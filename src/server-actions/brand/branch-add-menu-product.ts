@@ -21,7 +21,7 @@ export default async function addMenuProduct(
   const image = formData.get("image") as File;
   const category = formData.get("category");
   const newCategory = formData.get("newCategory");
-  const branchHome = formData.get("branchHome");
+  const branchName = formData.get("branchName");
 
   if (!name) {
     return {
@@ -54,11 +54,20 @@ export default async function addMenuProduct(
   let ipfsRes: string = "";
   if (image) {
     const blob = new Blob([image], { type: "image/jpeg" });
-    const file = new File([blob], `${name}/${branchHome}.jpeg`, {
+    const file = new File([blob], `${name}/${branchName}.jpeg`, {
       type: "image/jpeg",
     });
     const data = new FormData();
     data.append("file", file, "image.jpeg");
+    data.append(
+      "pinataMetadata",
+      `{\n  "name": "${name}/${branchName}.jpeg"\n}`
+    );
+    data.append(
+      "pinataOptions",
+      `{\n  "category": "${String(category) || String(newCategory)}"\n}`
+    );
+
     const res = await fetch("https://api.pinata.cloud/pinning/pinFileToIPFS", {
       method: "POST",
       headers: {

@@ -1,5 +1,7 @@
 "use client";
 import Link from "next/link";
+import { Bounce, ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   Table,
   TableHeader,
@@ -9,8 +11,23 @@ import {
   TableCell,
 } from "@/src/components/ui/table";
 import { Button } from "@/src/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddMenuItem from "@/src/components/customer/menu/AddMenuItem";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/src/components/ui/alert-dialog";
+import deleteProductFromMenu, {
+  FormState,
+} from "@/src/server-actions/brand/branch-delete-product-from-menu";
+import { useFormState } from "react-dom";
 
 type Product = {
   name: string;
@@ -30,17 +47,42 @@ type Props = {
   menu: CategoryProduct[];
 };
 
-export default function BranchMenu({ menu }: Props) {
-  const handleDelete = (id: number) => {
-    return;
-  };
+const message = {
+  success: undefined,
+  message: "",
+};
 
-  const handleEdit = (product: Product) => {
-    return;
-  };
+export default function BranchMenu({ menu }: Props) {
+  const [state, formAction] = useFormState(
+    deleteProductFromMenu,
+    message as FormState
+  );
+
+  useEffect(() => {
+    if (state?.success === true) {
+      toast.success(state.message);
+    }
+
+    if (state?.success === false) {
+      toast.error(state?.message);
+    }
+  }, [state]);
 
   return (
     <div className="container mx-auto px-4 md:px-6 py-8 bg-white text-black mt-24">
+      <ToastContainer
+        position="top-right"
+        autoClose={1500}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+        transition={Bounce}
+      />
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Menü Yönetimi</h1>
         <AddMenuItem
@@ -79,22 +121,37 @@ export default function BranchMenu({ menu }: Props) {
                     </TableCell>
                     <TableCell className="p-4">{product.description}</TableCell>
                     <TableCell className="p-4">
-                      <div className="flex gap-2">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleEdit(product)}>
-                          <DeleteIcon className="h-5 w-5 text-gray-500" />
-                          <span className="sr-only">Edit {product.name}</span>
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleDelete(+product.id)}>
-                          <TrashIcon className="h-5 w-5 text-red-500" />
-                          <span className="sr-only">Delete {product.name}</span>
-                        </Button>
-                      </div>
+                      <AlertDialog>
+                        <AlertDialogTrigger>
+                          <Button variant="ghost" size="icon">
+                            <TrashIcon className="h-5 w-5 text-red-500" />
+                            <span className="sr-only">Sil {product.name}</span>
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              Ürün Silme İşlemi
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Bu işlem geri alınamaz. Devam etmek istediğinize
+                              emin misiniz?
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Vazgeç</AlertDialogCancel>
+                            <form action={formAction}>
+                              <input
+                                type="hidden"
+                                name="productID"
+                                value={product.id}
+                              />
+                              {/* <AlertDialogAction>Devam Et</AlertDialogAction> */}
+                              <button>Devam Et</button>
+                            </form>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -104,26 +161,6 @@ export default function BranchMenu({ menu }: Props) {
         </ul>
       ))}
     </div>
-  );
-}
-
-function DeleteIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round">
-      <path d="M20 5H9l-7 7 7 7h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2Z" />
-      <line x1="18" x2="12" y1="9" y2="15" />
-      <line x1="12" x2="18" y1="9" y2="15" />
-    </svg>
   );
 }
 

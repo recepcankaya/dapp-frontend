@@ -269,6 +269,13 @@ export type Database = {
         }
         Returns: undefined
       }
+      delete_product_from_menu: {
+        Args: {
+          p_brand_branch_id: string
+          p_product_id: number
+        }
+        Returns: undefined
+      }
       delete_spesific_campaign: {
         Args: {
           row_id: string
