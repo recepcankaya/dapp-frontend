@@ -23,7 +23,7 @@ export default async function Profile({
     .select("username")
     .eq("id", user?.id)
     .single();
-
+  
   if (!username?.username) {
     redirect("/user/user-info");
   }
