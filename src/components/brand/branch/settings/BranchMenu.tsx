@@ -9,6 +9,8 @@ import {
   TableCell,
 } from "@/src/components/ui/table";
 import { Button } from "@/src/components/ui/button";
+import { useState } from "react";
+import AddMenuItem from "@/src/components/customer/menu/AddMenuItem";
 
 type Product = {
   name: string;
@@ -41,12 +43,9 @@ export default function BranchMenu({ menu }: Props) {
     <div className="container mx-auto px-4 md:px-6 py-8 bg-white text-black mt-24">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Menü Yönetimi</h1>
-        <Link
-          href="#"
-          className="inline-flex items-center justify-center rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
-          prefetch={false}>
-          Yeni Ürün Ekle
-        </Link>
+        <AddMenuItem
+          categories={menu.map((item: CategoryProduct) => item.category)}
+        />
       </div>
       {menu.map((item: CategoryProduct) => (
         <ul key={item.categoryID} className="mt-12">
