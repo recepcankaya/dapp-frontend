@@ -14,7 +14,7 @@ export default function AdminLogin() {
       <form action={formAction} className="flex flex-col justify-center">
         <label
           htmlFor="email"
-          className="content-start font-rosarivo text-xl mb-6 mr-[16vh] text-lad-white">
+          className="content-start text-xl mb-6 mr-[16vh] text-lad-white">
           Mailiniz
         </label>
         <input
@@ -25,7 +25,7 @@ export default function AdminLogin() {
         />
         <label
           htmlFor="password"
-          className="content-start font-rosarivo text-xl mb-6 mt-14 mr-[16vh] text-lad-white">
+          className="content-start text-xl mb-6 mt-14 mr-[16vh] text-lad-white">
           Şifreniz
         </label>
         <input
@@ -37,7 +37,7 @@ export default function AdminLogin() {
         <p className="text-destructive mt-6">{state?.message}</p>
         <button
           type="submit"
-          className="mt-12 mx-4 grow text-lg font-bold font-rosarivo rounded-3xl bg-lad-pink text-lad-black py-2 hover:bg-gradient-to-br from-lad-purple to-lad-green">
+          className="mt-12 mx-4 grow text-lg font-bold rounded-3xl bg-lad-pink text-lad-black py-2 hover:bg-gradient-to-br from-lad-purple to-lad-green">
           Giriş Yap
         </button>
       </form>

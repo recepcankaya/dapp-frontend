@@ -148,7 +148,7 @@ export default function RenderTicket({
       </div>
       <Button
         asChild
-        className="mt-16 px-16 py-6 mb-8 mx-auto flex text-lg font-bold font-rosarivo rounded-xl border-2 border-lad-pink text-lad-white"
+        className="mt-16 px-16 py-6 mb-8 mx-auto flex text-lg font-bold rounded-xl border-2 border-lad-pink text-lad-white"
         type="submit">
         <a href={data.publicUrl} target="_blank" rel="noopener noreferrer">
           Menü

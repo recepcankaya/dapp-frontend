@@ -16,7 +16,7 @@ export default function UserInfo() {
       <form action={formAction} className="flex flex-col justify-center">
         <label
           htmlFor="username"
-          className="content-start font-rosarivo text-xl mb-10 mr-[16vh] text-lad-white">
+          className="content-start text-xl mb-10 mr-[16vh] text-lad-white">
           Kullanıcı Adınız
         </label>
         <input
@@ -28,7 +28,7 @@ export default function UserInfo() {
         <p className="text-destructive mt-6">{state?.message}</p>
         <button
           type="submit"
-          className="mt-[10vh] mx-4 grow text-lg font-bold font-rosarivo rounded-3xl bg-lad-pink text-lad-black py-2">
+          className="mt-[10vh] mx-4 grow text-lg font-bold rounded-3xl bg-lad-pink text-lad-black py-2">
           Kaydet
         </button>
       </form>
