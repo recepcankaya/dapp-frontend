@@ -7,7 +7,7 @@ import { AdminCampaigns } from "@/src/lib/types/jsonQuery.types";
 
 type Product = {
   name: string;
-  price: number;
+  price: string;
   description: string;
   image: string;
   id: string;
