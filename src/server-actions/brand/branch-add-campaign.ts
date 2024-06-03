@@ -3,17 +3,13 @@ import { revalidatePath } from "next/cache";
 
 import { createClient } from "@/src/lib/supabase/server";
 import getUserID from "@/src/lib/getUserID";
-import { AdminCampaigns, Campaign } from "@/src/lib/types/jsonQuery.types";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
+
+const PINATA_JWT = process.env.PINATA_JWT;
 
 export type FormState = {
   success: unknown;
   message: string;
 };
-
-const storage = new ThirdwebStorage({
-  secretKey: process.env.NEXT_PUBLIC_THIRDWEB_SECRET_KEY,
-});
 
 export default async function addCampaign(prevState: any, formData: FormData) {
   const supabase = createClient();
@@ -36,19 +32,48 @@ export default async function addCampaign(prevState: any, formData: FormData) {
     };
   }
 
-  const bannerIPFSUri = await storage.upload(
-    Buffer.from(await campaignBanner.arrayBuffer())
-  );
+  const { data: info } = await supabase
+    .from("brand_branch")
+    .select("branch_name, brand (brand_name)")
+    .eq("id", userID)
+    .single();
 
-  const httpsBannerIPFSUri = bannerIPFSUri.replace(
-    "ipfs://",
-    "https://ipfs.io/ipfs/"
+  if (!info) {
+    return {
+      success: false,
+      message: "Kullanıcı bulunamadı. Lütfen tekrar giriş yapınız.",
+    };
+  }
+
+  let ipfsRes: string = "";
+  const blob = new Blob([campaignBanner], { type: "image/jpeg" });
+  const file = new File([blob], `${campaignName}/${info.branch_name}.jpeg`, {
+    type: "image/jpeg",
+  });
+  const data = new FormData();
+  data.append("file", file, "image.jpeg");
+  data.append(
+    "pinataMetadata",
+    `{\n  "name": "${campaignName}/${info.brand?.brand_name}-campaign.jpeg"\n}`
   );
+  data.append("pinataOptions", `{\n  "campaign": "true"\n}`);
+
+  const res = await fetch("https://api.pinata.cloud/pinning/pinFileToIPFS", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${PINATA_JWT}`,
+    },
+    body: data,
+  });
+  const resData = await res.json();
+  ipfsRes = resData.IpfsHash;
+
+  const dbIPFS = `https://ipfs.io/ipfs/${ipfsRes}`;
 
   const { error } = await supabase.rpc("add_campaign", {
     row_id: userID,
     name: String(campaignName),
-    image: httpsBannerIPFSUri,
+    image: dbIPFS,
     favourite: Boolean(campaignFavourite),
   });
 

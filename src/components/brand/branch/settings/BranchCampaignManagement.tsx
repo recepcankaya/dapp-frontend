@@ -36,6 +36,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/src/components/ui/dialog";
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+} from "@/src/components/ui/table";
 import { Label } from "@/src/components/ui/label";
 import { RedBinIcon } from "@/src/components/ui/bin";
 import AddIcon from "@/src/components/ui/add";
@@ -53,9 +61,9 @@ const message = {
   message: "",
 };
 
-export default function BranchCampaignManagement(
-  campaigns: BranchCampaignManagementProps
-) {
+export default function BranchCampaignManagement({
+  campaigns,
+}: BranchCampaignManagementProps) {
   const [state, formAction] = useFormState(
     deleteCampaign,
     message as FormState
@@ -86,7 +94,7 @@ export default function BranchCampaignManagement(
   }, [addState]);
 
   return (
-    <section className="grid gap-6">
+    <section className="container mx-auto px-4 md:px-6 py-8 bg-white text-black mt-24">
       <ToastContainer
         position="top-right"
         autoClose={1500}
@@ -100,115 +108,127 @@ export default function BranchCampaignManagement(
         theme="dark"
         transition={Bounce}
       />
-      <Card className="pt-12">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle>Kampanya Yönetimi</CardTitle>
-            <Dialog>
-              <DialogTrigger>
-                <AddIcon />
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>Kampanya Ekle</DialogTitle>
-                  <DialogDescription>
-                    Müşterilerine göstermek istediğiniz kampanyayı ekleyin.
-                  </DialogDescription>
-                </DialogHeader>
-                <form action={addFormAction} className="grid gap-4 py-4">
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="name" className="text-right">
-                      İsmi
-                    </Label>
-                    <Input
-                      id="name"
-                      name="campaignName"
-                      className="col-span-3"
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold">Kampanya Yönetimi</h1>
+        <Dialog>
+          <DialogTrigger>
+            <AddIcon />
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Kampanya Ekle</DialogTitle>
+              <DialogDescription>
+                Müşterilerine göstermek istediğiniz kampanyayı ekleyin.
+              </DialogDescription>
+            </DialogHeader>
+            <form action={addFormAction} className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="name" className="text-right">
+                  İsmi
+                </Label>
+                <Input id="name" name="campaignName" className="col-span-3" />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="banner" className="text-right">
+                  Afişi
+                </Label>
+                <Input
+                  id="banner"
+                  type="file"
+                  name="banner"
+                  className="col-span-3"
+                />
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox id="favourite" name="favourite" />
+                <Label
+                  htmlFor="favourite"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  Favori afiş
+                </Label>
+              </div>
+              <DialogFooter>
+                <Button type="submit">Kaydet</Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </div>
+      <div className="border rounded-lg overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-1/4 p-4">Kampanya Favori mi?</TableHead>
+              <TableHead className="w-1/4 p-4">Kampanyanın Resmi</TableHead>
+              <TableHead className="w-1/4 p-4">Kampanyanın Adı</TableHead>
+              <TableHead className="w-1/4 p-4"></TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {campaigns && campaigns.length > 0 ? (
+              campaigns.map((campaign) => (
+                <TableRow
+                  key={campaign.campaign_id}
+                  className="hover:bg-gray-100">
+                  <TableCell className="p-4">
+                    {campaign.favourite ? "✅" : ""}
+                  </TableCell>
+                  <TableCell className="p-4">
+                    <img
+                      src={campaign.campaign_image}
+                      alt={campaign.campaign_name}
+                      width={128}
+                      height={128}
+                      className="rounded-md object-cover"
                     />
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="banner" className="text-right">
-                      Afişi
-                    </Label>
-                    <Input
-                      id="banner"
-                      type="file"
-                      name="banner"
-                      className="col-span-3"
-                    />
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Checkbox id="favourite" name="favourite" />
-                    <Label
-                      htmlFor="favourite"
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                      Favori afiş
-                    </Label>
-                  </div>
-                  <DialogFooter>
-                    <Button type="submit">Kaydet</Button>
-                  </DialogFooter>
-                </form>
-              </DialogContent>
-            </Dialog>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-8">
-          {campaigns.campaigns && campaigns.campaigns.length > 0 ? (
-            <ul className="mt-4">
-              {campaigns.campaigns.map((campaign) => (
-                <li key={campaign.campaign_id} className="mb-10">
-                  <Label>{campaign.campaign_name}</Label>
-                  <div className="flex items-center justify-around">
-                    <Image
-                      src={campaign.campaign_image.replace(
-                        "ipfs://",
-                        "https://ipfs.io/ipfs/"
-                      )}
-                      alt={campaign.campaign_name || ""}
-                      width={300}
-                      height={150}
-                      quality={100}
-                      priority
-                      className="mt-4"
-                    />
-                    <AlertDialog>
-                      <AlertDialogTrigger>
-                        <RedBinIcon />
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>
-                            Kampanya Silme İşlemi
-                          </AlertDialogTitle>
-                          <AlertDialogDescription>
-                            Bu işlem geri alınamaz. Devam etmek istediğinize
-                            emin misiniz?
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Vazgeç</AlertDialogCancel>
-                          <form action={formAction}>
-                            <input
-                              type="hidden"
-                              name="campaignID"
-                              value={campaign.campaign_id}
-                            />
-                            {/* <AlertDialogAction>Devam Et</AlertDialogAction> */}
-                            <button>Devam Et</button>
-                          </form>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>Aktif kampanyanız bulunmamaktadır.</p>
-          )}
-        </CardContent>
-      </Card>
+                  </TableCell>
+                  <TableCell className="p-4 font-medium">
+                    {campaign.campaign_name}
+                  </TableCell>
+                  <TableCell className="p-4">
+                    <div className="flex gap-2">
+                      <AlertDialog>
+                        <AlertDialogTrigger>
+                          <Button variant="ghost" size="icon">
+                            <RedBinIcon className="h-5 w-5 text-red-500" />
+                            <span className="sr-only">
+                              Sil {campaign.campaign_name}
+                            </span>
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              Ürün Silme İşlemi
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Bu işlem geri alınamaz. Devam etmek istediğinize
+                              emin misiniz?
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Vazgeç</AlertDialogCancel>
+                            <form action={formAction}>
+                              <input
+                                type="hidden"
+                                name="campaignID"
+                                value={campaign.campaign_id}
+                              />
+                              <Button>Devam Et</Button>
+                            </form>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <p>Aktif kampanyanız bulunmamaktadır.</p>
+            )}
+          </TableBody>
+        </Table>
+      </div>
     </section>
   );
 }

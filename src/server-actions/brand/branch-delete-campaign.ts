@@ -1,6 +1,5 @@
 "use server";
 import { revalidatePath } from "next/cache";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
 
 import { createClient } from "@/src/lib/supabase/server";
 import getUserID from "@/src/lib/getUserID";
@@ -11,9 +10,7 @@ export type FormState = {
   message: string;
 };
 
-const storage = new ThirdwebStorage({
-  secretKey: process.env.NEXT_PUBLIC_THIRDWEB_SECRET_KEY,
-});
+const PINATA_JWT = process.env.PINATA_JWT;
 
 export default async function deleteCampaign(
   prevState: any,
@@ -37,6 +34,13 @@ export default async function deleteCampaign(
   const findCampaign = campaigns.find(
     (campaign) => Number(campaign.campaign_id) === Number(campaignID)
   );
+  const campaignIPFSHash = findCampaign?.campaign_image.slice(21);
+  await fetch(`https://api.pinata.cloud/pinning/unpin/${campaignIPFSHash}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${PINATA_JWT}`,
+    },
+  });
 
   const { error } = await supabase.rpc("delete_spesific_campaign", {
     row_id: userID,
