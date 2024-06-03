@@ -76,9 +76,11 @@ export default function BranchHomeHeader({
               <DropdownMenuItem className="hover:cursor-pointer">
                 <Link href={`${pathname}/settings`}>Ayarlar</Link>
               </DropdownMenuItem>
-              <DropdownMenuItem className="hover:cursor-pointer">
-                Destek
-              </DropdownMenuItem>
+              <Link href={`${pathname}/brand-contact`}>
+                <DropdownMenuItem className="hover:cursor-pointer">
+                      Destek  
+                </DropdownMenuItem>
+              </Link>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="hover:cursor-pointer">
                 Çıkış Yap
