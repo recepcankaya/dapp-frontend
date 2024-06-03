@@ -18,7 +18,7 @@ export default async function addMenuProduct(
   const name = formData.get("name");
   const description = formData.get("description");
   const price = formData.get("price");
-  const image = formData.get("image") as File;
+  const image = formData.get("image");
   const category = formData.get("category");
   const newCategory = formData.get("newCategory");
   const branchName = formData.get("branchName");

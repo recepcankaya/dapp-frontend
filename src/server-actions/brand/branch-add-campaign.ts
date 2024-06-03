@@ -15,7 +15,7 @@ export default async function addCampaign(prevState: any, formData: FormData) {
   const supabase = createClient();
   const userID = await getUserID();
   const campaignName = formData.get("campaignName");
-  const campaignBanner = formData.get("banner") as File;
+  const campaignBanner = formData.get("banner");
   const campaignFavourite = formData.get("favourite");
 
   if (!campaignName || campaignName?.length < 3) {
