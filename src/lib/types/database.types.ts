@@ -283,6 +283,15 @@ export type Database = {
         }
         Returns: undefined
       }
+      edit_product_from_menu: {
+        Args: {
+          p_brand_branch_id: string
+          p_product_id: number
+          p_new_price: string
+          p_new_description: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
