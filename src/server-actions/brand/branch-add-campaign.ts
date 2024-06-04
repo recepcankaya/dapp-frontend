@@ -48,12 +48,11 @@ export default async function addCampaign(prevState: any, formData: FormData) {
   }
 
   let ipfsRes: string = "";
-  const blob = new Blob([campaignBanner], { type: "image/jpeg" });
-  const file = new File([blob], `${campaignName}/${info.branch_name}.jpeg`, {
-    type: "image/jpeg",
-  });
   const data = new FormDataForPinata();
-  data.append("file", file, "image.jpeg");
+  data.append("file", campaignBanner, {
+    filename: "image.jpeg",
+    contentType: "image/jpeg",
+  });
   data.append(
     "pinataMetadata",
     `{\n  "name": "${campaignName}/${info.brand?.brand_name}-campaign.jpeg"\n}`

@@ -55,12 +55,11 @@ export default async function addMenuProduct(
 
   let ipfsRes: string = "";
   if (image) {
-    const blob = new Blob([image], { type: "image/jpeg" });
-    const file = new File([blob], `${name}/${branchName}.jpeg`, {
-      type: "image/jpeg",
-    });
     const data = new FormDataForPinata();
-    data.append("file", file, "image.jpeg");
+    data.append("file", image, {
+      filename: "image.jpeg",
+      contentType: "image/jpeg",
+    });
     data.append(
       "pinataMetadata",
       `{\n  "name": "${name}/${branchName}.jpeg"\n}`
