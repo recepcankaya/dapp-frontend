@@ -3,6 +3,8 @@ import { revalidatePath } from "next/cache";
 
 import { createClient } from "@/src/lib/supabase/server";
 import getUserID from "@/src/lib/getUserID";
+import { default as FormDataForPinata } from "form-data";
+import fetch from "node-fetch";
 
 const PINATA_JWT = process.env.PINATA_JWT;
 
@@ -50,7 +52,7 @@ export default async function addCampaign(prevState: any, formData: FormData) {
   const file = new File([blob], `${campaignName}/${info.branch_name}.jpeg`, {
     type: "image/jpeg",
   });
-  const data = new FormData();
+  const data = new FormDataForPinata();
   data.append("file", file, "image.jpeg");
   data.append(
     "pinataMetadata",
@@ -65,7 +67,7 @@ export default async function addCampaign(prevState: any, formData: FormData) {
     },
     body: data,
   });
-  const resData = await res.json();
+  const resData: any = await res.json();
   ipfsRes = resData.IpfsHash;
 
   const dbIPFS = `https://ipfs.io/ipfs/${ipfsRes}`;
