@@ -2,7 +2,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
 import { Button } from "@/src/components/ui/button";
 import {
   DropdownMenuTrigger,
@@ -13,7 +12,8 @@ import {
   DropdownMenu,
 } from "@/src/components/ui/dropdown-menu";
 import useScreenSize from "@/src/hooks/useScreenSize";
-
+import path from "path";
+import { createClient } from "@/src/lib/supabase/client";
 type BranchHomeHeaderProps = {
   brandName: Brand["brand_name"];
   brandBranch: BrandBranch["branch_name"];
@@ -27,6 +27,16 @@ export default function BranchHomeHeader({
 }: BranchHomeHeaderProps) {
   const pathname = usePathname();
   const { containerWidth, setContainerRef } = useScreenSize();
+  const supabase = createClient();
+
+  const logout = async () => {
+    try {
+      await supabase.auth.signOut();
+      window.location.reload();
+    } catch (error) {
+      console.error("Could not sign out", error);
+    }
+  };
 
   return (
     <header ref={setContainerRef}>
@@ -73,18 +83,22 @@ export default function BranchHomeHeader({
             <DropdownMenuContent align="end" className="bg-[#d8d0c3]">
               <DropdownMenuLabel>Hesabım</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="hover:cursor-pointer">
-                <Link href={`${pathname}/settings`}>Ayarlar</Link>
-              </DropdownMenuItem>
+              <Link href={`${pathname}/settings`}>
+                <DropdownMenuItem className="hover:cursor-pointer">
+                      Ayarlar
+                </DropdownMenuItem>
+              </Link>
               <Link href={`${pathname}/brand-contact`}>
                 <DropdownMenuItem className="hover:cursor-pointer">
                       Destek  
                 </DropdownMenuItem>
               </Link>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="hover:cursor-pointer">
-                Çıkış Yap
-              </DropdownMenuItem>
+              <Link onClick={logout} href={`/`}>
+                <DropdownMenuItem className="hover:cursor-pointer">
+                  Çıkış Yap
+                </DropdownMenuItem>
+              </Link>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
