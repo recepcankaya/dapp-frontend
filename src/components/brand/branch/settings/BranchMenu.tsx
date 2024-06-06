@@ -40,6 +40,7 @@ import { Input } from "@/src/components/ui/input";
 import editMenuProduct, {
   FormState as EditFormState,
 } from "@/src/server-actions/brand/branch-edit-product";
+import { useParams } from "next/navigation";
 
 type Product = {
   name: string;
@@ -65,6 +66,7 @@ const message = {
 };
 
 export default function BranchMenu({ menu }: Props) {
+  const params = useParams<{ "brand-home": string }>();
   const [state, formAction] = useFormState(
     deleteProductFromMenu,
     message as FormState
@@ -228,6 +230,11 @@ export default function BranchMenu({ menu }: Props) {
                                   type="hidden"
                                   name="productID"
                                   value={product.id}
+                                />
+                                <input
+                                  type="hidden"
+                                  name="branchName"
+                                  value={decodeURI(params["brand-home"])}
                                 />
                                 <Button>Devam Et</Button>
                               </form>
