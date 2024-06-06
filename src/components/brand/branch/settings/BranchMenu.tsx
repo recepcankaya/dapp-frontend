@@ -57,7 +57,7 @@ type CategoryProduct = {
 };
 
 type Props = {
-  menu: CategoryProduct[];
+  menu: CategoryProduct[] | null;
 };
 
 const message = {
@@ -114,142 +114,156 @@ export default function BranchMenu({ menu }: Props) {
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Menü Yönetimi</h1>
         <AddMenuItem
-          categories={menu.map((item: CategoryProduct) => item.category)}
+          categories={
+            menu && menu.length > 0
+              ? menu.map((item: CategoryProduct) => item.category)
+              : []
+          }
         />
       </div>
-      {menu.map((item: CategoryProduct) => (
-        <ul key={item.categoryID} className="mt-12">
-          <h2 className="text-xl font-bold mb-4">{item.category}</h2>
-          <div className="border rounded-lg overflow-hidden">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-1/5 p-4">Ürünün Resmi</TableHead>
-                  <TableHead className="w-1/5 p-4">Ürünün Adı</TableHead>
-                  <TableHead className="w-1/5 p-4">Ürünün Açıklaması</TableHead>
-                  <TableHead className="w-1/5 p-4">Ürünün Fiyatı</TableHead>
-                  <TableHead className="w-1/5 p-4">
-                    Ürün İçin Aksiyonlar
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {item.products.map((product) => (
-                  <TableRow key={product.id} className="hover:bg-gray-100">
-                    <TableCell className="p-4">
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        width={64}
-                        height={64}
-                        className="rounded-md object-cover"
-                      />
-                    </TableCell>
-                    <TableCell className="p-4 font-medium">
-                      {product.name}
-                    </TableCell>
-                    <TableCell className="p-4">{product.description}</TableCell>
-                    <TableCell className="p-4">{product.price}</TableCell>
-                    <TableCell className="p-4">
-                      <div className="flex gap-2">
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <Button variant="ghost" size="icon">
-                              <EditIcon className="h-5 w-5 text-blue-500" />
-                              <span className="sr-only">
-                                Düzenle {product.name}
-                              </span>
-                            </Button>
-                          </DialogTrigger>
-                          <DialogContent className="sm:max-w-md">
-                            <form action={editProductFormAction}>
-                              <DialogHeader>
-                                <DialogTitle>Ürününüzü Güncelleyin</DialogTitle>
-                                <DialogDescription>
-                                  Ürününüz hakkında aşağıdaki alanları
-                                  düzenleyebilirsiniz.
-                                </DialogDescription>
-                              </DialogHeader>
-                              <div className="grid gap-2">
-                                <input
-                                  type="hidden"
-                                  name="productID"
-                                  value={product.id}
-                                />
-                                <div>
-                                  <Label htmlFor="edit-price">
-                                    Ürünün Yeni Fiyatı
-                                  </Label>
-                                  <Input
-                                    id="edit-price"
-                                    name="editPrice"
-                                    type="number"
-                                    defaultValue={product.price.split(" ")[0]}
-                                  />
-                                </div>
-                                <div>
-                                  <Label htmlFor="edit-description">
-                                    Ürünün Yeni Açıklaması
-                                  </Label>
-                                  <Input
-                                    id="edit-description"
-                                    name="editDescription"
-                                    defaultValue={product.description}
-                                  />
-                                </div>
-                              </div>
-                              <DialogFooter>
-                                <Button type="submit">Kaydet</Button>
-                              </DialogFooter>
-                            </form>
-                          </DialogContent>
-                        </Dialog>
-                        <AlertDialog>
-                          <AlertDialogTrigger>
-                            <Button variant="ghost" size="icon">
-                              <TrashIcon className="h-5 w-5 text-red-500" />
-                              <span className="sr-only">
-                                Sil {product.name}
-                              </span>
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>
-                                Ürün Silme İşlemi
-                              </AlertDialogTitle>
-                              <AlertDialogDescription>
-                                Bu işlem geri alınamaz. Devam etmek istediğinize
-                                emin misiniz?
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Vazgeç</AlertDialogCancel>
-                              <form action={formAction}>
-                                <input
-                                  type="hidden"
-                                  name="productID"
-                                  value={product.id}
-                                />
-                                <input
-                                  type="hidden"
-                                  name="branchName"
-                                  value={decodeURI(params["brand-home"])}
-                                />
-                                <Button>Devam Et</Button>
-                              </form>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      </div>
-                    </TableCell>
+      {menu && menu?.length > 0 ? (
+        menu.map((item: CategoryProduct) => (
+          <ul key={item.categoryID} className="mt-12">
+            <h2 className="text-xl font-bold mb-4">{item.category}</h2>
+            <div className="border rounded-lg overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-1/5 p-4">Ürünün Resmi</TableHead>
+                    <TableHead className="w-1/5 p-4">Ürünün Adı</TableHead>
+                    <TableHead className="w-1/5 p-4">
+                      Ürünün Açıklaması
+                    </TableHead>
+                    <TableHead className="w-1/5 p-4">Ürünün Fiyatı</TableHead>
+                    <TableHead className="w-1/5 p-4">
+                      Ürün İçin Aksiyonlar
+                    </TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        </ul>
-      ))}
+                </TableHeader>
+                <TableBody>
+                  {item.products.map((product) => (
+                    <TableRow key={product.id} className="hover:bg-gray-100">
+                      <TableCell className="p-4">
+                        <img
+                          src={product.image}
+                          alt={product.name}
+                          width={64}
+                          height={64}
+                          className="rounded-md object-cover"
+                        />
+                      </TableCell>
+                      <TableCell className="p-4 font-medium">
+                        {product.name}
+                      </TableCell>
+                      <TableCell className="p-4">
+                        {product.description}
+                      </TableCell>
+                      <TableCell className="p-4">{product.price}</TableCell>
+                      <TableCell className="p-4">
+                        <div className="flex gap-2">
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <Button variant="ghost" size="icon">
+                                <EditIcon className="h-5 w-5 text-blue-500" />
+                                <span className="sr-only">
+                                  Düzenle {product.name}
+                                </span>
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent className="sm:max-w-md">
+                              <form action={editProductFormAction}>
+                                <DialogHeader>
+                                  <DialogTitle>
+                                    Ürününüzü Güncelleyin
+                                  </DialogTitle>
+                                  <DialogDescription>
+                                    Ürününüz hakkında aşağıdaki alanları
+                                    düzenleyebilirsiniz.
+                                  </DialogDescription>
+                                </DialogHeader>
+                                <div className="grid gap-2">
+                                  <input
+                                    type="hidden"
+                                    name="productID"
+                                    value={product.id}
+                                  />
+                                  <div>
+                                    <Label htmlFor="edit-price">
+                                      Ürünün Yeni Fiyatı
+                                    </Label>
+                                    <Input
+                                      id="edit-price"
+                                      name="editPrice"
+                                      type="number"
+                                      defaultValue={product.price.split(" ")[0]}
+                                    />
+                                  </div>
+                                  <div>
+                                    <Label htmlFor="edit-description">
+                                      Ürünün Yeni Açıklaması
+                                    </Label>
+                                    <Input
+                                      id="edit-description"
+                                      name="editDescription"
+                                      defaultValue={product.description}
+                                    />
+                                  </div>
+                                </div>
+                                <DialogFooter>
+                                  <Button type="submit">Kaydet</Button>
+                                </DialogFooter>
+                              </form>
+                            </DialogContent>
+                          </Dialog>
+                          <AlertDialog>
+                            <AlertDialogTrigger>
+                              <Button variant="ghost" size="icon">
+                                <TrashIcon className="h-5 w-5 text-red-500" />
+                                <span className="sr-only">
+                                  Sil {product.name}
+                                </span>
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                  Ürün Silme İşlemi
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Bu işlem geri alınamaz. Devam etmek
+                                  istediğinize emin misiniz?
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Vazgeç</AlertDialogCancel>
+                                <form action={formAction}>
+                                  <input
+                                    type="hidden"
+                                    name="productID"
+                                    value={product.id}
+                                  />
+                                  <input
+                                    type="hidden"
+                                    name="branchName"
+                                    value={decodeURI(params["brand-home"])}
+                                  />
+                                  <Button>Devam Et</Button>
+                                </form>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </ul>
+        ))
+      ) : (
+        <p>Henüz menünüze ürün eklememişsiniz.</p>
+      )}
     </div>
   );
 }

@@ -93,7 +93,7 @@ export default function AddMenuItem({ categories }: Props) {
             </div>
             <div>
               <Label htmlFor="price">Ürünün Fiyatı</Label>
-              <Input id="price" name="price" required type="number" />
+              <Input id="price" name="price" type="number" />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="description">Ürünün Açıklaması</Label>

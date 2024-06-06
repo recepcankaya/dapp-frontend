@@ -14,13 +14,14 @@ export default async function addMenuProduct(
   formData: FormData
 ) {
   const userID = await getUserID();
-  const name = formData.get("name");
+  const name = formData.get("name") as String;
   const description = formData.get("description");
   const price = formData.get("price");
   const image = formData.get("image") as File;
   const category = formData.get("category");
   const newCategory = formData.get("newCategory");
   const branchName = formData.get("branchName");
+  const productNameForImage = name?.replace(/\s/g, "-");
   const convertToEnglish = decodeTurkishCharacters(String(branchName));
 
   if (!name) {
@@ -56,7 +57,7 @@ export default async function addMenuProduct(
   if (image) {
     const { error: uploadingError } = await supabase.storage
       .from("menus")
-      .upload(`${convertToEnglish}/${name}`, image);
+      .upload(`${convertToEnglish}/${productNameForImage}`, image);
 
     if (uploadingError) {
       return {
@@ -67,12 +68,12 @@ export default async function addMenuProduct(
 
     const { data: productURL } = supabase.storage
       .from("menus")
-      .getPublicUrl(`${convertToEnglish}/${name}`);
+      .getPublicUrl(`${convertToEnglish}/${productNameForImage}`);
 
     const { error } = await supabase.rpc("add_product_to_menu", {
       p_product_name: String(name),
       p_description: String(description),
-      p_price: `${price} TL`,
+      p_price: price ? `${price} TL` : "0",
       p_product_image: productURL.publicUrl,
       p_category: String(category) || String(newCategory),
       p_brand_branch_id: userID,
