@@ -4,13 +4,12 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/src/lib/supabase/server";
 import getUserID from "@/src/lib/getUserID";
 import { AdminCampaigns, Campaign } from "@/src/lib/types/jsonQuery.types";
+import decodeTurkishCharacters from "@/src/lib/convertToEnglishCharacters";
 
 export type FormState = {
   success: unknown;
   message: string;
 };
-
-const PINATA_JWT = process.env.PINATA_JWT;
 
 export default async function deleteCampaign(
   prevState: any,
@@ -19,6 +18,8 @@ export default async function deleteCampaign(
   const supabase = createClient();
   const userID = await getUserID();
   const campaignID = formData.get("campaignID");
+  const branchName = formData.get("branchName");
+  const convertToEnglish = decodeTurkishCharacters(String(branchName));
 
   const { data } = await supabase
     .from("brand_branch")
@@ -34,13 +35,18 @@ export default async function deleteCampaign(
   const findCampaign = campaigns.find(
     (campaign) => Number(campaign.campaign_id) === Number(campaignID)
   );
-  const campaignIPFSHash = findCampaign?.campaign_image.slice(21);
-  await fetch(`https://api.pinata.cloud/pinning/unpin/${campaignIPFSHash}`, {
-    method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${PINATA_JWT}`,
-    },
-  });
+  const imageName = findCampaign?.campaign_image.split("/").pop();
+
+  const { error: deleteCampaignImage } = await supabase.storage
+    .from("campaigns")
+    .remove([`${convertToEnglish}/${imageName}`]);
+
+  if (deleteCampaignImage) {
+    return {
+      success: false,
+      message: "Kampanya silinirken bir hata oluştu. Lütfen tekrar deneyiniz.",
+    };
+  }
 
   const { error } = await supabase.rpc("delete_spesific_campaign", {
     row_id: userID,

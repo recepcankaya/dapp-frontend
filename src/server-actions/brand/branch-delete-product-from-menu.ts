@@ -54,7 +54,7 @@ export default async function deleteProductFromMenu(
     const imageName = findProduct?.image.split("/").pop();
 
     const { error: deleteProductImage } = await supabase.storage
-      .from("avatars")
+      .from("menus")
       .remove([`${convertToEnglish}/${imageName}`]);
 
     if (deleteProductImage) {

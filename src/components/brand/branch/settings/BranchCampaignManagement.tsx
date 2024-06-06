@@ -51,6 +51,7 @@ import { Input } from "@/src/components/ui/input";
 import { Button } from "@/src/components/ui/button";
 import { Checkbox } from "@/src/components/ui/checkbox";
 import addCampaign from "@/src/server-actions/brand/branch-add-campaign";
+import { useParams } from "next/navigation";
 
 type BranchCampaignManagementProps = {
   campaigns: AdminCampaigns["campaigns"];
@@ -64,6 +65,7 @@ const message = {
 export default function BranchCampaignManagement({
   campaigns,
 }: BranchCampaignManagementProps) {
+  const params = useParams<{ "brand-home": string }>();
   const [state, formAction] = useFormState(
     deleteCampaign,
     message as FormState
@@ -122,6 +124,11 @@ export default function BranchCampaignManagement({
               </DialogDescription>
             </DialogHeader>
             <form action={addFormAction} className="grid gap-4 py-4">
+              <input
+                type="hidden"
+                name="branchName"
+                value={decodeURI(params["brand-home"])}
+              />
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="name" className="text-right">
                   İsmi
@@ -154,19 +161,19 @@ export default function BranchCampaignManagement({
           </DialogContent>
         </Dialog>
       </div>
-      <div className="border rounded-lg overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-1/4 p-4">Kampanya Favori mi?</TableHead>
-              <TableHead className="w-1/4 p-4">Kampanyanın Resmi</TableHead>
-              <TableHead className="w-1/4 p-4">Kampanyanın Adı</TableHead>
-              <TableHead className="w-1/4 p-4"></TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {campaigns && campaigns.length > 0 ? (
-              campaigns.map((campaign) => (
+      {campaigns && campaigns.length > 0 ? (
+        <div className="border rounded-lg overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-1/4 p-4">Kampanya Favori mi?</TableHead>
+                <TableHead className="w-1/4 p-4">Kampanyanın Resmi</TableHead>
+                <TableHead className="w-1/4 p-4">Kampanyanın Adı</TableHead>
+                <TableHead className="w-1/4 p-4"></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {campaigns.map((campaign) => (
                 <TableRow
                   key={campaign.campaign_id}
                   className="hover:bg-gray-100">
@@ -199,7 +206,7 @@ export default function BranchCampaignManagement({
                         <AlertDialogContent>
                           <AlertDialogHeader>
                             <AlertDialogTitle>
-                              Ürün Silme İşlemi
+                              Kampanya Silme İşlemi
                             </AlertDialogTitle>
                             <AlertDialogDescription>
                               Bu işlem geri alınamaz. Devam etmek istediğinize
@@ -214,6 +221,11 @@ export default function BranchCampaignManagement({
                                 name="campaignID"
                                 value={campaign.campaign_id}
                               />
+                              <input
+                                type="hidden"
+                                name="branchName"
+                                value={decodeURI(params["brand-home"])}
+                              />
                               <Button>Devam Et</Button>
                             </form>
                           </AlertDialogFooter>
@@ -222,13 +234,13 @@ export default function BranchCampaignManagement({
                     </div>
                   </TableCell>
                 </TableRow>
-              ))
-            ) : (
-              <p>Aktif kampanyanız bulunmamaktadır.</p>
-            )}
-          </TableBody>
-        </Table>
-      </div>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      ) : (
+        <p>Aktif kampanyanız bulunmamaktadır.</p>
+      )}
     </section>
   );
 }
