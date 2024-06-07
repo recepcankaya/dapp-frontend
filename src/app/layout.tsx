@@ -1,7 +1,13 @@
 "use client";
+import {
+  ThirdwebProvider as OldThirdwebProvider,
+  embeddedWallet,
+} from "@thirdweb-dev/react";
 import { ThirdwebProvider } from "thirdweb/react";
 
 import "./globals.css";
+
+const activeChain = "polygon";
 
 export default function RootLayout({
   // Layouts must accept a children prop.
@@ -11,10 +17,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ThirdwebProvider>
-      <html lang="en">
-        <body>{children}</body>
-      </html>
-    </ThirdwebProvider>
+    <OldThirdwebProvider
+      clientId={process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID}
+      activeChain="polygon"
+      supportedWallets={[
+        embeddedWallet({
+          auth: {
+            options: ["email", "google"],
+          },
+        }),
+      ]}>
+      <ThirdwebProvider>
+        <html lang="en">
+          <body>{children}</body>
+        </html>
+      </ThirdwebProvider>
+    </OldThirdwebProvider>
   );
 }

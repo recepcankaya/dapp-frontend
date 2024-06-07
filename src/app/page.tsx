@@ -1,12 +1,13 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ConnectEmbed, useActiveAccount } from "thirdweb/react";
+import { useActiveAccount } from "thirdweb/react";
+import { ConnectEmbed } from "@thirdweb-dev/react";
 import { polygon } from "thirdweb/chains";
 import { inAppWallet } from "thirdweb/wallets";
 import { sha512 } from "js-sha512";
 
-import { createClient } from "../lib/supabase/client";
+import { createClient } from "@/src/lib/supabase/client";
 import { client } from "@/src/lib/thirdweb/client";
 
 export default function Home() {
@@ -85,14 +86,8 @@ export default function Home() {
         </div>
       ) : (
         <>
-          <ConnectEmbed
-            style={{ width: "50%" }}
-            client={client}
-            wallets={[inAppWallet()]}
-            chain={polygon}
-            showAllWallets={false}
-          />
-          <p className="text-gray-300 text-xs">
+          <ConnectEmbed style={{ width: "75%" }} theme={"light"} />
+          <p className="text-black-300 text-xs">
             Devam ederek{" "}
             <Link href="/terms-of-use" className="text-blue-500 underline">
               üyelik sözleşmesi ve kullanım koşullarını <br />

@@ -48,7 +48,7 @@ export default async function BranchHome() {
   };
 
   return (
-    <div className="bg-[#d8d0c3]">
+    <div>
       <BranchHomeHeader
         brandName={String(data.brand?.brand_name)}
         brandBranch={data.branch_name}

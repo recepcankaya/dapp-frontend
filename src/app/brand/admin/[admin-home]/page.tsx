@@ -96,7 +96,7 @@ export default async function AdminHome() {
   }, {});
 
   return (
-    <div className="bg-[#d8d0c3]">
+    <div>
       <AdminHomeHeader
         brandName={data[0].brand_name}
         brandLogo={data[0].brand_logo_ipfs_url}
@@ -109,4 +109,3 @@ export default async function AdminHome() {
     </div>
   );
 }
-

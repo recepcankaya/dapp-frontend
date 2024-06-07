@@ -24,7 +24,7 @@ export default async function QrCode() {
   }
 
   return (
-    <div className="w-screen h-screen flex justify-center items-center bg-lad-white">
+    <div className="w-screen h-screen flex justify-center items-center">
       <QrCodeClient userID={user?.id} />
     </div>
   );

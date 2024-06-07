@@ -52,6 +52,7 @@ export default function RenderTicket({
         },
         (payload: any) => {
           setUserOrderNumber(payload.new.total_ticket_orders);
+          router.refresh();
         }
       )
       .subscribe();
