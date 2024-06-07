@@ -33,10 +33,7 @@ export default function CampaignCarousel({
           ) : (
             <SwiperSlide key={campaign.campaign_id}>
               <Image
-                src={campaign.campaign_image.replace(
-                  "ipfs://",
-                  "https://ipfs.io/ipfs/"
-                )}
+                src={campaign.campaign_image}
                 alt="campaign image"
                 width={500}
                 height={500}

@@ -33,7 +33,7 @@ export default async function Settings() {
   }
 
   return (
-    <main className="flex flex-col min-h-[100dvh] bg-[#d8d0c3]">
+    <main className="flex flex-col min-h-[100dvh]">
       <BranchChangePassword />
       <BranchCampaignManagement
         campaigns={(data[0].campaigns as AdminCampaigns["campaigns"]) ?? []}
