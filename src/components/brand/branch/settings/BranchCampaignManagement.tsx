@@ -6,16 +6,6 @@ import UploadCampaign from "./campaigns/UploadCampaign";
 import type { AdminCampaigns } from "@/src/lib/types/jsonQuery.types";
 
 import {
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/src/components/ui/alert-dialog";
-import {
   Table,
   TableHeader,
   TableRow,
@@ -23,8 +13,6 @@ import {
   TableBody,
   TableCell,
 } from "@/src/components/ui/table";
-import { RedBinIcon } from "@/src/components/ui/bin";
-import { Button } from "@/src/components/ui/button";
 
 type BranchCampaignManagementProps = {
   campaigns: AdminCampaigns["campaigns"];
@@ -34,26 +22,30 @@ export default function BranchCampaignManagement({
   campaigns,
 }: BranchCampaignManagementProps) {
   return (
-    <section className="container mx-auto px-4 md:px-6 py-8 bg-white text-black mt-24">
+    <section className="container mx-auto px-4 md:px-6 py-8 bg-[#D9D9D9] text-black mt-24">
       <UploadCampaign />
       {campaigns && campaigns.length > 0 ? (
-        <div className="border rounded-lg overflow-hidden">
+        <div className="overflow-hidden">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-1/4 p-4">Kampanya Favori mi?</TableHead>
-                <TableHead className="w-1/4 p-4">Kampanyanın Resmi</TableHead>
-                <TableHead className="w-1/4 p-4">Kampanyanın Adı</TableHead>
-                <TableHead className="w-1/4 p-4"></TableHead>
+                <TableHead className="w-1/7 p-4">Kampanya Favori mi?</TableHead>
+                <TableHead className="w-2/7 p-4">Kampanyanın Resmi</TableHead>
+                <TableHead className="w-2/7 p-4">Kampanyanın Adı</TableHead>
+                <TableHead className="w-1/7 p-4"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {campaigns.map((campaign) => (
                 <TableRow
                   key={campaign.campaign_id}
-                  className="hover:bg-gray-100">
+                  className="hover:bg-gray-200 border-none">
                   <TableCell className="p-4">
-                    {campaign.favourite ? "✅" : ""}
+                    {campaign.favourite ? (
+                      <div className="w-8 h-8 rounded-full bg-green-600 md:ml-8"></div>
+                    ) : (
+                      <div className="w-8 h-8 rounded-full bg-[#DBB5B5] md:ml-8"></div>
+                    )}
                   </TableCell>
                   <TableCell className="p-4">
                     <Image
@@ -68,33 +60,10 @@ export default function BranchCampaignManagement({
                     {campaign.campaign_name}
                   </TableCell>
                   <TableCell className="p-4">
-                    <div className="flex gap-2">
-                      <AlertDialog>
-                        <AlertDialogTrigger>
-                          <Button variant="ghost" size="icon">
-                            <RedBinIcon className="h-5 w-5 text-red-500" />
-                            <span className="sr-only">
-                              Sil {campaign.campaign_name}
-                            </span>
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>
-                              Kampanya Silme İşlemi
-                            </AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Bu işlem geri alınamaz. Devam etmek istediğinize
-                              emin misiniz?
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Vazgeç</AlertDialogCancel>
-                            <DeleteCampaign campaignID={campaign.campaign_id} />
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </div>
+                    <DeleteCampaign
+                      campaignID={campaign.campaign_id}
+                      campaignName={campaign.campaign_name}
+                    />
                   </TableCell>
                 </TableRow>
               ))}
