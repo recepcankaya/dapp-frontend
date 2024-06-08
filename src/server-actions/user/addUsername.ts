@@ -24,13 +24,11 @@ export default async function addUsername(prevState: any, formData: FormData) {
     redirect("/");
   }
 
-  const { error } = await supabase
-    .from("users")
-    .update({
-      username: result.data?.username,
-      last_login: String(new Date().toISOString()),
-    })
-    .eq("id", userID);
+  const { error } = await supabase.from("users").insert({
+    id: userID,
+    username: result.data?.username,
+    last_login: String(new Date().toISOString()),
+  });
 
   if (
     error?.message.includes("duplicate key value violates unique constraint")

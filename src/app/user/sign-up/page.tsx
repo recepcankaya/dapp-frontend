@@ -4,19 +4,19 @@ import Link from "next/link";
 import { Bounce, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import loginWithEmail from "../server-actions/user/login";
 import { Button } from "@/src/components/ui/button";
 import { Label } from "@/src/components/ui/label";
 import { Input } from "@/src/components/ui/input";
 import { useEffect } from "react";
-import { createClient } from "../lib/supabase/client";
+import { createClient } from "@/src/lib/supabase/client";
+import signUpWithEmail from "@/src/server-actions/user/sign-up";
 
 const message = {
   message: "",
 };
 
-export default function Home() {
-  const [state, loginEmailAction] = useFormState(loginWithEmail, message);
+export default function SignUp() {
+  const [state, loginEmailAction] = useFormState(signUpWithEmail, message);
 
   useEffect(() => {
     if (state?.message.length > 0) {
@@ -51,9 +51,9 @@ export default function Home() {
       />
       <div className="mx-auto w-full max-w-md space-y-6 rounded-lg bg-white p-8 shadow-lg dark:bg-gray-950">
         <div className="space-y-2 text-center">
-          <h1 className="text-3xl font-bold">Tekrar Hoşgeldin!</h1>
+          <h1 className="text-3xl font-bold">Hoşgeldin!</h1>
           <p className="text-gray-500 dark:text-gray-400">
-            Giriş yapmak için lütfen bilgilerinizi giriniz.
+            Kayıt olmak için lütfen gerekli bilgileri giriniz.
           </p>
         </div>
         <div className="space-y-4">
@@ -62,7 +62,7 @@ export default function Home() {
             className="w-full"
             onClick={handleLoginWithGoogle}>
             <ChromeIcon className="mr-2 h-5 w-5" />
-            Google ile Giriş Yap
+            Google ile Kayıt Ol
           </Button>
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
@@ -86,41 +86,22 @@ export default function Home() {
               />
             </div>
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password">Şifreniz</Label>
-                <Link
-                  href="#"
-                  className="text-sm font-medium underline underline-offset-2 hover:text-gray-900 dark:hover:text-gray-50"
-                  prefetch={false}>
-                  Şifreni mi unuttun?
-                </Link>
-              </div>
+              <Label htmlFor="password">Şifreniz</Label>
               <Input id="password" type="password" name="password" required />
             </div>
             <Button type="submit" className="w-full">
-              Giriş Yap
+              Kayıt Ol
             </Button>
           </form>
         </div>
-        <div className="mt-4 text-center text-sm">
-          Hesabın yok mu?
-          <Link
-            href="/user/sign-up"
-            className="font-medium underline underline-offset-2 hover:text-gray-900 dark:hover:text-gray-50"
-            prefetch={false}>
-            {" "}
-            Kayıt ol!
-          </Link>
-        </div>
+        <p className="text-black-300 text-xs">
+          Devam ederek{" "}
+          <Link href="/terms-of-use" className="text-blue-500 underline">
+            üyelik sözleşmesi ve kullanım koşullarını <br />
+          </Link>{" "}
+          kabul etmiş olursunuz.
+        </p>
       </div>
-      <button className="mt-8">
-        <Link href="/brand/brand-login" className="text-lg">
-          Üye İş Yeriyseniz Giriş Yapmak için <br />
-          <span className="bg-gradient-to-r from-lad-purple to-lad-green inline-block text-transparent bg-clip-text">
-            Tıklayınız
-          </span>
-        </Link>
-      </button>
     </section>
   );
 }
