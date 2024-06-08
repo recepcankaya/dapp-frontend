@@ -16,8 +16,8 @@ import deleteProductFromMenu, {
 import { useFormState } from "react-dom";
 
 import { useParams } from "next/navigation";
-import { useEffect } from "react";
-import { toast, Bounce } from "react-toastify";
+import { useEffect, useState } from "react";
+import { toast, Bounce, ToastOptions } from "react-toastify";
 import SubmitButton from "@/src/components/ui/submit-button";
 
 type Product = {
@@ -33,7 +33,20 @@ const message = {
   message: "",
 };
 
+const toastOptions: ToastOptions = {
+  position: "top-right",
+  autoClose: 1500,
+  hideProgressBar: false,
+  closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
+  progress: undefined,
+  theme: "light",
+  transition: Bounce,
+};
+
 export default function DeleteMenuItem({ product }: { product: Product }) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const params = useParams<{ "brand-home": string }>();
   const [state, formAction] = useFormState(
     deleteProductFromMenu,
@@ -42,31 +55,31 @@ export default function DeleteMenuItem({ product }: { product: Product }) {
 
   useEffect(() => {
     if (state?.success === true) {
-      toast.success(state.message);
+      setIsDialogOpen(false);
+      toast.success(state.message, toastOptions);
     }
 
     if (state?.success === false) {
-      toast.error(state?.message);
+      toast.error(state?.message, toastOptions);
     }
   }, [state]);
 
   return (
-    <AlertDialog>
+    <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <AlertDialogTrigger>
-        <Button variant="ghost" size="icon">
-          <TrashIcon className="h-5 w-5 text-red-500" />
+        <Button className="bg-transparent hover:bg-transparent" size="icon">
+          <TrashIcon className="h-5 w-5 text-red-500 hover:scale-110 transition-all" />
           <span className="sr-only">Sil {product.name}</span>
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Ürün Silme İşlemi</AlertDialogTitle>
-          <AlertDialogDescription>
-            Bu işlem geri alınamaz. Devam etmek istediğinize emin misiniz?
-          </AlertDialogDescription>
+          <AlertDialogTitle>
+            Ürünü Silmek İstediğinize Emin misiniz?
+          </AlertDialogTitle>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Vazgeç</AlertDialogCancel>
+          <AlertDialogCancel className="bg-[#D9D9D9]">Vazgeç</AlertDialogCancel>
           <form action={formAction}>
             <input type="hidden" name="productID" value={product.id} />
             <input
@@ -74,7 +87,11 @@ export default function DeleteMenuItem({ product }: { product: Product }) {
               name="branchName"
               value={decodeURI(params["brand-home"])}
             />
-            <SubmitButton type="submit" className="" title="Devam Et" />
+            <SubmitButton
+              type="submit"
+              className="bg-[#dbb5b580] text-black hover:bg-[#DBB5B5]"
+              title="Devam Et"
+            />
           </form>
         </AlertDialogFooter>
       </AlertDialogContent>

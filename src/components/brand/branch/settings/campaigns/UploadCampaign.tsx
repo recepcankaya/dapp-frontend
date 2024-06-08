@@ -112,7 +112,6 @@ export default function UploadCampaign() {
                 </Label>
               </div>
               <DialogFooter>
-                <DialogClose></DialogClose>
                 <SubmitButton type="submit" className="mt-8" title="Kaydet" />
               </DialogFooter>
             </form>
@@ -123,7 +122,7 @@ export default function UploadCampaign() {
   );
 }
 
-function AddIcon(props: React.SVGProps<SVGSVGElement>) {
+export function AddIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       width="30"

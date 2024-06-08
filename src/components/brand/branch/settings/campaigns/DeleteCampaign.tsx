@@ -68,15 +68,15 @@ export default function DeleteCampaign({
   return (
     <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <AlertDialogTrigger>
-        <Button variant="ghost" size="icon">
+        <Button className="bg-transparent hover:bg-transparent" size="icon">
           <Trash className="hover:scale-110 transition-all" />
           <span className="sr-only">Sil {campaignName}</span>
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent className="bg-[#D8D0C3]">
+      <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            Kampanya Silmek İstediğinize Emin misiniz?
+            Kampanyayı Silmek İstediğinize Emin misiniz?
           </AlertDialogTitle>
         </AlertDialogHeader>
         <AlertDialogFooter>

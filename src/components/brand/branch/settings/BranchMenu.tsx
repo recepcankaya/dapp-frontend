@@ -33,22 +33,19 @@ type Props = {
 
 export default function BranchMenu({ menu }: Props) {
   return (
-    <div className="container mx-auto px-4 md:px-6 py-8 bg-white text-black mt-24">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Menü Yönetimi</h1>
-        <UploadMenu
-          categories={
-            menu && menu.length > 0
-              ? menu.map((item: CategoryProduct) => item.category)
-              : []
-          }
-        />
-      </div>
+    <div className="container mx-auto px-4 md:px-6 py-8 bg-[#D9D9D9] text-black mt-24">
+      <UploadMenu
+        categories={
+          menu && menu.length > 0
+            ? menu.map((item: CategoryProduct) => item.category)
+            : []
+        }
+      />
       {menu && menu?.length > 0 ? (
         menu.map((item: CategoryProduct) => (
           <ul key={item.categoryID} className="mt-12">
             <h2 className="text-xl font-bold mb-4">{item.category}</h2>
-            <div className="border rounded-lg overflow-hidden">
+            <div className="overflow-hidden">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -65,7 +62,9 @@ export default function BranchMenu({ menu }: Props) {
                 </TableHeader>
                 <TableBody>
                   {item.products.map((product) => (
-                    <TableRow key={product.id} className="hover:bg-gray-100">
+                    <TableRow
+                      key={product.id}
+                      className="hover:bg-gray-200 border-none">
                       <TableCell className="p-4">
                         <Image
                           src={product.image}

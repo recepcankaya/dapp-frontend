@@ -2,7 +2,6 @@
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -15,8 +14,8 @@ import { useFormState } from "react-dom";
 import editMenuProduct, {
   FormState as EditFormState,
 } from "@/src/server-actions/brand/branch-edit-product";
-import { useEffect } from "react";
-import { toast } from "react-toastify";
+import { useEffect, useState } from "react";
+import { Bounce, ToastOptions, toast } from "react-toastify";
 import SubmitButton from "@/src/components/ui/submit-button";
 
 const message = {
@@ -32,7 +31,20 @@ type Product = {
   id: string;
 };
 
+const toastOptions: ToastOptions = {
+  position: "top-right",
+  autoClose: 1500,
+  hideProgressBar: false,
+  closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
+  progress: undefined,
+  theme: "light",
+  transition: Bounce,
+};
+
 export default function EditMenu({ product }: { product: Product }) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editState, editProductFormAction] = useFormState(
     editMenuProduct,
     message as EditFormState
@@ -40,29 +52,27 @@ export default function EditMenu({ product }: { product: Product }) {
 
   useEffect(() => {
     if (editState?.success === true) {
-      toast.success(editState.message);
+      setIsDialogOpen(false);
+      toast.success(editState.message, toastOptions);
     }
 
     if (editState?.success === false) {
-      toast.error(editState?.message);
+      toast.error(editState?.message, toastOptions);
     }
   }, [editState]);
 
   return (
-    <Dialog>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon">
-          <EditIcon className="h-5 w-5 text-blue-500" />
+        <Button className="bg-transparent hover:bg-transparent" size="icon">
+          <EditIcon className="h-5 w-5 text-blue-500 hover:scale-110 transition-all" />
           <span className="sr-only">Düzenle {product.name}</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <form action={editProductFormAction}>
           <DialogHeader>
-            <DialogTitle>Ürününüzü Güncelleyin</DialogTitle>
-            <DialogDescription>
-              Ürününüz hakkında aşağıdaki alanları düzenleyebilirsiniz.
-            </DialogDescription>
+            <DialogTitle className="mb-8">Ürününüzü Güncelleyin</DialogTitle>
           </DialogHeader>
           <div className="grid gap-2">
             <input type="hidden" name="productID" value={product.id} />
@@ -73,6 +83,7 @@ export default function EditMenu({ product }: { product: Product }) {
                 name="editPrice"
                 type="number"
                 defaultValue={product.price.split(" ")[0]}
+                className="bg-[#dbb5b59d]"
               />
             </div>
             <div>
@@ -81,11 +92,12 @@ export default function EditMenu({ product }: { product: Product }) {
                 id="edit-description"
                 name="editDescription"
                 defaultValue={product.description}
+                className="bg-[#dbb5b59d]"
               />
             </div>
           </div>
           <DialogFooter>
-            <SubmitButton type="submit" className="" title="Devam Et" />
+            <SubmitButton type="submit" className="mt-8" title="Devam Et" />
           </DialogFooter>
         </form>
       </DialogContent>
