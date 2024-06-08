@@ -1,5 +1,5 @@
 "use client";
-import { Bounce, ToastContainer, toast } from "react-toastify";
+import { toast, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Button } from "@/src/components/ui/button";
 import {
@@ -21,13 +21,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/src/components/ui/select";
-import { Textarea } from "../../ui/textarea";
+import { Textarea } from "@/src/components/ui/textarea";
 import { useFormState } from "react-dom";
 import addMenuProduct, {
   FormState,
 } from "@/src/server-actions/brand/branch-add-menu-product";
 import { useParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
+import SubmitButton from "@/src/components/ui/submit-button";
 
 const message = {
   success: undefined,
@@ -38,7 +39,7 @@ type Props = {
   categories: string[];
 };
 
-export default function AddMenuItem({ categories }: Props) {
+export default function UploadMenu({ categories }: Props) {
   const params = useParams<{ "brand-home": string }>();
   const [state, formAction] = useFormState(
     addMenuProduct,
@@ -57,19 +58,6 @@ export default function AddMenuItem({ categories }: Props) {
 
   return (
     <section>
-      <ToastContainer
-        position="top-right"
-        autoClose={1500}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-        transition={Bounce}
-      />
       <Dialog>
         <DialogTrigger>
           <Button>Yeni Ürün Ekle</Button>
@@ -128,7 +116,7 @@ export default function AddMenuItem({ categories }: Props) {
                   Vazgeç
                 </Button>
               </DialogClose>
-              <Button type="submit">Kaydet</Button>
+              <SubmitButton type="submit" className="" title="Devam Et" />
             </DialogFooter>
           </form>
         </DialogContent>
