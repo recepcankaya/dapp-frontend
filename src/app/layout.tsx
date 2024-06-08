@@ -4,6 +4,8 @@ import {
   embeddedWallet,
 } from "@thirdweb-dev/react";
 import { ThirdwebProvider } from "thirdweb/react";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import "./globals.css";
 
@@ -30,6 +32,7 @@ export default function RootLayout({
       <ThirdwebProvider>
         <html lang="en">
           <body>{children}</body>
+          <ToastContainer />
         </html>
       </ThirdwebProvider>
     </OldThirdwebProvider>

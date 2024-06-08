@@ -1,6 +1,9 @@
 "use client";
 import { useFormState } from "react-dom";
+
 import login from "@/src/server-actions/admin/login";
+import { Button } from "@/src/components/ui/button";
+import SubmitButton from "@/src/components/ui/submit-button";
 
 const errorMessage = {
   message: "",
@@ -33,11 +36,11 @@ export default function AdminLogin() {
           className="rounded-full border-2 border-lad-pink py-1.5 pl-4"
         />
         <p className="text-destructive mt-6">{state?.message}</p>
-        <button
+        <SubmitButton
           type="submit"
-          className="mt-12 mx-4 grow text-lg font-bold rounded-3xl bg-lad-pink text-lad-black py-2 hover:bg-gradient-to-br from-lad-purple to-lad-green">
-          Giriş Yap
-        </button>
+          className="mt-12 mx-4 grow text-lg font-bold rounded-3xl bg-lad-pink text-lad-black py-2 hover:bg-gradient-to-br from-lad-purple to-lad-green"
+          title="Giriş Yap"
+        />
       </form>
     </section>
   );
