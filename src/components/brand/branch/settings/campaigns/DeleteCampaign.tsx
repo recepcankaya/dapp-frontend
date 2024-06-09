@@ -1,14 +1,13 @@
 "use client";
-import { useParams } from "next/navigation";
-import { useFormState } from "react-dom";
-
-import deleteCampaign, {
-  FormState,
-} from "@/src/server-actions/brand/branch-delete-campaign";
-
-import { Bounce, ToastOptions, toast } from "react-toastify";
-import SubmitButton from "@/src/components/ui/submit-button";
 import { useEffect, useState } from "react";
+import { useFormState } from "react-dom";
+import { useParams } from "next/navigation";
+import { toast } from "react-toastify";
+
+import { shortLengthToastOptions } from "@/src/lib/toastOptions";
+import { initialState } from "@/src/lib/feedbackForForms";
+import deleteCampaign from "@/src/server-actions/brand/branch-delete-campaign";
+
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -20,23 +19,7 @@ import {
 } from "@/src/components/ui/alert-dialog";
 import { Button } from "@/src/components/ui/button";
 import { Campaign } from "@/src/lib/types/jsonQuery.types";
-
-const initialState = {
-  success: undefined,
-  message: "",
-};
-
-const toastOptions: ToastOptions = {
-  position: "top-right",
-  autoClose: 1500,
-  hideProgressBar: false,
-  closeOnClick: true,
-  pauseOnHover: true,
-  draggable: true,
-  progress: undefined,
-  theme: "light",
-  transition: Bounce,
-};
+import SubmitButton from "@/src/components/ui/submit-button";
 
 type DeleteCampaignProps = {
   campaignID: Campaign["campaign_id"];
@@ -49,19 +32,16 @@ export default function DeleteCampaign({
 }: DeleteCampaignProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const params = useParams<{ "brand-home": string }>();
-  const [state, deleteformAction] = useFormState(
-    deleteCampaign,
-    initialState as FormState
-  );
+  const [state, deleteformAction] = useFormState(deleteCampaign, initialState);
 
   useEffect(() => {
     if (state?.success === true) {
       setIsDialogOpen(false);
-      toast.success(state.message, toastOptions);
+      toast.success(state.message, shortLengthToastOptions);
     }
 
     if (state?.success === false) {
-      toast.error(state?.message, toastOptions);
+      toast.error(state?.message, shortLengthToastOptions);
     }
   }, [state]);
 

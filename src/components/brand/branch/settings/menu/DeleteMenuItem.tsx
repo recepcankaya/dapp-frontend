@@ -1,66 +1,45 @@
 "use client";
+import { useEffect, useState } from "react";
+import { useFormState } from "react-dom";
+import { useParams } from "next/navigation";
+import { toast } from "react-toastify";
+
+import { shortLengthToastOptions } from "@/src/lib/toastOptions";
+import { initialState } from "@/src/lib/feedbackForForms";
+import deleteProductFromMenu from "@/src/server-actions/brand/branch-delete-product-from-menu";
+
 import {
   AlertDialog,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/src/components/ui/alert-dialog";
 import { Button } from "@/src/components/ui/button";
-import deleteProductFromMenu, {
-  FormState,
-} from "@/src/server-actions/brand/branch-delete-product-from-menu";
-import { useFormState } from "react-dom";
-
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { toast, Bounce, ToastOptions } from "react-toastify";
 import SubmitButton from "@/src/components/ui/submit-button";
 
-type Product = {
-  name: string;
-  price: string;
-  description: string;
-  image: string;
-  id: string;
-};
+import type { Product } from "@/src/lib/types/product.types";
 
 const message = {
   success: undefined,
   message: "",
 };
 
-const toastOptions: ToastOptions = {
-  position: "top-right",
-  autoClose: 1500,
-  hideProgressBar: false,
-  closeOnClick: true,
-  pauseOnHover: true,
-  draggable: true,
-  progress: undefined,
-  theme: "light",
-  transition: Bounce,
-};
-
 export default function DeleteMenuItem({ product }: { product: Product }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const params = useParams<{ "brand-home": string }>();
-  const [state, formAction] = useFormState(
-    deleteProductFromMenu,
-    message as FormState
-  );
+  const [state, formAction] = useFormState(deleteProductFromMenu, initialState);
 
   useEffect(() => {
     if (state?.success === true) {
       setIsDialogOpen(false);
-      toast.success(state.message, toastOptions);
+      toast.success(state.message, shortLengthToastOptions);
     }
 
     if (state?.success === false) {
-      toast.error(state?.message, toastOptions);
+      toast.error(state?.message, shortLengthToastOptions);
     }
   }, [state]);
 

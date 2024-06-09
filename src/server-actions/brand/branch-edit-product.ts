@@ -3,11 +3,6 @@ import { createClient } from "@/src/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import getUserID from "@/src/lib/getUserID";
 
-export type FormState = {
-  success: unknown;
-  message: string;
-};
-
 export default async function editMenuProduct(
   prevState: any,
   formData: FormData

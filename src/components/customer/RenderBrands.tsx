@@ -106,7 +106,8 @@ export default function RenderBrands(brands: RenderBrandsProps) {
                         item.brand.brand_name
                       )}/${convertString(item.branch_name)}?brandID=${
                         item.brand.id
-                      }&branchID=${item.id}`}>
+                      }&branchID=${item.id}`}
+                      prefetch={false}>
                       <Image
                         src={item.brand.brand_logo_ipfs_url.replace(
                           "ipfs://",
@@ -145,7 +146,8 @@ export default function RenderBrands(brands: RenderBrandsProps) {
                         item.brand.brand_name
                       )}/${convertString(item.branch_name)}?brandID=${
                         item.brand.id
-                      }&branchID=${item.id}`}>
+                      }&branchID=${item.id}`}
+                      prefetch={false}>
                       <Image
                         src={item.brand.brand_logo_ipfs_url.replace(
                           "ipfs://",

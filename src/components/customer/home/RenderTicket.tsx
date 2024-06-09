@@ -110,7 +110,9 @@ export default function RenderTicket({
       <Button
         asChild
         className="mt-16 px-16 py-6 mb-8 mx-auto flex text-lg font-bold font-rosarivo rounded-xl border-2 border-lad-pink text-lad-white">
-        <Link href={`${pathname}/menu?brandID=${brandID}&branchID=${branchID}`}>
+        <Link
+          href={`${pathname}/menu?brandID=${brandID}&branchID=${branchID}`}
+          prefetch={false}>
           Menü
         </Link>
       </Button>

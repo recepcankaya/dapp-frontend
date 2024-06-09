@@ -2,11 +2,11 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useFormState } from "react-dom";
-import { Bounce, ToastOptions, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
-import addCampaign, {
-  type Status,
-} from "@/src/server-actions/brand/branch-add-campaign";
+import { shortLengthToastOptions } from "@/src/lib/toastOptions";
+import { initialState } from "@/src/lib/feedbackForForms";
+import addCampaign from "@/src/server-actions/brand/branch-add-campaign";
 
 import { Checkbox } from "@/src/components/ui/checkbox";
 import {
@@ -22,39 +22,19 @@ import { Input } from "@/src/components/ui/input";
 import { Label } from "@/src/components/ui/label";
 import SubmitButton from "@/src/components/ui/submit-button";
 
-const initialState = {
-  success: undefined,
-  message: "",
-};
-
-const toastOptions: ToastOptions = {
-  position: "top-right",
-  autoClose: 1500,
-  hideProgressBar: false,
-  closeOnClick: true,
-  pauseOnHover: true,
-  draggable: true,
-  progress: undefined,
-  theme: "light",
-  transition: Bounce,
-};
-
 export default function UploadCampaign() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const params = useParams<{ "brand-home": string }>();
-  const [addState, addFormAction] = useFormState(
-    addCampaign,
-    initialState as Status
-  );
+  const [addState, addFormAction] = useFormState(addCampaign, initialState);
 
   useEffect(() => {
     if (addState?.success === true) {
       setIsDialogOpen(false);
-      toast.success(addState.message, toastOptions);
+      toast.success(addState.message, shortLengthToastOptions);
     }
 
     if (addState?.success === false) {
-      toast.error(addState?.message, toastOptions);
+      toast.error(addState?.message, shortLengthToastOptions);
     }
   }, [addState]);
 

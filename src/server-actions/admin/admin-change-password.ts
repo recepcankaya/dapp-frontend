@@ -4,11 +4,6 @@ import { revalidatePath } from "next/cache";
 
 import { createClient } from "@/src/lib/supabase/server";
 
-export type FormState = {
-  message: string;
-  success: unknown;
-};
-
 export async function changePassword(prevState: any, formData: FormData) {
   const schema = z.object({
     password: z.string().min(8, {

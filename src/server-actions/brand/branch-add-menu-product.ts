@@ -4,11 +4,6 @@ import { revalidatePath } from "next/cache";
 import getUserID from "@/src/lib/getUserID";
 import decodeTurkishCharacters from "@/src/lib/convertToEnglishCharacters";
 
-export type FormState = {
-  success: unknown;
-  message: string;
-};
-
 export default async function addMenuProduct(
   prevState: any,
   formData: FormData

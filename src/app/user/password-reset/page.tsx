@@ -4,30 +4,12 @@ import { Label } from "@/src/components/ui/label";
 import { Input } from "@/src/components/ui/input";
 import Link from "next/link";
 import SubmitButton from "@/src/components/ui/submit-button";
-import {
-  FormState,
-  changePassword,
-} from "@/src/server-actions/user/reset-password";
+import { changePassword } from "@/src/server-actions/user/reset-password";
 import { useFormState } from "react-dom";
 import { useEffect } from "react";
-import { Bounce, ToastOptions, toast } from "react-toastify";
-
-const initialState: FormState = {
-  message: "",
-  success: undefined,
-};
-
-const toastOptions: ToastOptions = {
-  position: "top-right",
-  autoClose: 1500,
-  hideProgressBar: false,
-  closeOnClick: true,
-  pauseOnHover: true,
-  draggable: true,
-  progress: undefined,
-  theme: "light",
-  transition: Bounce,
-};
+import { toast } from "react-toastify";
+import { initialState } from "@/src/lib/feedbackForForms";
+import { shortLengthToastOptions } from "@/src/lib/toastOptions";
 
 export default function Component() {
   const [state, resetPasswordAction] = useFormState(
@@ -37,11 +19,11 @@ export default function Component() {
 
   useEffect(() => {
     if (state.success === true) {
-      toast.success(state.message, toastOptions);
+      toast.success(state.message, shortLengthToastOptions);
     }
 
     if (state.success === false) {
-      toast.error(state.message, toastOptions);
+      toast.error(state.message, shortLengthToastOptions);
     }
   }, [state]);
 
@@ -81,7 +63,7 @@ export default function Component() {
       </Card>
       <div className="text-center text-sm text-gray-500 dark:text-gray-400">
         <Link href="/" className="font-medium hover:underline" prefetch={false}>
-          Giriş sayfasına
+          Giriş sayfasına Dön
         </Link>
       </div>
     </div>

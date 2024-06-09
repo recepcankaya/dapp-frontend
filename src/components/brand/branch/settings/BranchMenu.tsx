@@ -1,4 +1,10 @@
 "use client";
+import Image from "next/image";
+
+import UploadMenu from "./menu/UploadMenu";
+import EditMenu from "./menu/EditMenu";
+import DeleteMenuItem from "./menu/DeleteMenuItem";
+
 import {
   Table,
   TableHeader,
@@ -8,24 +14,7 @@ import {
   TableCell,
 } from "@/src/components/ui/table";
 
-import UploadMenu from "./menu/UploadMenu";
-import EditMenu from "./menu/EditMenu";
-import DeleteMenuItem from "./menu/DeleteMenuItem";
-import Image from "next/image";
-
-type Product = {
-  name: string;
-  price: string;
-  description: string;
-  image: string;
-  id: string;
-};
-
-type CategoryProduct = {
-  category: string;
-  categoryID: string;
-  products: Product[];
-};
+import type { CategoryProduct, Product } from "@/src/lib/types/product.types";
 
 type Props = {
   menu: CategoryProduct[] | null;

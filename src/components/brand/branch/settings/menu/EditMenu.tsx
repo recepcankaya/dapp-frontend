@@ -1,4 +1,12 @@
 "use client";
+import { useEffect, useState } from "react";
+import { useFormState } from "react-dom";
+import { toast } from "react-toastify";
+
+import { shortLengthToastOptions } from "@/src/lib/toastOptions";
+import { initialState } from "@/src/lib/feedbackForForms";
+import editMenuProduct from "@/src/server-actions/brand/branch-edit-product";
+
 import {
   Dialog,
   DialogContent,
@@ -10,54 +18,25 @@ import {
 import { Label } from "@/src/components/ui/label";
 import { Input } from "@/src/components/ui/input";
 import { Button } from "@/src/components/ui/button";
-import { useFormState } from "react-dom";
-import editMenuProduct, {
-  FormState as EditFormState,
-} from "@/src/server-actions/brand/branch-edit-product";
-import { useEffect, useState } from "react";
-import { Bounce, ToastOptions, toast } from "react-toastify";
 import SubmitButton from "@/src/components/ui/submit-button";
 
-const message = {
-  success: undefined,
-  message: "",
-};
-
-type Product = {
-  name: string;
-  price: string;
-  description: string;
-  image: string;
-  id: string;
-};
-
-const toastOptions: ToastOptions = {
-  position: "top-right",
-  autoClose: 1500,
-  hideProgressBar: false,
-  closeOnClick: true,
-  pauseOnHover: true,
-  draggable: true,
-  progress: undefined,
-  theme: "light",
-  transition: Bounce,
-};
+import type { Product } from "@/src/lib/types/product.types";
 
 export default function EditMenu({ product }: { product: Product }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editState, editProductFormAction] = useFormState(
     editMenuProduct,
-    message as EditFormState
+    initialState
   );
 
   useEffect(() => {
     if (editState?.success === true) {
       setIsDialogOpen(false);
-      toast.success(editState.message, toastOptions);
+      toast.success(editState.message, shortLengthToastOptions);
     }
 
     if (editState?.success === false) {
-      toast.error(editState?.message, toastOptions);
+      toast.error(editState?.message, shortLengthToastOptions);
     }
   }, [editState]);
 

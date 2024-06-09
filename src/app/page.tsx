@@ -1,15 +1,17 @@
 "use client";
+import { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 import Link from "next/link";
-import { Bounce, ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import { createClient } from "../lib/supabase/client";
+import { shortLengthToastOptions } from "../lib/toastOptions";
 import loginWithEmail from "../server-actions/user/login";
+
 import { Button } from "@/src/components/ui/button";
 import { Label } from "@/src/components/ui/label";
 import { Input } from "@/src/components/ui/input";
-import { useEffect, useState } from "react";
-import { createClient } from "../lib/supabase/client";
 import {
   Dialog,
   DialogClose,
@@ -51,28 +53,21 @@ export default function Home() {
     const supabase = createClient();
     const { error } = await supabase.auth.resetPasswordForEmail(mail);
     if (error) {
-      toast.error("Bir hata oluştu, lütfen tekrar deneyin.");
+      toast.error(
+        "Bir hata oluştu, lütfen tekrar deneyin.",
+        shortLengthToastOptions
+      );
       return;
     } else {
-      toast.success("Şifre sıfırlama maili gönderildi.");
+      toast.success(
+        "Şifre sıfırlama maili gönderildi.",
+        shortLengthToastOptions
+      );
     }
   };
 
   return (
     <section className="flex flex-col min-h-screen items-center justify-center bg-[length:100%_100%]">
-      <ToastContainer
-        position="top-right"
-        autoClose={1500}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-        transition={Bounce}
-      />
       <div className="mx-auto w-full max-w-md space-y-6 rounded-lg bg-white p-8 shadow-lg dark:bg-gray-950">
         <div className="space-y-2 text-center">
           <h1 className="text-3xl font-bold">Tekrar Hoşgeldin!</h1>
@@ -170,7 +165,7 @@ export default function Home() {
         </div>
       </div>
       <button className="mt-8">
-        <Link href="/brand/brand-login" className="text-lg">
+        <Link href="/brand/brand-login" className="text-lg" prefetch={false}>
           Üye İş Yeriyseniz Giriş Yapmak için <br />
           <span className="bg-gradient-to-r from-lad-purple to-lad-green inline-block text-transparent bg-clip-text">
             Tıklayınız

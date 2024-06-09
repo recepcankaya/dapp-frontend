@@ -6,11 +6,6 @@ import getUserID from "@/src/lib/getUserID";
 import { AdminCampaigns, Campaign } from "@/src/lib/types/jsonQuery.types";
 import decodeTurkishCharacters from "@/src/lib/convertToEnglishCharacters";
 
-export type FormState = {
-  success: unknown;
-  message: string;
-};
-
 export default async function deleteCampaign(
   prevState: any,
   formData: FormData

@@ -1,10 +1,11 @@
 "use client";
 
 import sendMail from "@/src/server-actions/admin/sendContactMail";
-import { Bounce, ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useFormState, useFormStatus } from "react-dom";
 import { useEffect } from "react";
+import { shortLengthToastOptions } from "@/src/lib/toastOptions";
 
 export default function BranchContact() {
   const [state, formAction] = useFormState(sendMail, undefined);
@@ -22,30 +23,16 @@ export default function BranchContact() {
   }
 
   useEffect(() => {
-    console.log(state);
     if (state?.success === true) {
-      toast.success(state?.message);
+      toast.success(state?.message, shortLengthToastOptions);
     }
 
     if (state?.success === false) {
-      toast.error(state?.message);
+      toast.error(state?.message, shortLengthToastOptions);
     }
   }, [state]);
   return (
     <>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-        transition={Bounce}
-      />
       <div className="flex items-center justify-center min-h-screen ">
         <div className="rounded p-5 bg-white flex flex-col w-4/5 shadow-2xl">
           <form className="flex flex-col space-y-5" action={formAction}>

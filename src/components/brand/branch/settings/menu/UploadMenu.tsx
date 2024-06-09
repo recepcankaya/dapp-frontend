@@ -1,6 +1,13 @@
 "use client";
-import { toast, Bounce, ToastOptions } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { useEffect, useState } from "react";
+import { useFormState } from "react-dom";
+import { useParams } from "next/navigation";
+import { toast } from "react-toastify";
+
+import { shortLengthToastOptions } from "@/src/lib/toastOptions";
+import { initialState } from "@/src/lib/feedbackForForms";
+import addMenuProduct from "@/src/server-actions/brand/branch-add-menu-product";
+
 import {
   Dialog,
   DialogContent,
@@ -19,52 +26,26 @@ import {
   SelectValue,
 } from "@/src/components/ui/select";
 import { Textarea } from "@/src/components/ui/textarea";
-import { useFormState } from "react-dom";
-import addMenuProduct, {
-  FormState,
-} from "@/src/server-actions/brand/branch-add-menu-product";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import SubmitButton from "@/src/components/ui/submit-button";
 import { AddIcon } from "../campaigns/UploadCampaign";
-
-const message = {
-  success: undefined,
-  message: "",
-};
+import SubmitButton from "@/src/components/ui/submit-button";
 
 type Props = {
   categories: string[];
 };
 
-const toastOptions: ToastOptions = {
-  position: "top-right",
-  autoClose: 1500,
-  hideProgressBar: false,
-  closeOnClick: true,
-  pauseOnHover: true,
-  draggable: true,
-  progress: undefined,
-  theme: "light",
-  transition: Bounce,
-};
-
 export default function UploadMenu({ categories }: Props) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const params = useParams<{ "brand-home": string }>();
-  const [state, formAction] = useFormState(
-    addMenuProduct,
-    message as FormState
-  );
+  const [state, formAction] = useFormState(addMenuProduct, initialState);
 
   useEffect(() => {
     if (state?.success === true) {
       setIsDialogOpen(false);
-      toast.success(state.message, toastOptions);
+      toast.success(state.message, shortLengthToastOptions);
     }
 
     if (state?.success === false) {
-      toast.error(state?.message, toastOptions);
+      toast.error(state?.message, shortLengthToastOptions);
     }
   }, [state]);
 

@@ -1,7 +1,7 @@
 "use client";
 import { useFormState } from "react-dom";
 import Link from "next/link";
-import { Bounce, ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { Button } from "@/src/components/ui/button";
@@ -10,6 +10,7 @@ import { Input } from "@/src/components/ui/input";
 import { useEffect } from "react";
 import { createClient } from "@/src/lib/supabase/client";
 import signUpWithEmail from "@/src/server-actions/user/sign-up";
+import { shortLengthToastOptions } from "@/src/lib/toastOptions";
 
 const message = {
   message: "",
@@ -20,7 +21,7 @@ export default function SignUp() {
 
   useEffect(() => {
     if (state?.message.length > 0) {
-      toast.error(state.message);
+      toast.error(state.message, shortLengthToastOptions);
     }
   }, [state]);
 
@@ -36,19 +37,6 @@ export default function SignUp() {
 
   return (
     <section className="flex flex-col min-h-screen items-center justify-center bg-[length:100%_100%]">
-      <ToastContainer
-        position="top-right"
-        autoClose={1500}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-        transition={Bounce}
-      />
       <div className="mx-auto w-full max-w-md space-y-6 rounded-lg bg-white p-8 shadow-lg dark:bg-gray-950">
         <div className="space-y-2 text-center">
           <h1 className="text-3xl font-bold">Hoşgeldin!</h1>
@@ -96,7 +84,10 @@ export default function SignUp() {
         </div>
         <p className="text-black-300 text-xs">
           Devam ederek{" "}
-          <Link href="/terms-of-use" className="text-blue-500 underline">
+          <Link
+            href="/terms-of-use"
+            className="text-blue-500 underline"
+            prefetch={false}>
             üyelik sözleşmesi ve kullanım koşullarını <br />
           </Link>{" "}
           kabul etmiş olursunuz.

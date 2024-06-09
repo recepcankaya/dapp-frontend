@@ -1,9 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useFormState, useFormStatus } from "react-dom";
+import { useFormState } from "react-dom";
+import { toast } from "react-toastify";
 
-import { Bounce, ToastContainer, ToastOptions, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { changePassword } from "@/src/server-actions/brand/brand-change-password";
+import { shortLengthToastOptions } from "@/src/lib/toastOptions";
+import { initialState } from "@/src/lib/feedbackForForms";
 
 import {
   CardTitle,
@@ -14,44 +16,17 @@ import {
 } from "@/src/components/ui/card";
 import { Label } from "@/src/components/ui/label";
 import { Input } from "@/src/components/ui/input";
-import { Button } from "@/src/components/ui/button";
 import { ViewIcon, ViewOffSlashIcon } from "@/src/components/ui/eyes";
-
-import {
-  FormState,
-  changePassword,
-} from "@/src/server-actions/brand/brand-change-password";
 import SubmitButton from "@/src/components/ui/submit-button";
-
-const messages = {
-  success: undefined,
-  message: "",
-};
 
 const EYES_CLASSES =
   "absolute top-1/2 transform -translate-y-1/2 right-2 hover:cursor-pointer";
-
-const toastOptions: ToastOptions = {
-  position: "top-right",
-  autoClose: 1500,
-  hideProgressBar: false,
-  closeOnClick: true,
-  pauseOnHover: true,
-  draggable: true,
-  progress: undefined,
-  theme: "light",
-  transition: Bounce,
-};
 
 export default function BranchChangePassword() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
     useState(false);
-  const [state, formAction] = useFormState(
-    changePassword,
-    messages as FormState
-  );
-  const { pending } = useFormStatus();
+  const [state, formAction] = useFormState(changePassword, initialState);
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible((prev) => !prev);
@@ -62,18 +37,14 @@ export default function BranchChangePassword() {
   };
 
   useEffect(() => {
-    if (pending) {
-      toast.info("Şifre değiştiriliyor...");
-    }
-
     if (state.success === true) {
-      toast.success(state.message, toastOptions);
+      toast.success(state.message, shortLengthToastOptions);
     }
 
     if (state.success === false) {
-      toast.error(state.message, toastOptions);
+      toast.error(state.message, shortLengthToastOptions);
     }
-  }, [pending, state.message, state.success]);
+  }, [state.message, state.success]);
 
   return (
     <section className="grid gap-6">
