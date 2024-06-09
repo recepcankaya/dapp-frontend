@@ -121,7 +121,7 @@ export default function RenderTicket({
             Menü
           </Link>
         ) : (
-          Menü Bulunamadı
+          <p>Menü Bulunamadı</p>
         )}
       </Button>
     </section>
