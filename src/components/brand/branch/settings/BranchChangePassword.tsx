@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 
-import { Bounce, ToastContainer, toast } from "react-toastify";
+import { Bounce, ToastContainer, ToastOptions, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import {
@@ -21,13 +21,27 @@ import {
   FormState,
   changePassword,
 } from "@/src/server-actions/brand/brand-change-password";
+import SubmitButton from "@/src/components/ui/submit-button";
 
 const messages = {
   success: undefined,
   message: "",
 };
 
-const EYES_CLASSES = "absolute top-1/2 transform -translate-y-1/2 right-2";
+const EYES_CLASSES =
+  "absolute top-1/2 transform -translate-y-1/2 right-2 hover:cursor-pointer";
+
+const toastOptions: ToastOptions = {
+  position: "top-right",
+  autoClose: 1500,
+  hideProgressBar: false,
+  closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
+  progress: undefined,
+  theme: "light",
+  transition: Bounce,
+};
 
 export default function BranchChangePassword() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -53,30 +67,17 @@ export default function BranchChangePassword() {
     }
 
     if (state.success === true) {
-      toast.success(state.message);
+      toast.success(state.message, toastOptions);
     }
 
     if (state.success === false) {
-      toast.error(state.message);
+      toast.error(state.message, toastOptions);
     }
   }, [pending, state.message, state.success]);
 
   return (
     <section className="grid gap-6">
-      <ToastContainer
-        position="top-right"
-        autoClose={1500}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-        transition={Bounce}
-      />
-      <Card className="pt-12">
+      <Card className="pt-12 bg-[#D9D9D9]">
         <CardHeader>
           <CardTitle>Şifre Değiştirme</CardTitle>
         </CardHeader>
@@ -89,7 +90,7 @@ export default function BranchChangePassword() {
                   id="new-password"
                   name="password"
                   type={isPasswordVisible ? "text" : "password"}
-                  className="text-black bg-white"
+                  className="bg-[#dbb5b59d]"
                 />
                 {isPasswordVisible ? (
                   <ViewIcon
@@ -111,7 +112,7 @@ export default function BranchChangePassword() {
                   id="confirm-password"
                   name="confirmPassword"
                   type={isConfirmPasswordVisible ? "text" : "password"}
-                  className="text-black bg-white"
+                  className="bg-[#dbb5b59d]"
                 />
                 {isConfirmPasswordVisible ? (
                   <ViewIcon
@@ -128,9 +129,7 @@ export default function BranchChangePassword() {
             </div>
           </CardContent>
           <CardFooter className="border-t p-6 align">
-            <Button className="hover:bg-gradient-to-br from-lad-purple to-lad-green">
-              Kaydet
-            </Button>
+            <SubmitButton type="submit" className="" title="Kaydet" />
           </CardFooter>
         </form>
       </Card>
