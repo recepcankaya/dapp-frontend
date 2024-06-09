@@ -57,7 +57,7 @@ export default function Component() {
             </div>
           </CardContent>
           <CardFooter>
-            <SubmitButton type="submit" className="w-full" title="Sıfırla" />
+            <SubmitButton type="submit" className="w-full" title="Güncelle" />
           </CardFooter>
         </form>
       </Card>

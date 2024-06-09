@@ -23,6 +23,7 @@ import {
   DialogTrigger,
 } from "@/src/components/ui/dialog";
 import SubmitButton from "../components/ui/submit-button";
+import { usePathname } from "next/navigation";
 
 const message = {
   message: "",
@@ -32,6 +33,7 @@ export default function Home() {
   const [mail, setMail] = useState("");
   const [state, loginEmailAction] = useFormState(loginWithEmail, message);
   const supabase = createClient();
+  const pathname = usePathname();
 
   useEffect(() => {
     if (state?.message.length > 0) {
@@ -51,7 +53,9 @@ export default function Home() {
 
   const sendPasswordRecoveryMail = async (e: React.FormEvent) => {
     e.preventDefault();
-    const { error } = await supabase.auth.resetPasswordForEmail(mail);
+    const { error } = await supabase.auth.resetPasswordForEmail(mail, {
+      redirectTo: `${pathname}/user/password-reset`,
+    });
     if (error) {
       toast.error(
         "Bir hata oluştu, lütfen tekrar deneyin.",
@@ -142,6 +146,7 @@ export default function Home() {
                           type="submit"
                           className="mt-4"
                           title="Gönder"
+                          onClick={sendPasswordRecoveryMail}
                         />
                       </DialogClose>
                     </DialogFooter>
