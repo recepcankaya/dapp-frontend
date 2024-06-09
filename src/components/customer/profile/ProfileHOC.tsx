@@ -25,19 +25,19 @@ export default function ProfileHOC({
   const branchID = searchParams.get("branchID");
 
   return (
-    <div className="w-full">
+    <div className="w-full text-black">
       <div className="flex justify-around">
         <button
           onClick={() => setSelectedTab("Waiting")}
           className={`py-2 ${
-            selectedTab === "Waiting" ? "border-b-2 border-white" : ""
+            selectedTab === "Waiting" ? "border-b-2 border-black" : ""
           }`}>
           Bekleyenler
         </button>
         <button
           onClick={() => setSelectedTab("Your Collection")}
           className={`py-2 ${
-            selectedTab === "Your Collection" ? "border-b-2 border-white" : ""
+            selectedTab === "Your Collection" ? "border-b-2 border-black" : ""
           }`}>
           Koleksiyonunuz
         </button>

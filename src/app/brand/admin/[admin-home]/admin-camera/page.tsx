@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { Bounce, ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import dynamic from "next/dynamic";
 const QrScanner = dynamic(
@@ -14,6 +14,10 @@ const QrScanner = dynamic(
 import { createClient } from "@/src/lib/supabase/client";
 import getUserID from "@/src/lib/getUserID";
 import { MonthlyOrdersWithYear } from "@/src/lib/types/jsonQuery.types";
+import {
+  adminOrBranchCameraToastOptions,
+  shortLengthToastOptions,
+} from "@/src/lib/toastOptions";
 
 export default function AdminCamera() {
   const isScanned = useRef<boolean>(false);
@@ -27,13 +31,14 @@ export default function AdminCamera() {
 
       if (!brandBranchID) {
         toast.error(
-          "Marka bilgisi bulunamadı. Lütfen müşterinizden markayı seçmesini isteyin."
+          "Marka bilgisi bulunamadı. Lütfen müşterinizden markayı seçmesini isteyin.",
+          shortLengthToastOptions
         );
         return;
       }
 
       if (!userID) {
-        toast.error("Müşteri bilgisi bulunamadı.");
+        toast.error("Müşteri bilgisi bulunamadı.", shortLengthToastOptions);
         return;
       }
 
@@ -82,13 +87,14 @@ export default function AdminCamera() {
         .eq("id", brandBranchID);
 
       if (!brandBranchInfo) {
-        toast.error("Şube bilgisi bulunamadı.");
+        toast.error("Şube bilgisi bulunamadı.", shortLengthToastOptions);
         return;
       }
 
       if (brandBranchInfo[0].id !== brandBranchID) {
         toast.error(
-          "Müşteri başka bir işletmenin QR kodunu okutmaktadır. Lütfen kendi markanızdaki qr kodunu isteyiniz."
+          "Müşteri başka bir işletmenin QR kodunu okutmaktadır. Lütfen kendi markanızdaki qr kodunu isteyiniz.",
+          shortLengthToastOptions
         );
         return;
       }
@@ -99,7 +105,7 @@ export default function AdminCamera() {
         .eq("id", adminID);
 
       if (!brandInfo) {
-        toast.error("Marka bilgisi bulunamadı.");
+        toast.error("Marka bilgisi bulunamadı.", shortLengthToastOptions);
         return;
       }
 
@@ -118,7 +124,10 @@ export default function AdminCamera() {
 
       if (forNFT === true) {
         if (totalUserFreeRights === 0) {
-          toast.error("Müşterinizin ödül hakkı kalmamıştır.");
+          toast.error(
+            "Müşterinizin ödül hakkı kalmamıştır.",
+            adminOrBranchCameraToastOptions
+          );
         }
 
         try {
@@ -200,7 +209,8 @@ export default function AdminCamera() {
                 {totalUserFreeRights && totalUserFreeRights - 1} <br />
                 Bugüne kadar kullandığı ödül sayısı:{" "}
                 {userOrderInfo.user_total_used_free_rights + 1}
-              </p>
+              </p>,
+              adminOrBranchCameraToastOptions
             );
           }
         } catch (error) {
@@ -269,7 +279,8 @@ export default function AdminCamera() {
                 {user?.username} adlı müşterinizin işlemi başarıyla
                 gerçekleştirildi. <br />
                 <span className="font-bold">İlk sipariş!</span>
-              </p>
+              </p>,
+              adminOrBranchCameraToastOptions
             );
           } catch (error) {
             toast.error("Müşteri siparişi alınamadı. Lütfen tekrar deneyiniz.");
@@ -344,10 +355,14 @@ export default function AdminCamera() {
                 {totalUserFreeRights} <br />
                 Bugüne kadar kullandığı ödül sayısı:{" "}
                 {userOrderInfo.user_total_used_free_rights}
-              </p>
+              </p>,
+              adminOrBranchCameraToastOptions
             );
           } catch (error) {
-            toast.error("Müşteri siparişi alınamadı. Lütfen tekrar deneyiniz.");
+            toast.error(
+              "Müşteri siparişi alınamadı. Lütfen tekrar deneyiniz.",
+              adminOrBranchCameraToastOptions
+            );
           }
         } else if (
           userOrderInfo.total_ticket_orders ===
@@ -423,15 +438,22 @@ export default function AdminCamera() {
                 {totalUserFreeRights ? totalUserFreeRights + 1 : 1} <br />
                 Bugüne kadar kullandığı ödül sayısı:{" "}
                 {userOrderInfo.user_total_used_free_rights}
-              </p>
+              </p>,
+              adminOrBranchCameraToastOptions
             );
           } catch (error) {
-            toast.error("Müşteriye ödülü verilemedi.Lütfen tekrar deneyiniz.");
+            toast.error(
+              "Müşteriye ödülü verilemedi.Lütfen tekrar deneyiniz.",
+              adminOrBranchCameraToastOptions
+            );
           }
         }
       }
     } catch (error) {
-      toast.error("Bir şeyler yanlış gitti. Lütfen tekrar deneyiniz.");
+      toast.error(
+        "Bir şeyler yanlış gitti. Lütfen tekrar deneyiniz.",
+        adminOrBranchCameraToastOptions
+      );
     } finally {
       setTimeout(() => {
         isScanned.current = false;
@@ -441,19 +463,6 @@ export default function AdminCamera() {
 
   return (
     <>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-        transition={Bounce}
-      />
       <QrScanner
         constraints={{ facingMode: "environment" }}
         onDecode={handleScan}

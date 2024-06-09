@@ -15,17 +15,20 @@ export default function CustomerHomeLinks({
     <div className="flex justify-around">
       <Link
         href="/user/brands"
-        className="text-right text-lg underline decoration-2 underline-offset-2">
+        className="text-right text-lg underline decoration-2 underline-offset-2"
+        prefetch={false}>
         Markalar
       </Link>
       <Link
         href={`${pathname}/qr-code?brandID=${brandID}&branchID=${branchID}`}
-        className="text-right text-lg underline decoration-2 underline-offset-2">
+        className="text-right text-lg underline decoration-2 underline-offset-2"
+        prefetch={false}>
         Qr Kodu Okut
       </Link>
       <Link
         href={`${pathname}/profile?brandID=${brandID}&branchID=${branchID}`}
-        className="text-right text-lg underline decoration-2 underline-offset-2">
+        className="text-right text-lg underline decoration-2 underline-offset-2"
+        prefetch={false}>
         Profil
       </Link>
     </div>

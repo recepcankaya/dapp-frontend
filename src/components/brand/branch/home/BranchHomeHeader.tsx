@@ -42,7 +42,9 @@ export default function BranchHomeHeader({
         </div>
         {containerWidth > 450 && (
           <Button asChild>
-            <Link href={`${pathname}/brand-camera`}>Qr Kodu Okut</Link>
+            <Link href={`${pathname}/brand-camera`} prefetch={false}>
+              Qr Kodu Okut
+            </Link>
           </Button>
         )}
         <div className="flex items-center gap-4">
@@ -74,11 +76,13 @@ export default function BranchHomeHeader({
               <DropdownMenuLabel>Hesabım</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="hover:cursor-pointer">
-                <Link href={`${pathname}/settings`}>Ayarlar</Link>
+                <Link href={`${pathname}/settings`} prefetch={false}>
+                  Ayarlar
+                </Link>
               </DropdownMenuItem>
-              <Link href={`${pathname}/brand-contact`}>
+              <Link href={`${pathname}/brand-contact`} prefetch={false}>
                 <DropdownMenuItem className="hover:cursor-pointer">
-                      Destek  
+                  Destek
                 </DropdownMenuItem>
               </Link>
               <DropdownMenuSeparator />

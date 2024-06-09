@@ -1,5 +1,4 @@
 import { createClient } from "@/src/lib/supabase/server";
-import GetNFTTotalSupply from "@/src/components/brand/branch/home/GetNFTTotalSupply";
 import RenderBrandBranchStatistics from "@/src/components/brand/branch/home/RenderBrandBranchStatistics";
 import BranchHomeHeader from "@/src/components/brand/branch/home/BranchHomeHeader";
 import getUserID from "@/src/lib/getUserID";

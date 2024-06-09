@@ -25,7 +25,7 @@ export default function AdminHomeHeader({
 }: AdminHomeHeaderProps) {
   const pathname = usePathname();
   const { containerWidth, setContainerRef } = useScreenSize();
-  
+
   return (
     <header ref={setContainerRef}>
       <div className="flex items-center justify-around py-4 shadow-md text-[#000101]">
@@ -37,7 +37,9 @@ export default function AdminHomeHeader({
         </div>
         {containerWidth > 450 && (
           <Button asChild>
-            <Link href={`${pathname}/admin-camera`}>Qr Kodu Okut</Link>
+            <Link href={`${pathname}/admin-camera`} prefetch={false}>
+              Qr Kodu Okut
+            </Link>
           </Button>
         )}
         <div className="flex items-center gap-4">
@@ -69,10 +71,12 @@ export default function AdminHomeHeader({
               <DropdownMenuLabel>Hesabım</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="hover:cursor-pointer">
-                <Link href={`${pathname}/settings`}>Ayarlar</Link>
+                <Link href={`${pathname}/settings`} prefetch={false}>
+                  Ayarlar
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem className="hover:cursor-pointer">
-                 Destek
+                Destek
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="hover:cursor-pointer">
@@ -85,7 +89,10 @@ export default function AdminHomeHeader({
       {containerWidth <= 450 && (
         <div className="flex justify-center mt-5">
           <Button asChild className="">
-            <Link href={`${pathname}/admin-camera`} className="text-balance">
+            <Link
+              href={`${pathname}/admin-camera`}
+              className="text-balance"
+              prefetch={false}>
               Qr Kodu Okut
             </Link>
           </Button>

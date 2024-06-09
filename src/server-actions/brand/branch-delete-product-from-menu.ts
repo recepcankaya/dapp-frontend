@@ -4,24 +4,7 @@ import { revalidatePath } from "next/cache";
 import getUserID from "@/src/lib/getUserID";
 import decodeTurkishCharacters from "@/src/lib/convertToEnglishCharacters";
 
-export type FormState = {
-  success: unknown;
-  message: string;
-};
-
-type Product = {
-  name: string;
-  price: number;
-  description: string;
-  image: string;
-  id: string;
-};
-
-type CategoryProduct = {
-  category: string;
-  categoryID: string;
-  products: Product[];
-};
+import type { CategoryProduct, Product } from "@/src/lib/types/product.types";
 
 export default async function deleteProductFromMenu(
   prevState: any,

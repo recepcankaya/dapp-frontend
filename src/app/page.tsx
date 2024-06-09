@@ -1,20 +1,35 @@
 "use client";
+import { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 import Link from "next/link";
-import { Bounce, ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import { createClient } from "../lib/supabase/client";
+import { shortLengthToastOptions } from "../lib/toastOptions";
 import loginWithEmail from "../server-actions/user/login";
+
 import { Button } from "@/src/components/ui/button";
 import { Label } from "@/src/components/ui/label";
 import { Input } from "@/src/components/ui/input";
-import { useEffect } from "react";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/src/components/ui/dialog";
+import SubmitButton from "../components/ui/submit-button";
 
 const message = {
   message: "",
 };
 
 export default function Home() {
+  const [mail, setMail] = useState("");
   const [state, loginEmailAction] = useFormState(loginWithEmail, message);
 
   useEffect(() => {
@@ -23,21 +38,36 @@ export default function Home() {
     }
   }, [state]);
 
+  const handleLoginWithGoogle = async () => {
+    const supabase = createClient();
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: location.origin + "/auth/callback",
+      },
+    });
+  };
+
+  const sendPasswordRecoveryMail = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const supabase = createClient();
+    const { error } = await supabase.auth.resetPasswordForEmail(mail);
+    if (error) {
+      toast.error(
+        "Bir hata oluştu, lütfen tekrar deneyin.",
+        shortLengthToastOptions
+      );
+      return;
+    } else {
+      toast.success(
+        "Şifre sıfırlama maili gönderildi.",
+        shortLengthToastOptions
+      );
+    }
+  };
+
   return (
     <section className="flex flex-col min-h-screen items-center justify-center bg-[length:100%_100%]">
-      <ToastContainer
-        position="top-right"
-        autoClose={1500}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-        transition={Bounce}
-      />
       <div className="mx-auto w-full max-w-md space-y-6 rounded-lg bg-white p-8 shadow-lg dark:bg-gray-950">
         <div className="space-y-2 text-center">
           <h1 className="text-3xl font-bold">Tekrar Hoşgeldin!</h1>
@@ -46,12 +76,13 @@ export default function Home() {
           </p>
         </div>
         <div className="space-y-4">
-          <form action="">
-            <Button variant="outline" className="w-full">
-              <ChromeIcon className="mr-2 h-5 w-5" />
-              Google ile Giriş Yap
-            </Button>
-          </form>
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={handleLoginWithGoogle}>
+            <ChromeIcon className="mr-2 h-5 w-5" />
+            Google ile Giriş Yap
+          </Button>
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <span className="w-full border-t" />
@@ -76,24 +107,56 @@ export default function Home() {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">Şifreniz</Label>
-                <Link
-                  href="#"
-                  className="text-sm font-medium underline underline-offset-2 hover:text-gray-900 dark:hover:text-gray-50"
-                  prefetch={false}>
-                  Şifreni mi unuttun?
-                </Link>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button className="text-sm font-medium underline underline-offset-2 text-black bg-transparent hover:bg-transparent">
+                      Şifreni mi unuttun?
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                      <DialogTitle>Şifre sıfırlama maili gönder</DialogTitle>
+                      <DialogDescription>
+                        Sistemde kayıtlı olan mail adresinizi girerek şifrenizi
+                        sıfırlayın
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="flex items-center space-x-2">
+                      <div className="grid flex-1 gap-2">
+                        <Label htmlFor="mail" className="sr-only">
+                          Mailiniz
+                        </Label>
+                        <Input
+                          id="mail"
+                          type="email"
+                          name="mail"
+                          className="bg-[#dbb5b59d]"
+                          value={mail}
+                          onChange={(e) => setMail(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                    <DialogFooter className="sm:justify-end">
+                      <DialogClose asChild>
+                        <SubmitButton
+                          type="submit"
+                          className="mt-4"
+                          title="Gönder"
+                        />
+                      </DialogClose>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
               </div>
               <Input id="password" type="password" name="password" required />
             </div>
-            <Button type="submit" className="w-full">
-              Giriş Yap
-            </Button>
+            <SubmitButton type="submit" className="w-full" title="Giriş Yap" />
           </form>
         </div>
         <div className="mt-4 text-center text-sm">
           Hesabın yok mu?
           <Link
-            href="#"
+            href="/user/sign-up"
             className="font-medium underline underline-offset-2 hover:text-gray-900 dark:hover:text-gray-50"
             prefetch={false}>
             {" "}
@@ -101,16 +164,8 @@ export default function Home() {
           </Link>
         </div>
       </div>
-      {/* <p className="text-black-300 text-xs">
-            Devam ederek{" "}
-            <Link href="/terms-of-use" className="text-blue-500 underline">
-              üyelik sözleşmesi ve kullanım koşullarını <br />
-            </Link>{" "}
-            kabul etmiş olursunuz.
-          </p> */}
-
       <button className="mt-8">
-        <Link href="/brand/brand-login" className="text-lg">
+        <Link href="/brand/brand-login" className="text-lg" prefetch={false}>
           Üye İş Yeriyseniz Giriş Yapmak için <br />
           <span className="bg-gradient-to-r from-lad-purple to-lad-green inline-block text-transparent bg-clip-text">
             Tıklayınız

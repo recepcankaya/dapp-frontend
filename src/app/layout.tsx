@@ -1,9 +1,6 @@
 "use client";
-import {
-  ThirdwebProvider as OldThirdwebProvider,
-  embeddedWallet,
-} from "@thirdweb-dev/react";
-import { ThirdwebProvider } from "thirdweb/react";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import "./globals.css";
 
@@ -17,21 +14,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <OldThirdwebProvider
-      clientId={process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID}
-      activeChain="polygon"
-      supportedWallets={[
-        embeddedWallet({
-          auth: {
-            options: ["email", "google"],
-          },
-        }),
-      ]}>
-      <ThirdwebProvider>
-        <html lang="en">
-          <body>{children}</body>
-        </html>
-      </ThirdwebProvider>
-    </OldThirdwebProvider>
+    <html lang="en">
+      <body>
+        {children}
+        <ToastContainer />
+      </body>
+    </html>
   );
 }

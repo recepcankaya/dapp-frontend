@@ -4,6 +4,11 @@ import { revalidatePath } from "next/cache";
 
 import { createClient } from "@/src/lib/supabase/server";
 
+export type FormState = {
+  message: string;
+  success: unknown;
+};
+
 export async function changePassword(prevState: any, formData: FormData) {
   const schema = z.object({
     password: z.string().min(8, {
@@ -37,7 +42,7 @@ export async function changePassword(prevState: any, formData: FormData) {
   ) {
     return {
       success: false,
-      message: "Şifre en az bir harf veya bir rakam içermelidir.",
+      message: "Şifre en az bir harf ve bir rakam içermelidir.",
     };
   }
 
@@ -48,12 +53,22 @@ export async function changePassword(prevState: any, formData: FormData) {
   });
 
   if (error) {
-    return {
-      success: false,
-      message: "Şifre değiştirilemedi. Lütfen tekrar deneyiniz.",
-    };
+    if (
+      error.message ===
+      "New password should be different from the old password."
+    ) {
+      return {
+        success: false,
+        message: "Yeni şifreniz eski şifrenizden farklı olmalıdır.",
+      };
+    } else {
+      return {
+        success: false,
+        message: "Şifre değiştirilemedi. Lütfen tekrar deneyiniz.",
+      };
+    }
   } else {
-    revalidatePath("/brand/brand/[brand-home]/settings", "page");
+    revalidatePath("/brand/admin/[admin-home]/settings", "page");
     return {
       success: true,
       message: "Şifreniz başarıyla değiştirilmiştir.",

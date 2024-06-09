@@ -5,11 +5,6 @@ import { createClient } from "@/src/lib/supabase/server";
 import getUserID from "@/src/lib/getUserID";
 import decodeTurkishCharacters from "@/src/lib/convertToEnglishCharacters";
 
-export type FormState = {
-  success: unknown;
-  message: string;
-};
-
 export default async function addCampaign(prevState: any, formData: FormData) {
   const supabase = createClient();
   const userID = await getUserID();
