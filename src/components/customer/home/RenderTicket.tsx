@@ -13,6 +13,7 @@ type RenderTicketProps = {
   branchInfo: {
     campaigns: BrandBranch["campaigns"];
     video_url: BrandBranch["video_url"];
+    menu: BrandBranch["menu"];
     brand: {
       required_number_for_free_right: Brand["required_number_for_free_right"];
       ticket_ipfs_url: Brand["ticket_ipfs_url"];
@@ -89,7 +90,8 @@ export default function RenderTicket({
               : ticketCircles.length === 7
               ? "grid-cols-4"
               : "grid-cols-4"
-          } justify-items-center content-around`}>
+          } justify-items-center content-around`}
+        >
           {ticketCircles.map((_, index) => (
             <li
               key={index}
@@ -103,18 +105,24 @@ export default function RenderTicket({
                       )}) no-repeat center center / contain`
                     : "#7B3501",
                 transform: "rotate(-45deg)",
-              }}></li>
+              }}
+            ></li>
           ))}
         </ul>
       </div>
       <Button
         asChild
-        className="mt-16 px-16 py-6 mb-8 mx-auto flex text-lg font-bold font-rosarivo rounded-xl border-2 border-lad-pink text-lad-white">
-        <Link
-          href={`${pathname}/menu?brandID=${brandID}&branchID=${branchID}`}
-          prefetch={false}>
-          Menü
-        </Link>
+        className="mt-16 px-16 py-6 mb-8 mx-auto flex text-lg font-bold font-rosarivo rounded-xl border-2 border-lad-pink text-lad-white"
+      >
+        {branchInfo.menu ? (
+          <Link
+            href={`${pathname}/menu?brandID=${brandID}&branchID=${branchID}`}
+          >
+            Menü
+          </Link>
+        ) : (
+          Menü Bulunamadı
+        )}
       </Button>
     </section>
   );

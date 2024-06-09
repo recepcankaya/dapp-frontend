@@ -32,6 +32,7 @@ export default async function CustomerHome({
       `
       campaigns,
       video_url,
+      menu,
       brand (
         required_number_for_free_right,
         ticket_ipfs_url,
