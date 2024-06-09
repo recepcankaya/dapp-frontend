@@ -8,14 +8,26 @@ import loginWithEmail from "../server-actions/user/login";
 import { Button } from "@/src/components/ui/button";
 import { Label } from "@/src/components/ui/label";
 import { Input } from "@/src/components/ui/input";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { createClient } from "../lib/supabase/client";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/src/components/ui/dialog";
+import SubmitButton from "../components/ui/submit-button";
 
 const message = {
   message: "",
 };
 
 export default function Home() {
+  const [mail, setMail] = useState("");
   const [state, loginEmailAction] = useFormState(loginWithEmail, message);
 
   useEffect(() => {
@@ -32,6 +44,18 @@ export default function Home() {
         redirectTo: location.origin + "/auth/callback",
       },
     });
+  };
+
+  const sendPasswordRecoveryMail = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const supabase = createClient();
+    const { error } = await supabase.auth.resetPasswordForEmail(mail);
+    if (error) {
+      toast.error("Bir hata oluştu, lütfen tekrar deneyin.");
+      return;
+    } else {
+      toast.success("Şifre sıfırlama maili gönderildi.");
+    }
   };
 
   return (
@@ -88,12 +112,46 @@ export default function Home() {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">Şifreniz</Label>
-                <Link
-                  href="#"
-                  className="text-sm font-medium underline underline-offset-2 hover:text-gray-900 dark:hover:text-gray-50"
-                  prefetch={false}>
-                  Şifreni mi unuttun?
-                </Link>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button className="text-sm font-medium underline underline-offset-2 text-black bg-transparent hover:bg-transparent">
+                      Şifreni mi unuttun?
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                      <DialogTitle>Şifre sıfırlama maili gönder</DialogTitle>
+                      <DialogDescription>
+                        Sistemde kayıtlı olan mail adresinizi girerek şifrenizi
+                        sıfırlayın
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="flex items-center space-x-2">
+                      <div className="grid flex-1 gap-2">
+                        <Label htmlFor="mail" className="sr-only">
+                          Mailiniz
+                        </Label>
+                        <Input
+                          id="mail"
+                          type="email"
+                          name="mail"
+                          className="bg-[#dbb5b59d]"
+                          value={mail}
+                          onChange={(e) => setMail(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                    <DialogFooter className="sm:justify-end">
+                      <DialogClose asChild>
+                        <SubmitButton
+                          type="submit"
+                          className="mt-4"
+                          title="Gönder"
+                        />
+                      </DialogClose>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
               </div>
               <Input id="password" type="password" name="password" required />
             </div>
