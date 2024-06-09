@@ -30,10 +30,27 @@ export default async function signUpWithEmail(
 
   const { error } = await supabase.auth.signUp(result.data);
 
-  if (error) {
+  if (
+    !/[a-zA-Z]/.test(result.data.password) ||
+    !/\d/.test(result.data.password)
+  ) {
     return {
-      message: "Kayıt oluşturulurken bir hata oluştu. Lütfen tekrar deneyiniz.",
+      message: "Şifre en az bir harf ve bir rakam içermelidir.",
     };
+  }
+
+  if (error) {
+    if (error.message.includes("User already registered")) {
+      return {
+        message:
+          "Bu email adresi kullanımdadır. Lütfen başka bir email adresi giriniz.",
+      };
+    } else {
+      return {
+        message:
+          "Kayıt oluşturulurken bir hata oluştu. Lütfen tekrar deneyiniz.",
+      };
+    }
   }
 
   revalidatePath("/user/sign-up", "page");

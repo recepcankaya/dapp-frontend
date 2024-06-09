@@ -1,16 +1,18 @@
 "use client";
+import { useEffect } from "react";
 import { useFormState } from "react-dom";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import { createClient } from "@/src/lib/supabase/client";
+import { shortLengthToastOptions } from "@/src/lib/toastOptions";
+import signUpWithEmail from "@/src/server-actions/user/sign-up";
+
 import { Button } from "@/src/components/ui/button";
 import { Label } from "@/src/components/ui/label";
 import { Input } from "@/src/components/ui/input";
-import { useEffect } from "react";
-import { createClient } from "@/src/lib/supabase/client";
-import signUpWithEmail from "@/src/server-actions/user/sign-up";
-import { shortLengthToastOptions } from "@/src/lib/toastOptions";
+import SubmitButton from "@/src/components/ui/submit-button";
 
 const message = {
   message: "",
@@ -77,9 +79,7 @@ export default function SignUp() {
               <Label htmlFor="password">Şifreniz</Label>
               <Input id="password" type="password" name="password" required />
             </div>
-            <Button type="submit" className="w-full">
-              Kayıt Ol
-            </Button>
+            <SubmitButton type="submit" className="w-full" title="Kayıt Ol" />
           </form>
         </div>
         <p className="text-black-300 text-xs">
