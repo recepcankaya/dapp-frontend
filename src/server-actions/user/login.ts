@@ -29,7 +29,7 @@ export default async function loginWithEmail(
   const supabase = createClient();
 
   const { error } = await supabase.auth.signInWithPassword(result.data);
-  console.log(result.data);
+
   if (error) {
     return {
       message: "Giriş yapılırken bir hata oluştu. Lütfen tekrar deneyiniz.",
