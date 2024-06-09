@@ -44,8 +44,8 @@ export default async function Profile({
     .single();
 
   return (
-    <div className="flex flex-col items-center pt-16 text-white">
-      <h1 className="text-xl mb-16 text-white">{username?.username}</h1>
+    <div className="flex flex-col items-center pt-16">
+      <h1 className="text-xl mb-16 text-black">{username?.username}</h1>
       <ProfileHOC
         userID={userID}
         userTotalFreeRights={totalFreeRights}

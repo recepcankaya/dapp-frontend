@@ -79,7 +79,7 @@ export default function RenderBrands(brands: RenderBrandsProps) {
   return (
     <div className="w-screen flex flex-col justify-center items-center">
       <Input
-        className="mb-12 w-4/5"
+        className="mb-12 w-4/5 border-2 border-[#dbb5b5]"
         value={searchedAdmin}
         onChange={(e) => setSearchedAdmin(e.target.value)}
         placeholder="Mekanını ara..."

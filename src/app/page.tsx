@@ -155,9 +155,7 @@ export default function Home() {
               </div>
               <Input id="password" type="password" name="password" required />
             </div>
-            <Button type="submit" className="w-full">
-              Giriş Yap
-            </Button>
+            <SubmitButton type="submit" className="w-full" title="Giriş Yap" />
           </form>
         </div>
         <div className="mt-4 text-center text-sm">
