@@ -22,11 +22,6 @@ import SubmitButton from "@/src/components/ui/submit-button";
 
 import type { Product } from "@/src/lib/types/product.types";
 
-const message = {
-  success: undefined,
-  message: "",
-};
-
 export default function DeleteMenuItem({ product }: { product: Product }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const params = useParams<{ "brand-home": string }>();
@@ -45,7 +40,7 @@ export default function DeleteMenuItem({ product }: { product: Product }) {
 
   return (
     <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-      <AlertDialogTrigger>
+      <AlertDialogTrigger asChild>
         <Button className="bg-transparent hover:bg-transparent" size="icon">
           <TrashIcon className="h-5 w-5 text-red-500 hover:scale-110 transition-all" />
           <span className="sr-only">Sil {product.name}</span>

@@ -2,7 +2,6 @@
 import { useFormState } from "react-dom";
 
 import login from "@/src/server-actions/admin/login";
-import { Button } from "@/src/components/ui/button";
 import SubmitButton from "@/src/components/ui/submit-button";
 
 const errorMessage = {
@@ -38,7 +37,7 @@ export default function AdminLogin() {
         <p className="text-destructive mt-6">{state?.message}</p>
         <SubmitButton
           type="submit"
-          className="mt-12 mx-4 grow text-lg font-bold rounded-3xl bg-lad-pink text-lad-black py-2 hover:bg-gradient-to-br from-lad-purple to-lad-green"
+          className="rounded-xl mx-4 grow text-lg font-bold "
           title="Giriş Yap"
         />
       </form>
