@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -31,6 +32,8 @@ const message = {
 export default function Home() {
   const [mail, setMail] = useState("");
   const [state, loginEmailAction] = useFormState(loginWithEmail, message);
+  const supabase = createClient();
+  const router = useRouter();
 
   useEffect(() => {
     if (state?.message.length > 0) {
@@ -50,7 +53,6 @@ export default function Home() {
 
   const sendPasswordRecoveryMail = async (e: React.FormEvent) => {
     e.preventDefault();
-    const supabase = createClient();
     const { error } = await supabase.auth.resetPasswordForEmail(mail);
     if (error) {
       toast.error(
@@ -65,6 +67,20 @@ export default function Home() {
       );
     }
   };
+
+  useEffect(() => {
+    const { data } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "INITIAL_SESSION") {
+        router.push("/user/user-info");
+      } else if (event === "SIGNED_IN") {
+        router.push("/user/brands");
+      }
+    });
+
+    return () => {
+      data.subscription.unsubscribe();
+    };
+  }, [router, supabase.auth]);
 
   return (
     <section className="flex flex-col min-h-screen items-center justify-center bg-[length:100%_100%]">
