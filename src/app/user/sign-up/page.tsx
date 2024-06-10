@@ -32,7 +32,7 @@ export default function SignUp() {
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: location.origin + "/auth/callback",
+        redirectTo: "https://www.ladderit.app/auth/callback?next=/user/brands",
       },
     });
   };
@@ -50,7 +50,8 @@ export default function SignUp() {
           <Button
             variant="outline"
             className="w-full"
-            onClick={handleLoginWithGoogle}>
+            onClick={handleLoginWithGoogle}
+          >
             <ChromeIcon className="mr-2 h-5 w-5" />
             Google ile Kayıt Ol
           </Button>
@@ -87,7 +88,8 @@ export default function SignUp() {
           <Link
             href="/terms-of-use"
             className="text-blue-500 underline"
-            prefetch={false}>
+            prefetch={false}
+          >
             üyelik sözleşmesi ve kullanım koşullarını <br />
           </Link>{" "}
           kabul etmiş olursunuz.
@@ -109,7 +111,8 @@ function ChromeIcon(props: React.SVGProps<SVGSVGElement>) {
       stroke="currentColor"
       strokeWidth="2"
       strokeLinecap="round"
-      strokeLinejoin="round">
+      strokeLinejoin="round"
+    >
       <circle cx="12" cy="12" r="10" />
       <circle cx="12" cy="12" r="4" />
       <line x1="21.17" x2="12" y1="8" y2="8" />
