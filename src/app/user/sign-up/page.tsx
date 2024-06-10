@@ -1,6 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { useFormState } from "react-dom";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -19,12 +20,15 @@ const message = {
 };
 
 export default function SignUp() {
-  const [state, loginEmailAction] = useFormState(signUpWithEmail, message);
+  const [state, signupEmailAction] = useFormState(signUpWithEmail, message);
+  const router = useRouter();
 
   useEffect(() => {
     if (state?.message.length > 0) {
       toast.error(state.message, shortLengthToastOptions);
     }
+    // @todo - Eğer message.length < 0 ise başarılı olduğu anlamına gelir ve serverda redirect ile burada
+    // router.replace() kullanalım
   }, [state]);
 
   const handleLoginWithGoogle = async () => {
@@ -50,8 +54,7 @@ export default function SignUp() {
           <Button
             variant="outline"
             className="w-full"
-            onClick={handleLoginWithGoogle}
-          >
+            onClick={handleLoginWithGoogle}>
             <ChromeIcon className="mr-2 h-5 w-5" />
             Google ile Kayıt Ol
           </Button>
@@ -65,7 +68,7 @@ export default function SignUp() {
               </span>
             </div>
           </div>
-          <form className="space-y-4" action={loginEmailAction}>
+          <form className="space-y-4" action={signupEmailAction}>
             <div className="space-y-2">
               <Label htmlFor="email">Mailiniz</Label>
               <Input
@@ -88,8 +91,7 @@ export default function SignUp() {
           <Link
             href="/terms-of-use"
             className="text-blue-500 underline"
-            prefetch={false}
-          >
+            prefetch={false}>
             üyelik sözleşmesi ve kullanım koşullarını <br />
           </Link>{" "}
           kabul etmiş olursunuz.
@@ -111,8 +113,7 @@ function ChromeIcon(props: React.SVGProps<SVGSVGElement>) {
       stroke="currentColor"
       strokeWidth="2"
       strokeLinecap="round"
-      strokeLinejoin="round"
-    >
+      strokeLinejoin="round">
       <circle cx="12" cy="12" r="10" />
       <circle cx="12" cy="12" r="4" />
       <line x1="21.17" x2="12" y1="8" y2="8" />

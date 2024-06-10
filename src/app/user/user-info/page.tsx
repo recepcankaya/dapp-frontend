@@ -18,7 +18,7 @@ export default function UserInfo() {
         <label
           htmlFor="username"
           className="content-start text-xl mb-10 mr-[16vh]">
-          Kullanıcı Adınız
+          Kullanıcı Adınızı Giriniz:
         </label>
         <Input
           type="text"
