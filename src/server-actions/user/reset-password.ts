@@ -47,11 +47,13 @@ export async function changePassword(prevState: any, formData: FormData) {
   }
 
   const supabase = createClient();
-
-  const { error } = await supabase.auth.updateUser({
+  const { data, error } = await supabase.auth.updateUser({
     password: result.data.passwordConfirm,
   });
-
+  const session = supabase.auth.getSession();
+  // console.log("session", session);
+  // console.log("data", data);
+  // console.log("error", error);
   if (error) {
     if (
       error.message ===
@@ -64,7 +66,7 @@ export async function changePassword(prevState: any, formData: FormData) {
     } else {
       return {
         success: false,
-        message: "Şifre değiştirilemedi. Lütfen tekrar deneyiniz.",
+        message: `Şifre değiştirilemedi. Lütfen tekrar deneyiniz.`,
       };
     }
   } else {
