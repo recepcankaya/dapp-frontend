@@ -46,7 +46,7 @@ export default function Home() {
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: "https:///www.ladderit.app/auth/callback?next=/user/brands",
+        redirectTo: "https://www.ladderit.app/auth/callback?next=/user/brands",
       },
     });
   };
@@ -54,7 +54,7 @@ export default function Home() {
   const sendPasswordRecoveryMail = async (e: React.FormEvent) => {
     e.preventDefault();
     const { error } = await supabase.auth.resetPasswordForEmail(mail, {
-      redirectTo: "https:///www.ladderit.app/user/password-reset",
+      redirectTo: "https://www.ladderit.app/user/password-reset",
     });
     if (error) {
       toast.error(
