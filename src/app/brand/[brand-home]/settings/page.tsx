@@ -3,21 +3,9 @@ import BranchChangePassword from "@/src/components/brand/branch/settings/BranchC
 import BranchMenu from "@/src/components/brand/branch/settings/BranchMenu";
 import getUserID from "@/src/lib/getUserID";
 import { createClient } from "@/src/lib/supabase/server";
-import { AdminCampaigns } from "@/src/lib/types/jsonQuery.types";
 
-type Product = {
-  name: string;
-  price: string;
-  description: string;
-  image: string;
-  id: string;
-};
-
-type CategoryProduct = {
-  category: string;
-  categoryID: string;
-  products: Product[];
-};
+import type { AdminCampaigns } from "@/src/lib/types/jsonQuery.types";
+import type { CategoryProduct } from "@/src/lib/types/product.types";
 
 export default async function Settings() {
   const supabase = createClient();

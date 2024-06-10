@@ -4,7 +4,7 @@ import { useFormState } from "react-dom";
 import { useParams } from "next/navigation";
 import { toast } from "react-toastify";
 
-import { shortLengthToastOptions } from "@/src/lib/toastOptions";
+import { getShortLengthToastOptions } from "@/src/lib/toastOptions";
 import { initialState } from "@/src/lib/feedbackForForms";
 import deleteProductFromMenu from "@/src/server-actions/brand/branch-delete-product-from-menu";
 
@@ -30,13 +30,13 @@ export default function DeleteMenuItem({ product }: { product: Product }) {
   useEffect(() => {
     if (state?.success === true) {
       setIsDialogOpen(false);
-      toast.success(state.message, shortLengthToastOptions);
+      toast.success(state.message, getShortLengthToastOptions());
     }
 
     if (state?.success === false) {
-      toast.error(state?.message, shortLengthToastOptions);
+      toast.error(state?.message, getShortLengthToastOptions());
     }
-  }, [state]);
+  }, [state?.message, state?.success]);
 
   return (
     <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

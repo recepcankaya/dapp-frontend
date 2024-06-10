@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 import { toast } from "react-toastify";
 
-import { shortLengthToastOptions } from "@/src/lib/toastOptions";
+import { getShortLengthToastOptions } from "@/src/lib/toastOptions";
 import { initialState } from "@/src/lib/feedbackForForms";
 import editMenuProduct from "@/src/server-actions/brand/branch-edit-product";
 
@@ -32,13 +32,13 @@ export default function EditMenu({ product }: { product: Product }) {
   useEffect(() => {
     if (editState?.success === true) {
       setIsDialogOpen(false);
-      toast.success(editState.message, shortLengthToastOptions);
+      toast.success(editState.message, getShortLengthToastOptions());
     }
 
     if (editState?.success === false) {
-      toast.error(editState?.message, shortLengthToastOptions);
+      toast.error(editState?.message, getShortLengthToastOptions());
     }
-  }, [editState]);
+  }, [editState.message, editState.success]);
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

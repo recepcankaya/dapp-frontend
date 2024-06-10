@@ -4,14 +4,13 @@ import { useParams } from "next/navigation";
 import { useFormState } from "react-dom";
 import { toast } from "react-toastify";
 
-import { shortLengthToastOptions } from "@/src/lib/toastOptions";
+import { getShortLengthToastOptions } from "@/src/lib/toastOptions";
 import { initialState } from "@/src/lib/feedbackForForms";
 import addCampaign from "@/src/server-actions/brand/branch-add-campaign";
 
 import { Checkbox } from "@/src/components/ui/checkbox";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogFooter,
   DialogHeader,
@@ -30,13 +29,13 @@ export default function UploadCampaign() {
   useEffect(() => {
     if (addState?.success === true) {
       setIsDialogOpen(false);
-      toast.success(addState.message, shortLengthToastOptions);
+      toast.success(addState.message, getShortLengthToastOptions());
     }
 
     if (addState?.success === false) {
-      toast.error(addState?.message, shortLengthToastOptions);
+      toast.error(addState?.message, getShortLengthToastOptions());
     }
-  }, [addState]);
+  }, [addState.success, addState.message]);
 
   return (
     <div className="flex justify-center items-center mb-6 relative">
