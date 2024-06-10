@@ -49,6 +49,7 @@
     "react-toastify": "^10.0.5",
     "resend": "^3.2.0",
     "sharp": "^0.33.3",
+    "supabase": "^1.172.2",
     "swiper": "^11.1.1",
     "tailwind-merge": "^1.14.0",
     "tailwind-scrollbar-hide": "^1.1.7",
