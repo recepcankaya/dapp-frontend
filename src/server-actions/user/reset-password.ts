@@ -14,7 +14,7 @@ export async function changePassword(prevState: any, formData: FormData) {
     password: z.string().min(8, {
       message: "Şifre en az 8 karakterden oluşmalıdır.",
     }),
-    confirmPassword: z
+    passwordConfirm: z
       .string()
       .min(8, {
         message: "Şifre en az 8 karakterden oluşmalıdır.",
@@ -26,7 +26,7 @@ export async function changePassword(prevState: any, formData: FormData) {
 
   const result = schema.safeParse({
     password: formData.get("password"),
-    confirmPassword: formData.get("confirmPassword"),
+    passwordConfirm: formData.get("passwordConfirm"),
   });
 
   if (result.error) {
@@ -49,7 +49,7 @@ export async function changePassword(prevState: any, formData: FormData) {
   const supabase = createClient();
 
   const { error } = await supabase.auth.updateUser({
-    password: result.data.confirmPassword,
+    password: result.data.passwordConfirm,
   });
 
   if (error) {
