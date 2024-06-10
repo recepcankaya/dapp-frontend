@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { createClient } from "@/src/lib/supabase/client";
-import { shortLengthToastOptions } from "@/src/lib/toastOptions";
+import { getShortLengthToastOptions } from "@/src/lib/toastOptions";
 import signUpWithEmail from "@/src/server-actions/user/sign-up";
 
 import { Button } from "@/src/components/ui/button";
@@ -25,7 +25,7 @@ export default function SignUp() {
 
   useEffect(() => {
     if (state?.message.length > 0) {
-      toast.error(state.message, shortLengthToastOptions);
+      toast.error(state.message, getShortLengthToastOptions());
     }
     // @todo - Eğer message.length < 0 ise başarılı olduğu anlamına gelir ve serverda redirect ile burada
     // router.replace() kullanalım

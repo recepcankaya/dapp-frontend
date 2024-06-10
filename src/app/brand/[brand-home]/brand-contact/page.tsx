@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useFormState, useFormStatus } from "react-dom";
 import { useEffect } from "react";
-import { shortLengthToastOptions } from "@/src/lib/toastOptions";
+import { getShortLengthToastOptions } from "@/src/lib/toastOptions";
 
 export default function BranchContact() {
   const [state, formAction] = useFormState(sendMail, undefined);
@@ -24,11 +24,11 @@ export default function BranchContact() {
 
   useEffect(() => {
     if (state?.success === true) {
-      toast.success(state?.message, shortLengthToastOptions);
+      toast.success(state?.message, getShortLengthToastOptions());
     }
 
     if (state?.success === false) {
-      toast.error(state?.message, shortLengthToastOptions);
+      toast.error(state?.message, getShortLengthToastOptions());
     }
   }, [state]);
   return (

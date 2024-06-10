@@ -19,7 +19,7 @@ import {
 } from "@/src/lib/types/jsonQuery.types";
 import {
   adminOrBranchCameraToastOptions,
-  shortLengthToastOptions,
+  getShortLengthToastOptions,
 } from "@/src/lib/toastOptions";
 
 export default function BranchCamera() {
@@ -41,14 +41,17 @@ export default function BranchCamera() {
       }
 
       if (!userID) {
-        toast.error("Müşteri bilgisi bulunamadı.", shortLengthToastOptions);
+        toast.error(
+          "Müşteri bilgisi bulunamadı.",
+          getShortLengthToastOptions()
+        );
         return;
       }
 
       if (branchID !== brandBranchID) {
         toast.error(
           "Müşteri başka bir işletmenin QR kodunu okutmaktadır. Lütfen kendi markanızdaki qr kodunu isteyiniz.",
-          shortLengthToastOptions
+          getShortLengthToastOptions()
         );
         return;
       }
@@ -95,7 +98,7 @@ export default function BranchCamera() {
         .eq("id", branchID);
 
       if (!brandBranchInfo) {
-        toast.error("Şube bilgisi bulunamadı.", shortLengthToastOptions);
+        toast.error("Şube bilgisi bulunamadı.", getShortLengthToastOptions());
         return;
       }
 
@@ -105,7 +108,10 @@ export default function BranchCamera() {
         .eq("id", brandBranchInfo[0].brand_id);
 
       if (!brandInfo) {
-        toast.error("İşletme bilgisi bulunamadı.", shortLengthToastOptions);
+        toast.error(
+          "İşletme bilgisi bulunamadı.",
+          getShortLengthToastOptions()
+        );
         return;
       }
 

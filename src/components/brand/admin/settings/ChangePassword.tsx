@@ -17,7 +17,7 @@ import { Button } from "@/src/components/ui/button";
 import { ViewIcon, ViewOffSlashIcon } from "@/src/components/ui/eyes";
 
 import { changePassword } from "@/src/server-actions/admin/admin-change-password";
-import { shortLengthToastOptions } from "@/src/lib/toastOptions";
+import { getShortLengthToastOptions } from "@/src/lib/toastOptions";
 import { initialState } from "@/src/lib/feedbackForForms";
 
 const messages = {
@@ -43,11 +43,11 @@ export default function ChangePassword() {
 
   useEffect(() => {
     if (state.success === true) {
-      toast.success(state.message, shortLengthToastOptions);
+      toast.success(state.message, getShortLengthToastOptions());
     }
 
     if (state.success === false) {
-      toast.error(state.message, shortLengthToastOptions);
+      toast.error(state.message, getShortLengthToastOptions());
     }
   }, [state.message, state.success]);
 

@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { createClient } from "../lib/supabase/client";
-import { shortLengthToastOptions } from "../lib/toastOptions";
+import { getShortLengthToastOptions } from "../lib/toastOptions";
 import loginWithEmail from "../server-actions/user/login";
 
 import { Button } from "@/src/components/ui/button";
@@ -60,13 +60,13 @@ export default function Home() {
     if (error) {
       toast.error(
         "Bir hata oluştu, lütfen tekrar deneyin.",
-        shortLengthToastOptions
+        getShortLengthToastOptions()
       );
       return;
     } else {
       toast.success(
         "Şifre sıfırlama maili gönderildi.",
-        shortLengthToastOptions
+        getShortLengthToastOptions()
       );
     }
   };
@@ -143,7 +143,10 @@ export default function Home() {
                     </div>
                     <DialogFooter className="sm:justify-end">
                       <DialogClose asChild>
-                        <Button type="submit" className="mt-4">
+                        <Button
+                          type="submit"
+                          className="mt-4"
+                          onClick={sendPasswordRecoveryMail}>
                           {loading ? (
                             <div className="w-6 h-6 animate-spin rounded-full border-b-2 border-white"></div>
                           ) : (

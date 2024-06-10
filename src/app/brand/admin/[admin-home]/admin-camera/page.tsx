@@ -16,7 +16,7 @@ import getUserID from "@/src/lib/getUserID";
 import { MonthlyOrdersWithYear } from "@/src/lib/types/jsonQuery.types";
 import {
   adminOrBranchCameraToastOptions,
-  shortLengthToastOptions,
+  getShortLengthToastOptions,
 } from "@/src/lib/toastOptions";
 
 export default function AdminCamera() {
@@ -32,13 +32,16 @@ export default function AdminCamera() {
       if (!brandBranchID) {
         toast.error(
           "Marka bilgisi bulunamadı. Lütfen müşterinizden markayı seçmesini isteyin.",
-          shortLengthToastOptions
+          getShortLengthToastOptions()
         );
         return;
       }
 
       if (!userID) {
-        toast.error("Müşteri bilgisi bulunamadı.", shortLengthToastOptions);
+        toast.error(
+          "Müşteri bilgisi bulunamadı.",
+          getShortLengthToastOptions()
+        );
         return;
       }
 
@@ -87,14 +90,14 @@ export default function AdminCamera() {
         .eq("id", brandBranchID);
 
       if (!brandBranchInfo) {
-        toast.error("Şube bilgisi bulunamadı.", shortLengthToastOptions);
+        toast.error("Şube bilgisi bulunamadı.", getShortLengthToastOptions());
         return;
       }
 
       if (brandBranchInfo[0].id !== brandBranchID) {
         toast.error(
           "Müşteri başka bir işletmenin QR kodunu okutmaktadır. Lütfen kendi markanızdaki qr kodunu isteyiniz.",
-          shortLengthToastOptions
+          getShortLengthToastOptions()
         );
         return;
       }
@@ -105,7 +108,7 @@ export default function AdminCamera() {
         .eq("id", adminID);
 
       if (!brandInfo) {
-        toast.error("Marka bilgisi bulunamadı.", shortLengthToastOptions);
+        toast.error("Marka bilgisi bulunamadı.", getShortLengthToastOptions());
         return;
       }
 
