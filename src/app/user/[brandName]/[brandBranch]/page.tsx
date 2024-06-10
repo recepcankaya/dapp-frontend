@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { unstable_noStore as noStore } from "next/cache";
 
 import { createClient } from "@/src/lib/supabase/server";
 import CustomerHomeHeader from "@/src/components/customer/home/CustomerHomeHeader";
@@ -16,6 +17,7 @@ export default async function CustomerHome({
 }: {
   searchParams: { brandID: Brand["id"]; branchID: BrandBranch["id"] };
 }) {
+  noStore();
   const supabase = createClient();
   const userID = await getUserID();
 

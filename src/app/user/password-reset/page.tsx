@@ -9,7 +9,7 @@ import { useFormState } from "react-dom";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { initialState } from "@/src/lib/feedbackForForms";
-import { shortLengthToastOptions } from "@/src/lib/toastOptions";
+import { getShortLengthToastOptions } from "@/src/lib/toastOptions";
 
 export default function Component() {
   const [state, resetPasswordAction] = useFormState(
@@ -19,11 +19,11 @@ export default function Component() {
 
   useEffect(() => {
     if (state.success === true) {
-      toast.success(state.message, shortLengthToastOptions);
+      toast.success(state.message, getShortLengthToastOptions());
     }
 
     if (state.success === false) {
-      toast.error(state.message, shortLengthToastOptions);
+      toast.error(state.message, getShortLengthToastOptions());
     }
   }, [state]);
 

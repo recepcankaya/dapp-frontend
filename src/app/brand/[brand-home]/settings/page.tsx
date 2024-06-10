@@ -1,3 +1,5 @@
+import { unstable_noStore as noStore } from "next/cache";
+
 import BranchCampaignManagement from "@/src/components/brand/branch/settings/BranchCampaignManagement";
 import BranchChangePassword from "@/src/components/brand/branch/settings/BranchChangePassword";
 import BranchMenu from "@/src/components/brand/branch/settings/BranchMenu";
@@ -8,6 +10,7 @@ import type { AdminCampaigns } from "@/src/lib/types/jsonQuery.types";
 import type { CategoryProduct } from "@/src/lib/types/product.types";
 
 export default async function Settings() {
+  noStore();
   const supabase = createClient();
   const userID = await getUserID();
 
