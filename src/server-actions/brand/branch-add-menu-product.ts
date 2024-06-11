@@ -17,6 +17,7 @@ export default async function addMenuProduct(
   const newCategory = formData.get("newCategory");
   const branchName = formData.get("branchName");
   const productNameForImage = name?.replace(/\s/g, "-");
+  const turnProductToEnglishChar = decodeTurkishCharacters(productNameForImage);
   const convertToEnglish = decodeTurkishCharacters(String(branchName));
 
   if (!name) {
@@ -45,7 +46,7 @@ export default async function addMenuProduct(
   if (image) {
     const { error: uploadingError } = await supabase.storage
       .from("menus")
-      .upload(`${convertToEnglish}/${productNameForImage}`, image);
+      .upload(`${convertToEnglish}/${turnProductToEnglishChar}`, image);
 
     if (uploadingError) {
       return {

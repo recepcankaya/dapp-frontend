@@ -13,6 +13,8 @@ export default async function addCampaign(prevState: any, formData: FormData) {
   const campaignFavourite = formData.get("favourite");
   const branchName = formData.get("branchName");
   const campaignNameForImage = campaignName?.replace(/\s/g, "-");
+  const turnCampaignToEnglishChar =
+    decodeTurkishCharacters(campaignNameForImage);
   const convertToEnglish = decodeTurkishCharacters(String(branchName));
 
   if (!campaignName || campaignName?.length < 3) {
@@ -44,7 +46,7 @@ export default async function addCampaign(prevState: any, formData: FormData) {
 
   const { error: uploadingError } = await supabase.storage
     .from("campaigns")
-    .upload(`${convertToEnglish}/${campaignNameForImage}`, campaignBanner);
+    .upload(`${convertToEnglish}/${turnCampaignToEnglishChar}`, campaignBanner);
 
   if (uploadingError) {
     return {
