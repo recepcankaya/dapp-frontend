@@ -57,7 +57,7 @@ export default async function addCampaign(prevState: any, formData: FormData) {
 
   const { data: productURL } = supabase.storage
     .from("campaigns")
-    .getPublicUrl(`${convertToEnglish}/${campaignNameForImage}`);
+    .getPublicUrl(`${convertToEnglish}/${turnCampaignToEnglishChar}`);
 
   const { error } = await supabase.rpc("add_campaign", {
     row_id: userID,

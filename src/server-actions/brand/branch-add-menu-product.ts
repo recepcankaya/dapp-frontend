@@ -57,7 +57,7 @@ export default async function addMenuProduct(
 
     const { data: productURL } = supabase.storage
       .from("menus")
-      .getPublicUrl(`${convertToEnglish}/${productNameForImage}`);
+      .getPublicUrl(`${convertToEnglish}/${turnProductToEnglishChar}`);
 
     const { error } = await supabase.rpc("add_product_to_menu", {
       p_product_name: String(name),
