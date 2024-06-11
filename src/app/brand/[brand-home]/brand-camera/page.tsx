@@ -77,7 +77,7 @@ export default function BranchCamera() {
 
       const { data: user } = await supabase
         .from("users")
-        .select("username, wallet_addr")
+        .select("username")
         .eq("id", userID)
         .single();
 

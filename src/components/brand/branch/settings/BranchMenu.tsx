@@ -51,7 +51,7 @@ export default function BranchMenu({ menu }: Props) {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {item.products.map((product) => (
+                  {item.products?.map((product) => (
                     <TableRow
                       key={product.id}
                       className="hover:bg-gray-200 border-none">
