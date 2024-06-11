@@ -16,7 +16,7 @@ import useScreenSize from "@/src/hooks/useScreenSize";
 
 type AdminHomeHeaderProps = {
   brandName: Brand["brand_name"];
-  brandLogo: Brand["brand_logo_ipfs_url"];
+  brandLogo: Brand["brand_logo_url"];
 };
 
 export default function AdminHomeHeader({

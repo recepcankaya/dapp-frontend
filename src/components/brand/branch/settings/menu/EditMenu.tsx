@@ -38,7 +38,7 @@ export default function EditMenu({ product }: { product: Product }) {
     if (editState?.success === false) {
       toast.error(editState?.message, getShortLengthToastOptions());
     }
-  }, [editState.message, editState.success]);
+  }, [editState]);
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

@@ -36,7 +36,7 @@ export default function DeleteMenuItem({ product }: { product: Product }) {
     if (state?.success === false) {
       toast.error(state?.message, getShortLengthToastOptions());
     }
-  }, [state?.message, state?.success]);
+  }, [state]);
 
   return (
     <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

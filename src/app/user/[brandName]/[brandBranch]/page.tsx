@@ -36,8 +36,8 @@ export default async function CustomerHome({
       menu,
       brand (
         required_number_for_free_right,
-        ticket_ipfs_url,
-        brand_logo_ipfs_url
+        ticket_url,
+        brand_logo_url
       )
     `
     )
@@ -54,9 +54,7 @@ export default async function CustomerHome({
 
   return (
     <section className="h-screen w-screen">
-      <CustomerHomeHeader
-        brandLogo={branchInfo.brand?.brand_logo_ipfs_url ?? ""}
-      />
+      <CustomerHomeHeader brandLogo={branchInfo.brand?.brand_logo_url ?? ""} />
       <CustomerHomeLinks
         brandID={searchParams.brandID}
         branchID={searchParams.branchID}

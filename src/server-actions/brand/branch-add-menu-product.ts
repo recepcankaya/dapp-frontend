@@ -26,13 +26,6 @@ export default async function addMenuProduct(
     };
   }
 
-  if (!price) {
-    return {
-      success: false,
-      message: "Ürün fiyatını girmelisiniz.",
-    };
-  }
-
   if (!category && !newCategory) {
     return {
       success: false,
@@ -73,9 +66,15 @@ export default async function addMenuProduct(
       p_category: String(category) || String(newCategory),
       p_brand_branch_id: userID,
     });
+
     if (!error) {
       revalidatePath("/brand/[brand-home]/settings", "page");
       return { success: true, message: "Ürün menünüze başarıyla eklendi." };
+    } else {
+      return {
+        success: false,
+        message: "Ürün eklenirken bir hata oluştu. Lütfen tekrar deneyiniz.",
+      };
     }
   }
 }

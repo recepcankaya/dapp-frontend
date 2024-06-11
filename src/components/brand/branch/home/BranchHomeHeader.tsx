@@ -17,7 +17,7 @@ import useScreenSize from "@/src/hooks/useScreenSize";
 type BranchHomeHeaderProps = {
   brandName: Brand["brand_name"];
   brandBranch: BrandBranch["branch_name"];
-  brandLogo: Brand["brand_logo_ipfs_url"];
+  brandLogo: Brand["brand_logo_url"];
 };
 
 export default function BranchHomeHeader({

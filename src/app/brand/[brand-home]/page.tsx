@@ -22,7 +22,7 @@ export default async function BranchHome() {
         total_unused_free_rights,
         brand (
           brand_name,
-          brand_logo_ipfs_url,
+          brand_logo_url,
           required_number_for_free_right
     )
     `
@@ -51,7 +51,7 @@ export default async function BranchHome() {
       <BranchHomeHeader
         brandName={String(data.brand?.brand_name)}
         brandBranch={data.branch_name}
-        brandLogo={String(data.brand.brand_logo_ipfs_url)}
+        brandLogo={String(data.brand.brand_logo_url)}
       />
       <RenderBrandBranchStatistics
         brandBranchData={dataObject as BrandBranchStatistics}

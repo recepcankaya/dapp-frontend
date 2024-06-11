@@ -12,7 +12,7 @@ export default async function AdminHome() {
     .from("brand")
     .select(
       `brand_name, 
-      brand_logo_ipfs_url, 
+      brand_logo_url, 
       required_number_for_free_right, 
       brand_branch(
         total_orders, 
@@ -99,7 +99,7 @@ export default async function AdminHome() {
     <div>
       <AdminHomeHeader
         brandName={data[0].brand_name}
-        brandLogo={data[0].brand_logo_ipfs_url}
+        brandLogo={data[0].brand_logo_url}
       />
       <RenderAdminStatistics
         requiredNumberForFreeRight={data[0].required_number_for_free_right}

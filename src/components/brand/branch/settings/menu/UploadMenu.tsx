@@ -47,7 +47,7 @@ export default function UploadMenu({ categories }: Props) {
     if (state?.success === false) {
       toast.error(state?.message, getShortLengthToastOptions());
     }
-  }, [state?.message, state?.success]);
+  }, [state]);
 
   return (
     <div className="flex justify-center items-center mb-6 relative">
