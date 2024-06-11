@@ -23,7 +23,7 @@ type Props = {
 
 export default function RenderMenu({ menu }: Props) {
   const [selectedTab, setSelectedTab] = useState<string>(
-    menu.find((item) => item.category === "Önerilenler")?.category || ""
+    menu[0].category || ""
   );
   const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
   const [startX, setStartX] = useState<number>(0);
@@ -58,29 +58,21 @@ export default function RenderMenu({ menu }: Props) {
     <>
       {menu ? (
         <div className="flex flex-col justify-center items-center w-full">
-          <div className="flex flex-col justify-center mt-20 gap-y-2">
+          <div className="w-full flex flex-col justify-center mt-20 gap-y-2">
             <p className="font-bold mb-3 pl-4 sm:pl-5">Menü</p>
-            <div
-              className="mx-auto grid grid-cols-3 gap-8 justify-center border border-[#DBB5B5] p-5 relative"
-              style={{
-                borderWidth: "1em",
-                maxWidth: "90%",
-              }}
-            >
-              <span className="absolute top-0 left-0 translate-x-[-75%] translate-y-[-75%] w-[20px] h-[20px] rounded-full bg-[#D9D9D9]"></span>
-              <span className="absolute top-0 left-0 translate-x-[-86.5%] translate-y-[-86%] w-[14px] h-[14px] rounded-full bg-[#987070]"></span>
-              <span className="absolute top-0 right-0 translate-x-[75%] translate-y-[-75%] w-[20px] h-[20px] rounded-full bg-[#D9D9D9]"></span>
-              <span className="absolute top-0 right-0 translate-x-[86%] translate-y-[-86%] w-[14px] h-[14px] rounded-full bg-[#987070]"></span>
+            <div className="flex gap-8 justify-start bg-[#DBB5B5] p-6 relative drop-shadow-xl overflow-x-auto">
               {menu.map((item: CategoryProduct) => (
                 <li
                   key={item.categoryID}
                   onClick={() => setSelectedTab(item.category)}
-                  className="inline-block select-none italic hover:cursor-pointer drop-shadow-2xl"
+                  className="font-bold inline-block select-none italic hover:cursor-pointer drop-shadow-2xl"
                   style={{
                     textDecoration:
                       selectedTab === item.category ? "underline" : "none",
                     textDecorationThickness: "1px",
                     textUnderlineOffset: "4px",
+                    textShadow: "1px 3px 3px rgba(0, 0, 0, 0.5)",
+                    fontFamily: "",
                   }}
                 >
                   {item.category}
@@ -88,7 +80,7 @@ export default function RenderMenu({ menu }: Props) {
               ))}
             </div>
           </div>
-          <div className="mt-12 w-[90vw] flex-col">
+          <div className="mt-4 w-[90vw] flex-col">
             <div className="flex-col justify-start ml-1 mb-8">
               <p className="font-bold mt-10">Fiyatlar</p>
               <p className="text-[#00000084]">{selectedTab}</p>
@@ -102,19 +94,17 @@ export default function RenderMenu({ menu }: Props) {
                       className="flex items-start justify-between overflow-hidden mb-12"
                       key={product.id}
                     >
-                      <Image
-                        className="rounded-full"
-                        src={product.image.replace(
-                          "ipfs://",
-                          "https://ipfs.io/ipfs/"
-                        )}
-                        alt={product.name}
-                        width={60}
-                        height={60}
-                        style={{
-                          aspectRatio: "60/60",
-                        }}
-                      />
+                      <div className="w-[70px] h-[70px] relative">
+                        <Image
+                          className="rounded-lg"
+                          src={product.image.replace(
+                            "ipfs://",
+                            "https://ipfs.io/ipfs/"
+                          )}
+                          alt={product.name}
+                          fill
+                        />
+                      </div>
                       <div className="flex flex-col w-1/2 justify-center h-[100%]">
                         <p className="font-bold" title={product.name}>
                           {product.name}

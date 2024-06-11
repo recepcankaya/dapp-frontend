@@ -18,8 +18,7 @@ const config = {
       },
     },
     extend: {
-      fontFamily: {
-      },
+      fontFamily: {},
       colors: {
         "lad-black": "#0C0C0C",
         "lad-purple": "#B80DCA",
@@ -90,6 +89,11 @@ const config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         loading: "loading 2s linear infinite",
+      },
+      textShadow: {
+        sm: "0 1px 2px var(--tw-shadow-color)",
+        DEFAULT: "0 2px 4px var(--tw-shadow-color)",
+        lg: "0 8px 16px var(--tw-shadow-color)",
       },
     },
   },
