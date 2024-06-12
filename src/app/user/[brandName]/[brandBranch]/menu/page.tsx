@@ -1,19 +1,7 @@
 import RenderMenu from "@/src/components/customer/menu/RenderMenu";
 import { createClient } from "@/src/lib/supabase/server";
 
-type Product = {
-  name: string;
-  price: number;
-  description: string;
-  image: string;
-  id: string;
-};
-
-type CategoryProduct = {
-  category: string;
-  categoryID: string;
-  products: Product[];
-};
+import type { CategoryProduct } from "@/src/lib/types/product.types";
 
 export default async function Menu({
   searchParams,

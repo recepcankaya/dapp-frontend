@@ -12,34 +12,6 @@ export default function RenderMenu({ menu }: Props) {
   const [selectedTab, setSelectedTab] = useState<string>(
     menu[0].category || ""
   );
-  const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
-  const [startX, setStartX] = useState<number>(0);
-  const [scrollLeft, setScrollLeft] = useState<number>(0);
-  const scrollRef = useRef<HTMLUListElement>(null);
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    setIsMouseDown(true);
-    setStartX(e.pageX - scrollRef.current?.offsetLeft!);
-    setScrollLeft(scrollRef.current?.scrollLeft!);
-  };
-
-  const handleMouseLeave = (e: React.MouseEvent) => {
-    setIsMouseDown(false);
-  };
-
-  const handleMouseUp = () => {
-    setIsMouseDown(false);
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isMouseDown) return;
-    e.preventDefault();
-    const x = e.pageX - scrollRef.current?.offsetLeft!;
-    const walk = (x - startX) * 2;
-    if (scrollRef.current) {
-      scrollRef.current.scrollLeft = scrollLeft - walk;
-    }
-  };
 
   return (
     <>
