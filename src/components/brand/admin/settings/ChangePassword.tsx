@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useFormState, useFormStatus } from "react-dom";
-import { Bounce, ToastContainer, toast } from "react-toastify";
+import { useFormState } from "react-dom";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import {
@@ -16,10 +16,9 @@ import { Input } from "@/src/components/ui/input";
 import { Button } from "@/src/components/ui/button";
 import { ViewIcon, ViewOffSlashIcon } from "@/src/components/ui/eyes";
 
-import {
-  FormState,
-  changePassword,
-} from "@/src/server-actions/admin/admin-change-password";
+import { changePassword } from "@/src/server-actions/admin/admin-change-password";
+import { getShortLengthToastOptions } from "@/src/lib/toastOptions";
+import { initialState } from "@/src/lib/feedbackForForms";
 
 const messages = {
   success: undefined,
@@ -32,11 +31,7 @@ export default function ChangePassword() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
     useState(false);
-  const [state, formAction] = useFormState(
-    changePassword,
-    messages as FormState
-  );
-  const { pending } = useFormStatus();
+  const [state, formAction] = useFormState(changePassword, initialState);
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible((prev) => !prev);
@@ -47,34 +42,17 @@ export default function ChangePassword() {
   };
 
   useEffect(() => {
-    if (pending) {
-      toast.info("Şifre değiştiriliyor...");
-    }
-
     if (state.success === true) {
-      toast.success(state.message);
+      toast.success(state.message, getShortLengthToastOptions());
     }
 
     if (state.success === false) {
-      toast.error(state.message);
+      toast.error(state.message, getShortLengthToastOptions());
     }
-  }, [pending, state.message, state.success]);
+  }, [state.message, state.success]);
 
   return (
     <section className="grid gap-6">
-      <ToastContainer
-        position="top-right"
-        autoClose={1500}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-        transition={Bounce}
-      />
       <Card className="pt-12">
         <CardHeader>
           <CardTitle>Şifre Değiştirme</CardTitle>

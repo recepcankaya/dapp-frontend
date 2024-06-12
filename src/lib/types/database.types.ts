@@ -11,50 +11,41 @@ export type Database = {
     Tables: {
       brand: {
         Row: {
-          brand_logo_ipfs_url: string
+          brand_logo_url: string
           brand_name: string
           category: string
-          collection_metadata: Json | null
-          contract_address: string | null
           created_at: string | null
           email: string
           free_right_image_url: string
           id: string
-          nft_src: string | null
           required_number_for_free_right: number
-          ticket_ipfs_url: string
+          ticket_url: string
         }
         Insert: {
-          brand_logo_ipfs_url?: string
+          brand_logo_url?: string
           brand_name?: string
           category?: string
-          collection_metadata?: Json | null
-          contract_address?: string | null
           created_at?: string | null
           email?: string
           free_right_image_url?: string
           id: string
-          nft_src?: string | null
           required_number_for_free_right?: number
-          ticket_ipfs_url?: string
+          ticket_url?: string
         }
         Update: {
-          brand_logo_ipfs_url?: string
+          brand_logo_url?: string
           brand_name?: string
           category?: string
-          collection_metadata?: Json | null
-          contract_address?: string | null
           created_at?: string | null
           email?: string
           free_right_image_url?: string
           id?: string
-          nft_src?: string | null
           required_number_for_free_right?: number
-          ticket_ipfs_url?: string
+          ticket_url?: string
         }
         Relationships: [
           {
-            foreignKeyName: "admins_id_fkey"
+            foreignKeyName: "brand_id_fkey"
             columns: ["id"]
             isOneToOne: true
             referencedRelation: "users"
@@ -84,14 +75,14 @@ export type Database = {
         }
         Insert: {
           branch_name?: string
-          brand_id?: string
+          brand_id: string
           campaigns?: Json[] | null
           city?: string
           coords?: Json | null
           daily_total_orders?: number
           daily_total_used_free_rights?: number
           email?: string
-          id?: string
+          id: string
           menu?: Json[] | null
           monthly_total_orders?: number
           monthly_total_orders_with_years?: Json
@@ -125,39 +116,42 @@ export type Database = {
             foreignKeyName: "brand_branch_brand_id_fkey"
             columns: ["brand_id"]
             isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "brand_branch_brand_id_fkey1"
+            columns: ["brand_id"]
+            isOneToOne: false
             referencedRelation: "brand"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "brand_branch_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
       }
       employees: {
         Row: {
-          admin_id: string | null
           created_at: string
           id: string
           last_qr_scan_time: string | null
         }
         Insert: {
-          admin_id?: string | null
           created_at?: string
           id?: string
           last_qr_scan_time?: string | null
         }
         Update: {
-          admin_id?: string | null
           created_at?: string
           id?: string
           last_qr_scan_time?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "public_employees_admin_id_fkey"
-            columns: ["admin_id"]
-            isOneToOne: false
-            referencedRelation: "brand"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       user_orders: {
         Row: {
@@ -180,7 +174,7 @@ export type Database = {
           last_order_date?: string
           total_ticket_orders?: number
           total_user_orders?: number
-          user_id?: string
+          user_id: string
           user_total_free_rights?: number
           user_total_used_free_rights?: number
         }
@@ -198,14 +192,14 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "public_user_missions_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: "user_orders_branch_id_fkey"
+            columns: ["branch_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "user_orders_branch_id_fkey"
+            foreignKeyName: "user_orders_branch_id_fkey1"
             columns: ["branch_id"]
             isOneToOne: false
             referencedRelation: "brand_branch"
@@ -215,7 +209,28 @@ export type Database = {
             foreignKeyName: "user_orders_brand_id_fkey"
             columns: ["brand_id"]
             isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_orders_brand_id_fkey1"
+            columns: ["brand_id"]
+            isOneToOne: false
             referencedRelation: "brand"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_orders_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_orders_user_id_fkey1"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
@@ -226,23 +241,28 @@ export type Database = {
           id: string
           last_login: string | null
           username: string | null
-          wallet_addr: string | null
         }
         Insert: {
           created_at?: string | null
-          id?: string
+          id: string
           last_login?: string | null
           username?: string | null
-          wallet_addr?: string | null
         }
         Update: {
           created_at?: string | null
           id?: string
           last_login?: string | null
           username?: string | null
-          wallet_addr?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "users_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
@@ -294,7 +314,7 @@ export type Database = {
       }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "branch" | "user"
     }
     CompositeTypes: {
       [_ in never]: never

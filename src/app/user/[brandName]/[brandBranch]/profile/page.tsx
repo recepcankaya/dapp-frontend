@@ -1,29 +1,25 @@
 import { redirect } from "next/navigation";
+import { unstable_noStore as noStore } from "next/cache";
 
 import { createClient } from "@/src/lib/supabase/server";
 import ProfileHOC from "@/src/components/customer/profile/ProfileHOC";
+import getUserID from "@/src/lib/getUserID";
 
 export default async function Profile({
   searchParams,
 }: {
   searchParams: { brandID: Brand["id"]; branchID: BrandBranch["id"] };
 }) {
+  noStore();
   const supabase = createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/");
-  }
+  const userID = await getUserID();
 
   const { data: username } = await supabase
     .from("users")
     .select("username")
-    .eq("id", user?.id)
+    .eq("id", userID)
     .single();
-  
+
   if (!username?.username) {
     redirect("/user/user-info");
   }
@@ -31,7 +27,7 @@ export default async function Profile({
   const { data: userTotalFreeRights, error } = await supabase
     .from("user_orders")
     .select("user_total_free_rights")
-    .eq("user_id", user?.id)
+    .eq("user_id", userID)
     .eq("brand_id", searchParams.brandID);
 
   if (!userTotalFreeRights) {
@@ -50,10 +46,10 @@ export default async function Profile({
     .single();
 
   return (
-    <div className="flex flex-col items-center pt-16 text-white">
-      <h1 className="text-xl mb-16 text-white">{username?.username}</h1>
+    <div className="flex flex-col items-center pt-16">
+      <h1 className="text-xl mb-16 text-black">{username?.username}</h1>
       <ProfileHOC
-        userID={user?.id}
+        userID={userID}
         userTotalFreeRights={totalFreeRights}
         freeRightImageUrl={freeRightImageUrl?.free_right_image_url}
       />

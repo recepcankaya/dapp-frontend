@@ -6,7 +6,7 @@ import Image from "next/image";
 export default function CustomerHomeHeader({
   brandLogo,
 }: {
-  brandLogo: Brand["brand_logo_ipfs_url"];
+  brandLogo: Brand["brand_logo_url"];
 }) {
   return (
     <div className="p-2 flex justify-around items-center gap-36 mb-8">

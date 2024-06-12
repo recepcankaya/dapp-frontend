@@ -18,35 +18,39 @@ export default function CampaignCarousel({
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <section className="pt-12">
-      <Swiper
-        pagination={true}
-        autoplay={true}
-        modules={[Pagination, Autoplay]}>
-        {campaigns?.map((campaign) =>
-          isModalOpen ? (
-            <CarouselModal
-              setIsModalOpen={setIsModalOpen}
-              campaign={campaign}
-              key={campaign.campaign_id}
-            />
-          ) : (
-            <SwiperSlide key={campaign.campaign_id}>
-              <Image
-                src={campaign.campaign_image.replace(
-                  "ipfs://",
-                  "https://ipfs.io/ipfs/"
-                )}
-                alt="campaign image"
-                width={500}
-                height={500}
-                className="mx-auto"
-                onClick={() => setIsModalOpen(true)}
-              />
-            </SwiperSlide>
-          )
-        )}
-      </Swiper>
-    </section>
+    <>
+      {campaigns ? (
+        <section className="pt-12">
+          <Swiper
+            pagination={true}
+            autoplay={true}
+            modules={[Pagination, Autoplay]}
+          >
+            {campaigns?.map((campaign) =>
+              isModalOpen ? (
+                <CarouselModal
+                  setIsModalOpen={setIsModalOpen}
+                  campaign={campaign}
+                  key={campaign.campaign_id}
+                />
+              ) : (
+                <SwiperSlide key={campaign.campaign_id}>
+                  <Image
+                    src={campaign.campaign_image}
+                    alt="campaign image"
+                    width={500}
+                    height={500}
+                    className="mx-auto"
+                    onClick={() => setIsModalOpen(true)}
+                  />
+                </SwiperSlide>
+              )
+            )}
+          </Swiper>
+        </section>
+      ) : (
+        ""
+      )}
+    </>
   );
 }

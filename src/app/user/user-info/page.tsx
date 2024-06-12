@@ -1,12 +1,13 @@
 "use client";
 
+import { Input } from "@/src/components/ui/input";
+import SubmitButton from "@/src/components/ui/submit-button";
 import addUsername from "@/src/server-actions/user/addUsername";
 import { useFormState } from "react-dom";
 
 const errorMessage = {
   message: "",
 };
-// @todo - Tasarım açısından eksikler var, düzeltilecek.
 
 export default function UserInfo() {
   const [state, formAction] = useFormState(addUsername, errorMessage);
@@ -16,21 +17,17 @@ export default function UserInfo() {
       <form action={formAction} className="flex flex-col justify-center">
         <label
           htmlFor="username"
-          className="content-start text-xl mb-10 mr-[16vh] text-lad-white">
-          Kullanıcı Adınız
+          className="content-start text-xl mb-10 mr-[16vh]">
+          Kullanıcı Adınızı Giriniz:
         </label>
-        <input
+        <Input
           type="text"
           name="username"
           id="username"
-          className="rounded-full border-2 border-lad-pink bg-black py-1.5 pl-4"
+          className="bg-[#dbb5b59d]"
         />
         <p className="text-destructive mt-6">{state?.message}</p>
-        <button
-          type="submit"
-          className="mt-[10vh] mx-4 grow text-lg font-bold rounded-3xl bg-lad-pink text-lad-black py-2">
-          Kaydet
-        </button>
+        <SubmitButton type="submit" className="mt-4" title="Kaydet" />
       </form>
     </section>
   );

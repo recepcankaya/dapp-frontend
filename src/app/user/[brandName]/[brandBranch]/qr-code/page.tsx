@@ -2,21 +2,16 @@ import { redirect } from "next/navigation";
 
 import { createClient } from "@/src/lib/supabase/server";
 import QrCodeClient from "@/src/components/QrCodeClient";
+import getUserID from "@/src/lib/getUserID";
 
 export default async function QrCode() {
   const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/");
-  }
+  const userID = await getUserID();
 
   const { data: username } = await supabase
     .from("users")
     .select("username")
-    .eq("id", user?.id)
+    .eq("id", userID)
     .single();
 
   if (!username?.username) {
@@ -24,8 +19,8 @@ export default async function QrCode() {
   }
 
   return (
-    <div className="w-screen h-screen flex justify-center items-center bg-lad-white">
-      <QrCodeClient userID={user?.id} />
+    <div className="w-screen h-screen flex justify-center items-center">
+      <QrCodeClient userID={userID} />
     </div>
   );
 }

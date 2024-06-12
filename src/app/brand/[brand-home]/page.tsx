@@ -1,5 +1,4 @@
 import { createClient } from "@/src/lib/supabase/server";
-import GetNFTTotalSupply from "@/src/components/brand/branch/home/GetNFTTotalSupply";
 import RenderBrandBranchStatistics from "@/src/components/brand/branch/home/RenderBrandBranchStatistics";
 import BranchHomeHeader from "@/src/components/brand/branch/home/BranchHomeHeader";
 import getUserID from "@/src/lib/getUserID";
@@ -23,7 +22,7 @@ export default async function BranchHome() {
         total_unused_free_rights,
         brand (
           brand_name,
-          brand_logo_ipfs_url,
+          brand_logo_url,
           required_number_for_free_right
     )
     `
@@ -48,11 +47,11 @@ export default async function BranchHome() {
   };
 
   return (
-    <div className="bg-[#d8d0c3]">
+    <div>
       <BranchHomeHeader
         brandName={String(data.brand?.brand_name)}
         brandBranch={data.branch_name}
-        brandLogo={String(data.brand.brand_logo_ipfs_url)}
+        brandLogo={String(data.brand.brand_logo_url)}
       />
       <RenderBrandBranchStatistics
         brandBranchData={dataObject as BrandBranchStatistics}

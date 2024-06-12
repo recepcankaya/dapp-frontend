@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { unstable_noStore as noStore } from "next/cache";
 
 import { createClient } from "@/src/lib/supabase/server";
 import CustomerHomeHeader from "@/src/components/customer/home/CustomerHomeHeader";
@@ -16,13 +17,13 @@ export default async function CustomerHome({
 }: {
   searchParams: { brandID: Brand["id"]; branchID: BrandBranch["id"] };
 }) {
+  noStore();
   const supabase = createClient();
   const userID = await getUserID();
 
   const { data: totalTicketOrders } = await supabase
     .from("user_orders")
     .select("total_ticket_orders")
-    .eq("user_id", userID)
     .eq("branch_id", searchParams.branchID)
     .single();
 
@@ -32,10 +33,11 @@ export default async function CustomerHome({
       `
       campaigns,
       video_url,
+      menu,
       brand (
         required_number_for_free_right,
-        ticket_ipfs_url,
-        brand_logo_ipfs_url
+        ticket_url,
+        brand_logo_url
       )
     `
     )
@@ -52,9 +54,7 @@ export default async function CustomerHome({
 
   return (
     <section className="h-screen w-screen">
-      <CustomerHomeHeader
-        brandLogo={branchInfo.brand?.brand_logo_ipfs_url ?? ""}
-      />
+      <CustomerHomeHeader brandLogo={branchInfo.brand?.brand_logo_url ?? ""} />
       <CustomerHomeLinks
         brandID={searchParams.brandID}
         branchID={searchParams.branchID}

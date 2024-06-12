@@ -13,10 +13,11 @@ type RenderTicketProps = {
   branchInfo: {
     campaigns: BrandBranch["campaigns"];
     video_url: BrandBranch["video_url"];
+    menu: BrandBranch["menu"];
     brand: {
       required_number_for_free_right: Brand["required_number_for_free_right"];
-      ticket_ipfs_url: Brand["ticket_ipfs_url"];
-      brand_logo_ipfs_url: Brand["brand_logo_ipfs_url"];
+      ticket_url: Brand["ticket_url"];
+      brand_logo_url: Brand["brand_logo_url"];
     } | null;
   };
   totalTicketOrders: UserOrders["total_ticket_orders"];
@@ -52,6 +53,7 @@ export default function RenderTicket({
         },
         (payload: any) => {
           setUserOrderNumber(payload.new.total_ticket_orders);
+          router.refresh();
         }
       )
       .subscribe();
@@ -65,12 +67,7 @@ export default function RenderTicket({
     <section className="pt-16 w-full grid justify-items-center items-center">
       <div className="w-full min-[525px]:w-5/6 min-[320px]:h-40 min-[375px]:h-44 min-[425px]:h-48 min-[475px]:h-52 min-[525px]:h-56 min-[600px]:h-60 min-[675px]:h-72 relative">
         <Image
-          src={
-            branchInfo.brand?.ticket_ipfs_url?.replace(
-              "ipfs://",
-              "https://ipfs.io/ipfs/"
-            ) || ""
-          }
+          src={branchInfo.brand?.ticket_url || ""}
           alt="Ticket"
           quality={100}
           priority
@@ -96,10 +93,7 @@ export default function RenderTicket({
               style={{
                 background:
                   index < totalTicketOrders
-                    ? `url(${branchInfo.brand?.brand_logo_ipfs_url.replace(
-                        "ipfs://",
-                        "https://ipfs.io/ipfs/"
-                      )}) no-repeat center center / contain`
+                    ? `url(${branchInfo.brand?.brand_logo_url}) no-repeat center center / contain`
                     : "#7B3501",
                 transform: "rotate(-45deg)",
               }}></li>
@@ -109,9 +103,14 @@ export default function RenderTicket({
       <Button
         asChild
         className="mt-16 px-16 py-6 mb-8 mx-auto flex text-lg font-bold font-rosarivo rounded-xl border-2 border-lad-pink text-lad-white">
-        <Link href={`${pathname}/menu?brandID=${brandID}&branchID=${branchID}`}>
-          Menü
-        </Link>
+        {branchInfo.menu ? (
+          <Link
+            href={`${pathname}/menu?brandID=${brandID}&branchID=${branchID}`}>
+            Menü
+          </Link>
+        ) : (
+          <p>Menü Bulunamadı</p>
+        )}
       </Button>
     </section>
   );

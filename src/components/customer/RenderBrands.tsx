@@ -15,7 +15,7 @@ type RenderBrandsProps = {
     brand: {
       id: Brand["id"];
       brand_name: Brand["brand_name"];
-      brand_logo_ipfs_url: Brand["brand_logo_ipfs_url"];
+      brand_logo_url: Brand["brand_logo_url"];
     } | null;
   }[];
 };
@@ -27,7 +27,7 @@ type BrandItem = {
   brand: {
     id: Brand["id"];
     brand_name: Brand["brand_name"];
-    brand_logo_ipfs_url: Brand["brand_logo_ipfs_url"];
+    brand_logo_url: Brand["brand_logo_url"];
   } | null;
 };
 
@@ -79,7 +79,7 @@ export default function RenderBrands(brands: RenderBrandsProps) {
   return (
     <div className="w-screen flex flex-col justify-center items-center">
       <Input
-        className="mb-12 w-4/5"
+        className="mb-12 w-4/5 border-2 border-[#dbb5b5]"
         value={searchedAdmin}
         onChange={(e) => setSearchedAdmin(e.target.value)}
         placeholder="Mekanını ara..."
@@ -106,12 +106,10 @@ export default function RenderBrands(brands: RenderBrandsProps) {
                         item.brand.brand_name
                       )}/${convertString(item.branch_name)}?brandID=${
                         item.brand.id
-                      }&branchID=${item.id}`}>
+                      }&branchID=${item.id}`}
+                      prefetch={false}>
                       <Image
-                        src={item.brand.brand_logo_ipfs_url.replace(
-                          "ipfs://",
-                          "https://ipfs.io/ipfs/"
-                        )}
+                        src={item.brand.brand_logo_url}
                         alt="brand logo"
                         className="rounded-2xl cursor-pointer object-cover border-2 border-lad-pink"
                         key={item.id}
@@ -145,12 +143,10 @@ export default function RenderBrands(brands: RenderBrandsProps) {
                         item.brand.brand_name
                       )}/${convertString(item.branch_name)}?brandID=${
                         item.brand.id
-                      }&branchID=${item.id}`}>
+                      }&branchID=${item.id}`}
+                      prefetch={false}>
                       <Image
-                        src={item.brand.brand_logo_ipfs_url.replace(
-                          "ipfs://",
-                          "https://ipfs.io/ipfs/"
-                        )}
+                        src={item.brand.brand_logo_url}
                         alt="brand logo"
                         className="rounded-2xl cursor-pointer object-cover border-2 border-lad-pink"
                         key={index}

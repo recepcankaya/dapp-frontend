@@ -11,7 +11,7 @@ export default async function Brands() {
       brand (
         id,
         brand_name,
-        brand_logo_ipfs_url
+        brand_logo_url
       )
     `);
 

@@ -2,27 +2,9 @@
 import { createClient } from "@/src/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import getUserID from "@/src/lib/getUserID";
+import decodeTurkishCharacters from "@/src/lib/convertToEnglishCharacters";
 
-const PINATA_JWT = process.env.PINATA_JWT;
-
-export type FormState = {
-  success: unknown;
-  message: string;
-};
-
-type Product = {
-  name: string;
-  price: number;
-  description: string;
-  image: string;
-  id: string;
-};
-
-type CategoryProduct = {
-  category: string;
-  categoryID: string;
-  products: Product[];
-};
+import type { CategoryProduct, Product } from "@/src/lib/types/product.types";
 
 export default async function deleteProductFromMenu(
   prevState: any,
@@ -31,6 +13,8 @@ export default async function deleteProductFromMenu(
   try {
     const userID = await getUserID();
     const productID = formData.get("productID");
+    const branchName = formData.get("branchName");
+    const convertToEnglish = decodeTurkishCharacters(String(branchName));
 
     const supabase = createClient();
 
@@ -50,14 +34,18 @@ export default async function deleteProductFromMenu(
     const findProduct: Product | undefined = (data.menu as CategoryProduct[])
       .flatMap((category: CategoryProduct) => category.products)
       .find((product: Product) => Number(product.id) === Number(productID));
-    const productIPFSHash = findProduct?.image.slice(21);
+    const imageName = findProduct?.image.split("/").pop();
 
-    await fetch(`https://api.pinata.cloud/pinning/unpin/${productIPFSHash}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${PINATA_JWT}`,
-      },
-    });
+    const { error: deleteProductImage } = await supabase.storage
+      .from("menus")
+      .remove([`${convertToEnglish}/${imageName}`]);
+
+    if (deleteProductImage) {
+      return {
+        success: false,
+        message: "Ürün silinirken bir hata oluştu. Lütfen tekrar deneyiniz.",
+      };
+    }
 
     const { error } = await supabase.rpc("delete_product_from_menu", {
       p_brand_branch_id: userID,

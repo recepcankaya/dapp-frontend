@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { Bounce, ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import dynamic from "next/dynamic";
 const QrScanner = dynamic(
@@ -17,6 +17,10 @@ import {
   MonthlyOrdersWithYear,
   MonthlyOrdersJustMonth,
 } from "@/src/lib/types/jsonQuery.types";
+import {
+  adminOrBranchCameraToastOptions,
+  getShortLengthToastOptions,
+} from "@/src/lib/toastOptions";
 
 export default function BranchCamera() {
   const isScanned = useRef<boolean>(false);
@@ -37,13 +41,17 @@ export default function BranchCamera() {
       }
 
       if (!userID) {
-        toast.error("Müşteri bilgisi bulunamadı.");
+        toast.error(
+          "Müşteri bilgisi bulunamadı.",
+          getShortLengthToastOptions()
+        );
         return;
       }
 
       if (branchID !== brandBranchID) {
         toast.error(
-          "Müşteri başka bir işletmenin QR kodunu okutmaktadır. Lütfen kendi markanızdaki qr kodunu isteyiniz."
+          "Müşteri başka bir işletmenin QR kodunu okutmaktadır. Lütfen kendi markanızdaki qr kodunu isteyiniz.",
+          getShortLengthToastOptions()
         );
         return;
       }
@@ -69,7 +77,7 @@ export default function BranchCamera() {
 
       const { data: user } = await supabase
         .from("users")
-        .select("username, wallet_addr")
+        .select("username")
         .eq("id", userID)
         .single();
 
@@ -90,7 +98,7 @@ export default function BranchCamera() {
         .eq("id", branchID);
 
       if (!brandBranchInfo) {
-        toast.error("Şube bilgisi bulunamadı.");
+        toast.error("Şube bilgisi bulunamadı.", getShortLengthToastOptions());
         return;
       }
 
@@ -100,7 +108,10 @@ export default function BranchCamera() {
         .eq("id", brandBranchInfo[0].brand_id);
 
       if (!brandInfo) {
-        toast.error("İşletme bilgisi bulunamadı.");
+        toast.error(
+          "İşletme bilgisi bulunamadı.",
+          getShortLengthToastOptions()
+        );
         return;
       }
 
@@ -119,7 +130,10 @@ export default function BranchCamera() {
 
       if (forNFT === true) {
         if (totalUserFreeRights === 0) {
-          toast.error("Müşterinizin ödül hakkı kalmamıştır.");
+          toast.error(
+            "Müşterinizin ödül hakkı kalmamıştır.",
+            adminOrBranchCameraToastOptions
+          );
         }
 
         try {
@@ -201,11 +215,15 @@ export default function BranchCamera() {
                 {totalUserFreeRights && totalUserFreeRights - 1} <br />
                 Bugüne kadar kullandığı ödül sayısı:{" "}
                 {userOrderInfo.user_total_used_free_rights + 1}
-              </p>
+              </p>,
+              adminOrBranchCameraToastOptions
             );
           }
         } catch (error) {
-          toast.error("Müşteri ödülünü kullanamadı. Lütfen tekrar deneyiniz.");
+          toast.error(
+            "Müşteri ödülünü kullanamadı. Lütfen tekrar deneyiniz.",
+            adminOrBranchCameraToastOptions
+          );
         }
       }
       // If the order is not for free, check total_ticket_orders
@@ -270,7 +288,8 @@ export default function BranchCamera() {
                 {user?.username} adlı müşterinizin işlemi başarıyla
                 gerçekleştirildi. <br />
                 <span className="font-bold">İlk sipariş!</span>
-              </p>
+              </p>,
+              adminOrBranchCameraToastOptions
             );
           } catch (error) {
             toast.error("Müşteri siparişi alınamadı. Lütfen tekrar deneyiniz.");
@@ -345,7 +364,8 @@ export default function BranchCamera() {
                 {totalUserFreeRights} <br />
                 Bugüne kadar kullandığı ödül sayısı:{" "}
                 {userOrderInfo.user_total_used_free_rights}
-              </p>
+              </p>,
+              adminOrBranchCameraToastOptions
             );
           } catch (error) {
             toast.error("Müşteri siparişi alınamadı. Lütfen tekrar deneyiniz.");
@@ -424,15 +444,22 @@ export default function BranchCamera() {
                 {totalUserFreeRights ? totalUserFreeRights + 1 : 1} <br />
                 Bugüne kadar kullandığı ödül sayısı:{" "}
                 {userOrderInfo.user_total_used_free_rights}
-              </p>
+              </p>,
+              adminOrBranchCameraToastOptions
             );
           } catch (error) {
-            toast.error("Müşteriye ödülü verilemedi.Lütfen tekrar deneyiniz.");
+            toast.error(
+              "Müşteriye ödülü verilemedi.Lütfen tekrar deneyiniz.",
+              adminOrBranchCameraToastOptions
+            );
           }
         }
       }
     } catch (error) {
-      toast.error("Bir şeyler yanlış gitti. Lütfen tekrar deneyiniz.");
+      toast.error(
+        "Bir şeyler yanlış gitti. Lütfen tekrar deneyiniz.",
+        adminOrBranchCameraToastOptions
+      );
     } finally {
       setTimeout(() => {
         isScanned.current = false;
@@ -442,19 +469,6 @@ export default function BranchCamera() {
 
   return (
     <>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-        transition={Bounce}
-      />
       <QrScanner
         constraints={{ facingMode: "environment" }}
         onDecode={handleScan}

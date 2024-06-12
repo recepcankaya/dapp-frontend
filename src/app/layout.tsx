@@ -1,6 +1,6 @@
 "use client";
-import { ThirdwebProvider, embeddedWallet } from "@thirdweb-dev/react";
-import TanstackQueryProvider from "../lib/tanstackQuery/TanstackQueryProvider";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import "./globals.css";
 
@@ -14,21 +14,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ThirdwebProvider
-      activeChain={activeChain}
-      clientId={process.env.NEXT_PUBLIC_TEMPLATE_CLIENT_ID}
-      supportedWallets={[
-        embeddedWallet({
-          auth: {
-            options: ["email", "google"],
-          },
-        }),
-      ]}>
-      <TanstackQueryProvider>
-        <html lang="en">
-          <body>{children}</body>
-        </html>
-      </TanstackQueryProvider>
-    </ThirdwebProvider>
+    <html lang="en">
+      <body>
+        {children}
+        <ToastContainer />
+      </body>
+    </html>
   );
 }

@@ -29,7 +29,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "components/landingpage/**/*.tsx" // Add the missing file path here
+    "components/landingpage/**/*.tsx", // Add the missing file path here
+    "src/lib/toastOptions.ts"
   ],
   "exclude": ["node_modules"]
 }

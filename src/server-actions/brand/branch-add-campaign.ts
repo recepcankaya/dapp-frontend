@@ -3,22 +3,17 @@ import { revalidatePath } from "next/cache";
 
 import { createClient } from "@/src/lib/supabase/server";
 import getUserID from "@/src/lib/getUserID";
-import { default as FormDataForPinata } from "form-data";
-import fetch from "node-fetch";
-
-const PINATA_JWT = process.env.PINATA_JWT;
-
-export type FormState = {
-  success: unknown;
-  message: string;
-};
+import decodeTurkishCharacters from "@/src/lib/convertToEnglishCharacters";
 
 export default async function addCampaign(prevState: any, formData: FormData) {
   const supabase = createClient();
   const userID = await getUserID();
-  const campaignName = formData.get("campaignName");
+  const campaignName = formData.get("campaignName") as String;
   const campaignBanner = formData.get("banner");
   const campaignFavourite = formData.get("favourite");
+  const branchName = formData.get("branchName");
+  const campaignNameForImage = campaignName?.replace(/\s/g, "-");
+  const convertToEnglish = decodeTurkishCharacters(String(branchName));
 
   if (!campaignName || campaignName?.length < 3) {
     return {
@@ -47,34 +42,25 @@ export default async function addCampaign(prevState: any, formData: FormData) {
     };
   }
 
-  let ipfsRes: string = "";
-  const data = new FormDataForPinata();
-  data.append("file", campaignBanner, {
-    filename: "image.jpeg",
-    contentType: "image/jpeg",
-  });
-  data.append(
-    "pinataMetadata",
-    `{\n  "name": "${campaignName}/${info.brand?.brand_name}-campaign.jpeg"\n}`
-  );
-  data.append("pinataOptions", `{\n  "campaign": "true"\n}`);
+  const { error: uploadingError } = await supabase.storage
+    .from("campaigns")
+    .upload(`${convertToEnglish}/${campaignNameForImage}`, campaignBanner);
 
-  const res = await fetch("https://api.pinata.cloud/pinning/pinFileToIPFS", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${PINATA_JWT}`,
-    },
-    body: data,
-  });
-  const resData: any = await res.json();
-  ipfsRes = resData.IpfsHash;
+  if (uploadingError) {
+    return {
+      success: false,
+      message: "Kampanya yüklenirken bir hata oluştu. Lütfen tekrar deneyiniz.",
+    };
+  }
 
-  const dbIPFS = `https://ipfs.io/ipfs/${ipfsRes}`;
+  const { data: productURL } = supabase.storage
+    .from("campaigns")
+    .getPublicUrl(`${convertToEnglish}/${campaignNameForImage}`);
 
   const { error } = await supabase.rpc("add_campaign", {
     row_id: userID,
     name: String(campaignName),
-    image: dbIPFS,
+    image: productURL.publicUrl,
     favourite: Boolean(campaignFavourite),
   });
 
