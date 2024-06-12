@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Rosarivo:ital@0;1&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Island+Moments&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -43,15 +43,5 @@
   }
   body {
     @apply bg-background text-foreground;
-  }
-}
-
-@layer base {
-  @font-face {
-    font-family: "IslandMoments";
-    font-style: normal;
-    font-weight: 400;
-    font-display: auto;
-    src: url(../fonts/IslandMoments-Regular.ttf) format(".ttf");
   }
 }

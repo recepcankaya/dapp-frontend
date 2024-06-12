@@ -18,7 +18,9 @@ const config = {
       },
     },
     extend: {
-      fontFamily: {},
+      fontFamily: {
+        "lad-island-moments": ["Island Moments", "sans-serif"],
+      },
       colors: {
         "lad-black": "#0C0C0C",
         "lad-purple": "#B80DCA",

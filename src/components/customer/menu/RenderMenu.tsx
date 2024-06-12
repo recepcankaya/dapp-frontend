@@ -1,21 +1,8 @@
 "use client";
-
-import Image from "next/image";
 import { useRef, useState } from "react";
+import Image from "next/image";
 
-type Product = {
-  name: string;
-  price: number;
-  description: string;
-  image: string;
-  id: string;
-};
-
-type CategoryProduct = {
-  category: string;
-  categoryID: string;
-  products: Product[];
-};
+import type { CategoryProduct, Product } from "@/src/lib/types/product.types";
 
 type Props = {
   menu: CategoryProduct[];
@@ -59,22 +46,19 @@ export default function RenderMenu({ menu }: Props) {
       {menu ? (
         <div className="flex flex-col justify-center items-center w-full">
           <div className="w-full flex flex-col justify-center mt-20 gap-y-2">
-            <p className="font-bold mb-3 pl-4 sm:pl-5">Menü</p>
-            <div className="flex gap-8 justify-start bg-[#DBB5B5] p-6 relative drop-shadow-xl overflow-x-auto">
+            <h1 className="font-bold mb-3 pl-4 sm:pl-5 text-xl">Menü</h1>
+            <div className="flex gap-8 justify-start overflow-y-auto bg-[#DBB5B5] p-6 relative drop-shadow-xl overflow-x-auto">
               {menu.map((item: CategoryProduct) => (
                 <li
                   key={item.categoryID}
                   onClick={() => setSelectedTab(item.category)}
-                  className="font-bold inline-block select-none italic hover:cursor-pointer drop-shadow-2xl"
+                  className="font-bold inline-block select-none hover:cursor-pointer drop-shadow-2xl font-lad-island-moments text-3xl min-w-fit"
                   style={{
                     textDecoration:
                       selectedTab === item.category ? "underline" : "none",
-                    textDecorationThickness: "1px",
                     textUnderlineOffset: "4px",
                     textShadow: "1px 3px 3px rgba(0, 0, 0, 0.5)",
-                    fontFamily: "",
-                  }}
-                >
+                  }}>
                   {item.category}
                 </li>
               ))}
@@ -82,8 +66,7 @@ export default function RenderMenu({ menu }: Props) {
           </div>
           <div className="mt-4 w-[90vw] flex-col">
             <div className="flex-col justify-start ml-1 mb-8">
-              <p className="font-bold mt-10">Fiyatlar</p>
-              <p className="text-[#00000084]">{selectedTab}</p>
+              <h2 className="font-bold mt-10 text-lg">Fiyatlar</h2>
             </div>
             {menu
               .filter((item: CategoryProduct) => selectedTab === item.category)
@@ -92,15 +75,11 @@ export default function RenderMenu({ menu }: Props) {
                   <>
                     <li
                       className="flex items-start justify-between overflow-hidden mb-12"
-                      key={product.id}
-                    >
+                      key={product.id}>
                       <div className="w-[70px] h-[70px] relative">
                         <Image
                           className="rounded-lg"
-                          src={product.image.replace(
-                            "ipfs://",
-                            "https://ipfs.io/ipfs/"
-                          )}
+                          src={product.image}
                           alt={product.name}
                           fill
                         />
