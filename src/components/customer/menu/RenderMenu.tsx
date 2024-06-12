@@ -15,7 +15,7 @@ export default function RenderMenu({ menu }: Props) {
 
   return (
     <>
-      {menu ? (
+      {menu && menu.length > 0 ? (
         <div className="flex flex-col justify-center items-center w-full">
           <div className="w-full flex flex-col justify-center mt-20 gap-y-2">
             <h1 className="font-bold mb-3 pl-4 sm:pl-5 text-xl">Menü</h1>
