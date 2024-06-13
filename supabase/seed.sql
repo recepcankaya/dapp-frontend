@@ -224,7 +224,7 @@ INSERT INTO
     ) (
         SELECT
             uuid_generate_v4 (),
-            brand.id
+            public.brand.id
             'branch deneme' || (ROW_NUMBER() OVER (ORDER BY users.email)),
             auth.users.email,
             'Ankara',
@@ -431,6 +431,8 @@ INSERT INTO
               }'
             ]::jsonb[]
         FROM
-            brand
-        JOIN 
+            public.brand
+        JOIN auth.users ON brand.id = auth.users.id
+        WHERE
+            auth.users.email LIKE '%brandbranch%'
     );
