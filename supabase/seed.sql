@@ -222,11 +222,12 @@ INSERT INTO
         monthly_total_orders_with_years,
         menu
     ) (
+
         SELECT
-            uuid_generate_v4 (),
-            public.brand.id
+            id,
+            (SELECT public.brand.id FROM public.brand WHERE public.brand.email LIKE 'brand%' AND REPLACE(public.brand.email, 'brand', '') = REPLACE(auth.users.email, 'brandbranch', '')),
             'branch deneme' || (ROW_NUMBER() OVER (ORDER BY users.email)),
-            auth.users.email,
+            email,
             'Ankara',
             '{"lat": 39.9334, "long": 32.8597}'::jsonb,
             'https://www.google.com',
@@ -431,8 +432,9 @@ INSERT INTO
               }'
             ]::jsonb[]
         FROM
-            public.brand
-        JOIN auth.users ON brand.id = auth.users.id
+            auth.users
         WHERE
             auth.users.email LIKE '%brandbranch%'
     );
+
+COMMIT;
