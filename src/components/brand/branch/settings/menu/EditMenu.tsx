@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import { useFormState } from "react-dom";
 import { toast } from "react-toastify";
 
@@ -28,6 +29,7 @@ export default function EditMenu({ product }: { product: Product }) {
     editMenuProduct,
     initialState
   );
+  const params = useParams<{ "brand-home": string }>();
 
   useEffect(() => {
     if (editState?.success === true) {
@@ -55,6 +57,12 @@ export default function EditMenu({ product }: { product: Product }) {
           </DialogHeader>
           <div className="grid gap-2">
             <input type="hidden" name="productID" value={product.id} />
+            <input
+              type="hidden"
+              name="branchName"
+              value={decodeURI(params["brand-home"])}
+            />
+            <input type="hidden" name="name" value={product.name} />
             <div>
               <Label htmlFor="edit-price">Ürünün Yeni Fiyatı</Label>
               <Input
@@ -71,6 +79,15 @@ export default function EditMenu({ product }: { product: Product }) {
                 id="edit-description"
                 name="editDescription"
                 defaultValue={product.description}
+                className="bg-[#dbb5b59d]"
+              />
+            </div>
+            <div>
+              <Label htmlFor="edit-image">Ürünün Yeni Resmi</Label>
+              <Input
+                type="file"
+                id="edit-image"
+                name="editImage"
                 className="bg-[#dbb5b59d]"
               />
             </div>

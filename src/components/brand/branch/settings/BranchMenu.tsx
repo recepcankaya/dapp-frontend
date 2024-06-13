@@ -21,7 +21,6 @@ type Props = {
 };
 
 export default function BranchMenu({ menu }: Props) {
-  console.log(menu);
   return (
     <div className="container mx-auto px-4 md:px-6 py-8 bg-[#D9D9D9] text-black mt-24">
       <UploadMenu
@@ -57,7 +56,7 @@ export default function BranchMenu({ menu }: Props) {
                       className="hover:bg-gray-200 border-none">
                       <TableCell className="p-4">
                         <Image
-                          src={product.image}
+                          src={product.image.length > 0 ? product.image : "/"}
                           alt={product.name}
                           width={64}
                           height={64}

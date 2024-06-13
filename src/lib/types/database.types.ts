@@ -82,7 +82,7 @@ export type Database = {
           daily_total_orders?: number
           daily_total_used_free_rights?: number
           email?: string
-          id: string
+          id?: string
           menu?: Json[] | null
           monthly_total_orders?: number
           monthly_total_orders_with_years?: Json
@@ -124,13 +124,6 @@ export type Database = {
             columns: ["brand_id"]
             isOneToOne: false
             referencedRelation: "brand"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "brand_branch_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
@@ -220,13 +213,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "user_orders_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "user_orders_user_id_fkey1"
             columns: ["user_id"]
             isOneToOne: false
@@ -278,17 +264,29 @@ export type Database = {
         }
         Returns: undefined
       }
-      add_product_to_menu: {
-        Args: {
-          p_product_name: string
-          p_description: string
-          p_price: string
-          p_product_image: string
-          p_category: string
-          p_brand_branch_id: string
-        }
-        Returns: undefined
-      }
+      add_product_to_menu:
+        | {
+            Args: {
+              p_product_name: string
+              p_description: string
+              p_price: string
+              p_product_image: string
+              p_category: string
+              p_brand_branch_id: string
+            }
+            Returns: undefined
+          }
+        | {
+            Args: {
+              product_name: string
+              message: string
+              price: string
+              image_url: string
+              category: string
+              user_id: string
+            }
+            Returns: undefined
+          }
       delete_product_from_menu: {
         Args: {
           p_brand_branch_id: string
@@ -309,6 +307,7 @@ export type Database = {
           p_product_id: number
           p_new_price: string
           p_new_description: string
+          p_new_image: string
         }
         Returns: undefined
       }
