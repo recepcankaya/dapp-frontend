@@ -5,5 +5,11 @@ export default function decodeTurkishCharacters(text: String) {
     .replace(/\ş/g, "s")
     .replace(/\ı/g, "i")
     .replace(/\ö/g, "o")
-    .replace(/\ç/g, "c");
+    .replace(/\ç/g, "c")
+    .replace(/\Ğ/g, "G")
+    .replace(/\Ü/g, "U")
+    .replace(/\Ş/g, "S")
+    .replace(/\İ/g, "I")
+    .replace(/\Ö/g, "O")
+    .replace(/\Ç/g, "C");
 }
