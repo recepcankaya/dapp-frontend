@@ -2,7 +2,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
 import { Button } from "@/src/components/ui/button";
 import {
   DropdownMenuTrigger,
@@ -13,7 +12,8 @@ import {
   DropdownMenu,
 } from "@/src/components/ui/dropdown-menu";
 import useScreenSize from "@/src/hooks/useScreenSize";
-
+import path from "path";
+import { createClient } from "@/src/lib/supabase/client";
 type BranchHomeHeaderProps = {
   brandName: Brand["brand_name"];
   brandBranch: BrandBranch["branch_name"];
@@ -27,6 +27,16 @@ export default function BranchHomeHeader({
 }: BranchHomeHeaderProps) {
   const pathname = usePathname();
   const { containerWidth, setContainerRef } = useScreenSize();
+  const supabase = createClient();
+
+  const logout = async () => {
+    try {
+      await supabase.auth.signOut();
+      window.location.reload();
+    } catch (error) {
+      console.error("Could not sign out", error);
+    }
+  };
 
   return (
     <header ref={setContainerRef}>
@@ -53,7 +63,8 @@ export default function BranchHomeHeader({
               <Button
                 className="rounded-full border border-black w-8 h-8"
                 size="icon"
-                variant="ghost">
+                variant="ghost"
+              >
                 <Image
                   alt="Avatar"
                   className="rounded-full"
@@ -75,19 +86,23 @@ export default function BranchHomeHeader({
             <DropdownMenuContent align="end" className="bg-[#d8d0c3]">
               <DropdownMenuLabel>Hesabım</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="hover:cursor-pointer">
+              <DropdownMenuItem className="hover:cursor-pointer" asChild>
                 <Link href={`${pathname}/settings`} prefetch={false}>
                   Ayarlar
                 </Link>
               </DropdownMenuItem>
-              <Link href={`${pathname}/brand-contact`} prefetch={false}>
-                <DropdownMenuItem className="hover:cursor-pointer">
+              <DropdownMenuItem className="hover:cursor-pointer" asChild>
+                <Link href={`${pathname}/brand-contact`} prefetch={false}>
                   Destek
-                </DropdownMenuItem>
-              </Link>
+                </Link>
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="hover:cursor-pointer">
-                Çıkış Yap
+              <DropdownMenuItem
+                onClick={logout}
+                className="hover:cursor-pointer"
+                asChild
+              >
+                <Link href={`/`}>Çıkış Yap</Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -118,7 +133,8 @@ function Package2Icon(props: React.SVGProps<SVGSVGElement>) {
       stroke="#000"
       strokeWidth="2"
       strokeLinecap="round"
-      strokeLinejoin="round">
+      strokeLinejoin="round"
+    >
       <path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z" />
       <path d="m3 9 2.45-4.9A2 2 0 0 1 7.24 3h9.52a2 2 0 0 1 1.8 1.1L21 9" />
       <path d="M12 3v6" />
