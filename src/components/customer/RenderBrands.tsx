@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 
 import { haversine } from "@/src/lib/haveresine";
 import { Input } from "../ui/input";
@@ -44,6 +45,8 @@ export default function RenderBrands(brands: RenderBrandsProps) {
     []
   );
   const [searchedAdmin, setSearchedAdmin] = useState<string>("");
+  const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -75,6 +78,13 @@ export default function RenderBrands(brands: RenderBrandsProps) {
 
     setSortedAdmins(sorted);
   }, [customerLocation, brands]);
+
+  useEffect(() => {
+    // Replace the current history entry with the current path
+    if (pathname.includes("/user/brands")) {
+      router.replace("/user/brands");
+    }
+  }, [router, pathname]);
 
   return (
     <div className="w-screen flex flex-col justify-center items-center">

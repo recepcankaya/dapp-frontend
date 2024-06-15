@@ -1,11 +1,12 @@
+"use server";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { type CookieOptions, createServerClient } from "@supabase/ssr";
 import getUserID from "@/src/lib/getUserID";
+import { RedirectType, redirect } from "next/navigation";
 
 export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url);
-  console.log("origin", origin);
+  const { searchParams, origin } = new URL(request.url);  
   const code = searchParams.get("code");
   // if "next" is in param, use it as the redirect URL
   const next = searchParams.get("next") ?? "/";
@@ -42,9 +43,9 @@ export async function GET(request: Request) {
         .single();
 
       if (!data) {
-        return NextResponse.redirect(`${origin}/user/user-info`);
+        return redirect(`${origin}/user/user-info`, "replace" as RedirectType);
       } else {
-        return NextResponse.redirect(`${origin}${next}`);
+        return redirect(`${origin}${next}`);
       }
     }
   }
