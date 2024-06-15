@@ -79,13 +79,6 @@ export default function RenderBrands(brands: RenderBrandsProps) {
     setSortedAdmins(sorted);
   }, [customerLocation, brands]);
 
-  useEffect(() => {
-    // Replace the current history entry with the current path
-    if (pathname.includes("/user/brands")) {
-      router.replace("/user/brands");
-    }
-  }, [router, pathname]);
-
   return (
     <div className="w-screen flex flex-col justify-center items-center">
       <Input
@@ -110,14 +103,16 @@ export default function RenderBrands(brands: RenderBrandsProps) {
                 ) : (
                   <div
                     key={item.id}
-                    className="flex flex-col items-center gap-4">
+                    className="flex flex-col items-center gap-4"
+                  >
                     <Link
                       href={`/user/${convertString(
                         item.brand.brand_name
                       )}/${convertString(item.branch_name)}?brandID=${
                         item.brand.id
                       }&branchID=${item.id}`}
-                      prefetch={false}>
+                      prefetch={false}
+                    >
                       <Image
                         src={item.brand.brand_logo_url}
                         alt="brand logo"
@@ -154,7 +149,8 @@ export default function RenderBrands(brands: RenderBrandsProps) {
                       )}/${convertString(item.branch_name)}?brandID=${
                         item.brand.id
                       }&branchID=${item.id}`}
-                      prefetch={false}>
+                      prefetch={false}
+                    >
                       <Image
                         src={item.brand.brand_logo_url}
                         alt="brand logo"
