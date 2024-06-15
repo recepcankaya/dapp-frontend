@@ -1,5 +1,5 @@
 "use server";
-import { redirect } from "next/navigation";
+import { RedirectType, redirect } from "next/navigation";
 import { z } from "zod";
 
 import { createClient } from "@/src/lib/supabase/server";
@@ -37,6 +37,6 @@ export default async function addUsername(prevState: any, formData: FormData) {
       message: "Bu kullanıcı adı kullanımdadır.",
     };
   } else {
-    redirect("/user/brands");
+    redirect("/user/brands", "replace" as RedirectType);
   }
 }
