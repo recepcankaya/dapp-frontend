@@ -45,7 +45,7 @@ export default function Home() {
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: "https://www.ladderit.app/auth/callback?next=/user/brands",
+        redirectTo: `${window.location.origin}/auth/callback?next=/user/brands`,
       },
     });
   };
@@ -84,8 +84,7 @@ export default function Home() {
           <Button
             variant="outline"
             className="w-full"
-            onClick={handleLoginWithGoogle}
-          >
+            onClick={handleLoginWithGoogle}>
             <ChromeIcon className="mr-2 h-5 w-5" />
             Google ile Giriş Yap
           </Button>
@@ -147,8 +146,7 @@ export default function Home() {
                         <Button
                           type="submit"
                           className="mt-4"
-                          onClick={sendPasswordRecoveryMail}
-                        >
+                          onClick={sendPasswordRecoveryMail}>
                           {loading ? (
                             <div className="w-6 h-6 animate-spin rounded-full border-b-2 border-white"></div>
                           ) : (
@@ -170,8 +168,7 @@ export default function Home() {
           <Link
             href="/user/sign-up"
             className="font-medium underline underline-offset-2 hover:text-gray-900 dark:hover:text-gray-50"
-            prefetch={false}
-          >
+            prefetch={false}>
             {" "}
             Kayıt ol!
           </Link>
@@ -201,8 +198,7 @@ function ChromeIcon(props: React.SVGProps<SVGSVGElement>) {
       stroke="currentColor"
       strokeWidth="2"
       strokeLinecap="round"
-      strokeLinejoin="round"
-    >
+      strokeLinejoin="round">
       <circle cx="12" cy="12" r="10" />
       <circle cx="12" cy="12" r="4" />
       <line x1="21.17" x2="12" y1="8" y2="8" />
