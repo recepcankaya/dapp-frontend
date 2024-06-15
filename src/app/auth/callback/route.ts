@@ -5,6 +5,7 @@ import getUserID from "@/src/lib/getUserID";
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
+  console.log("origin", origin);
   const code = searchParams.get("code");
   // if "next" is in param, use it as the redirect URL
   const next = searchParams.get("next") ?? "/";
@@ -29,6 +30,9 @@ export async function GET(request: Request) {
       }
     );
     const { error } = await supabase.auth.exchangeCodeForSession(code);
+
+    console.log("route error", error);
+
     if (!error) {
       const userID = await getUserID();
       const { data } = await supabase
