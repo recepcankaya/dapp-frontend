@@ -30,15 +30,21 @@ export default async function addUsername(prevState: any, formData: FormData) {
     last_login: String(new Date().toISOString()),
   });
 
-  if (
-    error?.message.includes("duplicate key value violates unique constraint")
-  ) {
-    return {
-      message: "Bu kullanıcı adı kullanımdadır.",
-    };
+  if (error) {
+    if (
+      error?.message.includes("duplicate key value violates unique constraint")
+    ) {
+      return {
+        message: "Bu kullanıcı adı kullanımdadır. Lütfen başka bir kullanıcı adı seçiniz.",
+      };
+    } else {
+      return {
+        message: "Kullanıcı adı eklenirken bir hata oluştu. Lütfen tekrar deneyiniz.",
+      };
+    }
   } else {
     return {
-      message: "Bu kullanıcı adı kullanımdadır.",
+      message: "",
     };
   }
 }

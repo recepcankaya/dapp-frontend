@@ -12,10 +12,10 @@ const errorMessage = {
 };
 
 export default function UserInfo() {
+  const [replaceState, setReplacateState] = useState(false);
   const [state, formAction] = useFormState(addUsername, errorMessage);
   const router = useRouter();
   const pathname = usePathname();
-  const [replaceState, setReplacateState] = useState(false);
 
   useEffect(() => {
     // Check if the user should be redirected away from the user-info page
@@ -29,8 +29,7 @@ export default function UserInfo() {
       <form action={formAction} className="flex flex-col justify-center">
         <label
           htmlFor="username"
-          className="content-start text-xl mb-10 mr-[16vh]"
-        >
+          className="content-start text-xl mb-10 mr-[16vh]">
           Kullanıcı Adınızı Giriniz:
         </label>
         <Input
