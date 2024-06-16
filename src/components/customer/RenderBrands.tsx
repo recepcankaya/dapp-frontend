@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 
 import { haversine } from "@/src/lib/haveresine";
 import { Input } from "../ui/input";
@@ -44,6 +45,8 @@ export default function RenderBrands(brands: RenderBrandsProps) {
     []
   );
   const [searchedAdmin, setSearchedAdmin] = useState<string>("");
+  const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -100,14 +103,16 @@ export default function RenderBrands(brands: RenderBrandsProps) {
                 ) : (
                   <div
                     key={item.id}
-                    className="flex flex-col items-center gap-4">
+                    className="flex flex-col items-center gap-4"
+                  >
                     <Link
                       href={`/user/${convertString(
                         item.brand.brand_name
                       )}/${convertString(item.branch_name)}?brandID=${
                         item.brand.id
                       }&branchID=${item.id}`}
-                      prefetch={false}>
+                      prefetch={false}
+                    >
                       <Image
                         src={item.brand.brand_logo_url}
                         alt="brand logo"
@@ -144,7 +149,8 @@ export default function RenderBrands(brands: RenderBrandsProps) {
                       )}/${convertString(item.branch_name)}?brandID=${
                         item.brand.id
                       }&branchID=${item.id}`}
-                      prefetch={false}>
+                      prefetch={false}
+                    >
                       <Image
                         src={item.brand.brand_logo_url}
                         alt="brand logo"

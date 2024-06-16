@@ -45,7 +45,7 @@ export default function Home() {
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: "https://www.ladderit.app/auth/callback?next=/user/brands",
+        redirectTo: `${window.location.origin}/auth/callback?next=/user/brands`,
       },
     });
   };
@@ -54,7 +54,7 @@ export default function Home() {
     e.preventDefault();
     setLoading(true);
     const { error } = await supabase.auth.resetPasswordForEmail(mail, {
-      redirectTo: "https://www.ladderit.app/user/password-reset",
+      redirectTo: `${window.location.origin}/user/password-reset`,
     });
     setLoading(false);
     if (error) {

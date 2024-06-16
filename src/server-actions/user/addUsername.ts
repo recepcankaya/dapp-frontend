@@ -1,5 +1,5 @@
 "use server";
-import { redirect } from "next/navigation";
+import { RedirectType, redirect } from "next/navigation";
 import { z } from "zod";
 
 import { createClient } from "@/src/lib/supabase/server";
@@ -30,13 +30,21 @@ export default async function addUsername(prevState: any, formData: FormData) {
     last_login: String(new Date().toISOString()),
   });
 
-  if (
-    error?.message.includes("duplicate key value violates unique constraint")
-  ) {
-    return {
-      message: "Bu kullanıcı adı kullanımdadır.",
-    };
+  if (error) {
+    if (
+      error?.message.includes("duplicate key value violates unique constraint")
+    ) {
+      return {
+        message: "Bu kullanıcı adı kullanımdadır. Lütfen başka bir kullanıcı adı seçiniz.",
+      };
+    } else {
+      return {
+        message: "Kullanıcı adı eklenirken bir hata oluştu. Lütfen tekrar deneyiniz.",
+      };
+    }
   } else {
-    redirect("/user/brands");
+    return {
+      message: "",
+    };
   }
 }
