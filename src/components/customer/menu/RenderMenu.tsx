@@ -10,7 +10,7 @@ type Props = {
 
 export default function RenderMenu({ menu }: Props) {
   const [selectedTab, setSelectedTab] = useState<string>(
-    menu[0].category || ""
+    menu?.[0]?.category || ""
   );
 
   return (
@@ -30,7 +30,8 @@ export default function RenderMenu({ menu }: Props) {
                       selectedTab === item.category ? "underline" : "none",
                     textUnderlineOffset: "4px",
                     textShadow: "1px 3px 3px rgba(0, 0, 0, 0.5)",
-                  }}>
+                  }}
+                >
                   {item.category}
                 </li>
               ))}
@@ -47,7 +48,8 @@ export default function RenderMenu({ menu }: Props) {
                   <>
                     <li
                       className="flex items-start justify-between overflow-hidden mb-12"
-                      key={product.id}>
+                      key={product.id}
+                    >
                       <div className="w-[70px] h-[70px] relative">
                         <Image
                           className="rounded-lg"
