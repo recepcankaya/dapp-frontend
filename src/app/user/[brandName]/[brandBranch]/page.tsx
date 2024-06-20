@@ -19,7 +19,9 @@ export default async function CustomerHome({
 }) {
   noStore();
   const supabase = createClient();
-  const userID = await getUserID();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   const { data: totalTicketOrders } = await supabase
     .from("user_orders")
@@ -65,7 +67,7 @@ export default async function CustomerHome({
         branchID={searchParams.branchID}
         branchInfo={branchInfo}
         totalTicketOrders={totalTicketOrders?.total_ticket_orders ?? 0}
-        userID={userID}
+        userID={user?.id ?? ""}
       />
       <CampaignCarousel
         campaigns={(branchInfo.campaigns as AdminCampaigns["campaigns"]) ?? []}
