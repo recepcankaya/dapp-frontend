@@ -191,8 +191,8 @@ INSERT INTO
           created_at,
           'brand deneme' || (ROW_NUMBER() OVER ()),
           'https://picsum.photos/200',
-          'https://picsum.photos/200',
-          'https://picsum.photos/200',
+          'https://gittjeqpqcmmbterylkd.supabase.co/storage/v1/object/public/brand_tickets/espresso-check-ticket.jpg?t=2024-06-21T07%3A30%3A17.707Z',
+          'https://gittjeqpqcmmbterylkd.supabase.co/storage/v1/object/public/brand_free_right_images/espresso-check-not-used-free-right.png?t=2024-06-21T07%3A31%3A11.273Z',
           6,
           'Kahve'
       FROM
@@ -230,7 +230,7 @@ INSERT INTO
             email,
             'Ankara',
             '{"lat": 39.9334, "long": 32.8597}'::jsonb,
-            'https://picsum.photos/200',
+            'https://www.youtube.com/embed/GbaiVH8spag?autoplay=1&mute=1',
             ARRAY[
               '{"campaign_id": "0", "campaign_name": "Kampanya 1", "campaign_image": "https://picsum.photos/200", "favourite": true}',
               '{"campaign_id": "1", "campaign_name": "Kampanya 2", "campaign_image": "https://picsum.photos/200", "favourite": false}'
