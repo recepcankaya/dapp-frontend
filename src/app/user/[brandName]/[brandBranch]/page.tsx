@@ -69,13 +69,7 @@ export default async function CustomerHome({
         totalTicketOrders={totalTicketOrders?.total_ticket_orders ?? 0}
         userID={user?.id ?? ""}
       />
-      <section
-        style={{
-          maxWidth: "1200px",
-          width: "100%",
-          aspectRatio: "16 / 9",
-          margin: "0 auto",
-        }}>
+      <section className="max-w-[768px] w-full aspect-video my-0 mx-auto">
         <CampaignCarousel
           campaigns={
             (branchInfo.campaigns as AdminCampaigns["campaigns"]) ?? []
