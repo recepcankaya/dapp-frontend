@@ -69,9 +69,13 @@ export default async function CustomerHome({
         totalTicketOrders={totalTicketOrders?.total_ticket_orders ?? 0}
         userID={user?.id ?? ""}
       />
-      <CampaignCarousel
-        campaigns={(branchInfo.campaigns as AdminCampaigns["campaigns"]) ?? []}
-      />
+      <section className="max-w-[768px] w-full aspect-video my-0 mx-auto">
+        <CampaignCarousel
+          campaigns={
+            (branchInfo.campaigns as AdminCampaigns["campaigns"]) ?? []
+          }
+        />
+      </section>
       {branchInfo.video_url ? (
         <BrandVideo brandVideo={branchInfo?.video_url} />
       ) : null}
