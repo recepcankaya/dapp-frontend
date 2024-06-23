@@ -14,7 +14,7 @@ export default async function addUsername(prevState: any, formData: FormData) {
 
   const result = schema.safeParse({ username: formData.get("username") });
   if (!result.success) {
-    return { message: result.error.errors[0].message };
+    return { success: false, message: result.error.errors[0].message };
   }
   const supabase = createClient();
 
@@ -35,15 +35,18 @@ export default async function addUsername(prevState: any, formData: FormData) {
       error?.message.includes("duplicate key value violates unique constraint")
     ) {
       return {
+        success: false,
         message: "Bu kullanıcı adı kullanımdadır. Lütfen başka bir kullanıcı adı seçiniz.",
       };
     } else {
       return {
+        success: false,
         message: "Kullanıcı adı eklenirken bir hata oluştu. Lütfen tekrar deneyiniz.",
       };
     }
   } else {
     return {
+      success: true,
       message: "",
     };
   }

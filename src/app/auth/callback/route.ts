@@ -32,8 +32,6 @@ export async function GET(request: Request) {
     );
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 
-    console.log("route error", error);
-
     if (!error) {
       const userID = await getUserID();
       const { data } = await supabase
@@ -49,7 +47,4 @@ export async function GET(request: Request) {
       }
     }
   }
-
-  // return the user to an error page with instructions
-  return NextResponse.redirect(`${origin}/auth/auth-code-error`);
 }
