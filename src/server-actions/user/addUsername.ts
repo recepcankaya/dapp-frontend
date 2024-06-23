@@ -24,11 +24,25 @@ export default async function addUsername(prevState: any, formData: FormData) {
     redirect("/");
   }
 
-  const { error } = await supabase.from("users").insert({
-    id: userID,
-    username: result.data?.username,
-    last_login: String(new Date().toISOString()),
-  });
+  const { data: user } = await supabase
+    .from("users")
+    .select("id, username")
+    .eq("id", userID)
+    .single();
+
+  let error;
+  if (user?.id && !user?.username) {
+    ({ error } = await supabase
+      .from("users")
+      .update({ username: result.data?.username })
+      .eq("id", userID));
+  } else {
+    ({ error } = await supabase.from("users").insert({
+      id: userID,
+      username: result.data?.username,
+      last_login: String(new Date().toISOString()),
+    }));
+  }
 
   if (error) {
     if (
@@ -36,12 +50,14 @@ export default async function addUsername(prevState: any, formData: FormData) {
     ) {
       return {
         success: false,
-        message: "Bu kullanıcı adı kullanımdadır. Lütfen başka bir kullanıcı adı seçiniz.",
+        message:
+          "Bu kullanıcı adı kullanımdadır. Lütfen başka bir kullanıcı adı seçiniz.",
       };
     } else {
       return {
         success: false,
-        message: "Kullanıcı adı eklenirken bir hata oluştu. Lütfen tekrar deneyiniz.",
+        message:
+          "Kullanıcı adı eklenirken bir hata oluştu. Lütfen tekrar deneyiniz.",
       };
     }
   } else {
