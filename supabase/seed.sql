@@ -232,8 +232,9 @@ INSERT INTO
             '{"lat": 39.9334, "long": 32.8597}'::jsonb,
             'https://www.youtube.com/embed/GbaiVH8spag?autoplay=1&mute=1',
             ARRAY[
-              '{"campaign_id": "0", "campaign_name": "Kampanya 1", "campaign_image": "https://picsum.photos/200", "favourite": true}',
-              '{"campaign_id": "1", "campaign_name": "Kampanya 2", "campaign_image": "https://picsum.photos/200", "favourite": false}'
+              '{"campaign_id": "0", "campaign_name": "Kampanya 1", "campaign_image": "https://gittjeqpqcmmbterylkd.supabase.co/storage/v1/object/public/ladderit-local/qpddr97pq4whve6t415hpl25f3kf.jpeg?t=2024-06-23T05%3A25%3A11.635Z", "favourite": true}',
+              '{"campaign_id": "1", "campaign_name": "Kampanya 2", "campaign_image": "https://picsum.photos/200", "favourite": false}',
+              '{"campaign_id": "2", "campaign_name": "Kampanya 3", "campaign_image": "https://picsum.photos/200", "favourite": false}'
             ]::jsonb[],
             0,
             0,

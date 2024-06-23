@@ -1,21 +1,14 @@
 "use client";
-// RE-IMPLEMENTATION OF SLIDER AND REFACTORING OF ResizeObserver
-import { useState, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination, Autoplay } from "swiper/modules";
-import { useResizeObserver } from "@wojtekmaj/react-hooks";
-
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
+import { Circle, CircleDot } from "lucide-react";
 
 import CarouselModal from "./CarouselModal";
 import type { AdminCampaigns } from "@/src/lib/types/jsonQuery.types";
 
-const resizeObserverOptions = {};
-
-const maxWidth = 560;
+// p-4 *:w-4 *h:4 duruma göre yeniden ayarlanacak
+const BUTTON_STYLES =
+  "block absolute top-0 bottom-0 p-4 cursor-pointer transition-colors ease-in-out hover:bg-black/20 *:stroke-white *:fill-black *:w-4 *h:4";
 
 export default function CampaignCarousel({
   campaigns,
@@ -23,68 +16,85 @@ export default function CampaignCarousel({
   campaigns: AdminCampaigns["campaigns"];
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [containerRef, setContainerRef] = useState<HTMLElement | null>(null);
-  const [containerWidth, setContainerWidth] = useState<number>();
+  const [imageIndex, setImageIndex] = useState(0);
 
-  const onResize = useCallback<ResizeObserverCallback>((entries) => {
-    const [entry] = entries;
+  const showNextImage = useCallback(() => {
+    setImageIndex((index: number) => {
+      if (index === (campaigns?.length ?? 0) - 1) return 0;
+      return index + 1;
+    });
+  }, [campaigns]);
 
-    if (entry) {
-      setContainerWidth(entry.contentRect.width);
-    }
-  }, []);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      showNextImage();
+    }, 4000);
 
-  useResizeObserver(containerRef, resizeObserverOptions, onResize);
+    return () => clearInterval(interval);
+  }, [imageIndex, showNextImage]);
+
+  if (!campaigns) return null;
 
   return (
-    <section ref={setContainerRef}>
-      {campaigns ? (
-        <div className="pt-12">
-          <Swiper
-            pagination={true}
-            autoplay={true}
-            modules={[Pagination, Autoplay]}
-            width={
-              containerWidth ? Math.min(containerWidth, maxWidth) : maxWidth
-            }
-            height={
-              containerWidth
-                ? (Math.min(containerWidth, maxWidth) * 9) / 16
-                : (maxWidth * 9) / 16
-            }>
-            {campaigns?.map((campaign) =>
-              isModalOpen ? (
-                <CarouselModal
-                  setIsModalOpen={setIsModalOpen}
-                  campaign={campaign}
-                  key={campaign.campaign_id}
-                />
-              ) : (
-                <SwiperSlide key={campaign.campaign_id}>
-                  <Image
-                    src={campaign.campaign_image}
-                    alt="campaign image"
-                    width={
-                      containerWidth
-                        ? Math.min(containerWidth, maxWidth)
-                        : maxWidth
-                    }
-                    height={
-                      containerWidth
-                        ? (Math.min(containerWidth, maxWidth) * 9) / 16
-                        : (maxWidth * 9) / 16
-                    }
-                    className="mx-auto"
-                    onClick={() => setIsModalOpen(true)}
-                  />
-                </SwiperSlide>
-              )
+    <div style={{ width: "100%", height: "100%", position: "relative" }}>
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          overflow: "hidden",
+        }}>
+        {campaigns.map((camp) => (
+          <img
+            key={camp.campaign_id}
+            src={camp.campaign_image}
+            alt={String(camp.campaign_name)}
+            style={{
+              objectFit: "cover",
+              width: "100%",
+              height: "100%",
+              display: "block",
+              translate: `${imageIndex * -100}%`,
+              flexShrink: 0,
+              flexGrow: 0,
+              transition: "translate 300ms ease-in-out",
+            }}
+          />
+        ))}
+      </div>
+      <div
+        style={{
+          position: "absolute",
+          bottom: ".5rem",
+          left: "50%",
+          translate: "-50%",
+          display: "flex",
+          gap: ".5rem",
+        }}>
+        {campaigns.map((_, index) => (
+          <div key={index} style={{ width: ".75rem", height: ".75rem" }}>
+            {index === imageIndex ? (
+              <CircleDot
+                style={{
+                  fill: "blue",
+                  stroke: "white",
+                  height: "100%",
+                  width: "100%",
+                }}
+              />
+            ) : (
+              <Circle
+                style={{
+                  fill: "blue",
+                  stroke: "white",
+                  height: "100%",
+                  width: "100%",
+                }}
+              />
             )}
-          </Swiper>
-        </div>
-      ) : (
-        ""
-      )}
-    </section>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
