@@ -1,9 +1,5 @@
 "use client";
-
-import { useCallback, useState } from "react";
-import { useResizeObserver } from "@wojtekmaj/react-hooks";
-
-const resizeObserverOptions = {};
+import useScreenSize from "@/src/hooks/useScreenSize";
 
 const maxWidth = 560;
 
@@ -12,18 +8,8 @@ export default function BrandVideo({
 }: {
   brandVideo: BrandBranch["video_url"];
 }) {
-  const [containerRef, setContainerRef] = useState<HTMLElement | null>(null);
-  const [containerWidth, setContainerWidth] = useState<number>();
+  const { containerWidth, setContainerRef } = useScreenSize();
 
-  const onResize = useCallback<ResizeObserverCallback>((entries) => {
-    const [entry] = entries;
-
-    if (entry) {
-      setContainerWidth(entry.contentRect.width);
-    }
-  }, []);
-
-  useResizeObserver(containerRef, resizeObserverOptions, onResize);
   return (
     <section
       className="w-screen pt-12 pb-12 flex justify-center"

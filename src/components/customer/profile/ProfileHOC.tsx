@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 
 import { createClient } from "@/src/lib/supabase/client";
+import { logout } from "@/src/lib/logout";
 import RenderFreeRights from "./RenderFreeRights";
 import RenderCustomerNFTs from "./RenderCustomerNFTs";
 import QrCodeModal from "@/src/components/QrCodeModal";
@@ -52,11 +53,19 @@ export default function ProfileHOC({
   }, [userID, router]);
 
   return (
-    <div className="w-full text-black">
-      <h1 className="text-xl mb-16 text-black text-center font-bold">
+    <div className="w-full text-black relative">
+      <div
+        className="flex items-center gap-2 absolute right-6 mt-8 cursor-pointer"
+        onClick={logout}>
+        <SignOutIcon />
+        <p className="text-sm hover:underline hover:underline-offset-2">
+          Çıkış Yap
+        </p>
+      </div>
+      <h1 className="text-xl text-black text-center font-bold mt-20">
         {username}
       </h1>
-      <div className="flex justify-around">
+      <div className="flex justify-around pt-16">
         <button
           onClick={() => setSelectedTab("Waiting")}
           className={`py-2 ${
@@ -92,5 +101,26 @@ export default function ProfileHOC({
         onClose={() => setQrCodeModalVisible(false)}
       />
     </div>
+  );
+}
+
+function SignOutIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width="11"
+      height="19"
+      viewBox="0 0 11 19"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M8.39231 10.6875H3.4375V8.3125H8.3435L7.59688 7.02287L8.569 5.34375L11 9.54275L8.569 13.7406L7.59688 12.0614L8.39231 10.6875ZM6.875 4.75H5.5V2.375H1.375V16.625H5.5V14.25H6.875V19H0V0H6.875V4.75Z"
+        fill="black"
+        fillOpacity="0.7"
+      />
+      <path
+        d="M8.39231 10.6875H3.4375V8.3125H8.3435L7.59688 7.02287L8.569 5.34375L11 9.54275L8.569 13.7406L7.59688 12.0614L8.39231 10.6875ZM6.875 4.75H5.5V2.375H1.375V16.625H5.5V14.25H6.875V19H0V0H6.875V4.75Z"
+        stroke="black"
+      />
+    </svg>
   );
 }

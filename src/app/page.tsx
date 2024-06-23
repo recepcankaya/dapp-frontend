@@ -66,7 +66,10 @@ export default function Home() {
 
           if (brandBranchTable?.branch_name) {
             router.replace(
-              `/brand/${brandBranchTable.brand?.brand_name}/${brandBranchTable.branch_name}`
+              `/brand/${brandBranchTable.brand?.brand_name.replace(
+                / /g,
+                "-"
+              )}-${brandBranchTable.branch_name.replace(/ /g, "-")}`
             );
           } else {
             const { data: brandTable } = await supabase
@@ -76,7 +79,9 @@ export default function Home() {
               .single();
 
             if (brandTable?.brand_name) {
-              router.replace(`/brand/admin/${brandTable.brand_name}`);
+              router.replace(
+                `/brand/admin/${brandTable.brand_name.replace(/ /g, "-")}`
+              );
             }
           }
         }

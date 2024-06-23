@@ -2,6 +2,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+
+import { logout } from "@/src/lib/logout";
+import useScreenSize from "@/src/hooks/useScreenSize";
+
 import { Button } from "@/src/components/ui/button";
 import {
   DropdownMenuTrigger,
@@ -11,9 +15,7 @@ import {
   DropdownMenuContent,
   DropdownMenu,
 } from "@/src/components/ui/dropdown-menu";
-import useScreenSize from "@/src/hooks/useScreenSize";
-import path from "path";
-import { createClient } from "@/src/lib/supabase/client";
+
 type BranchHomeHeaderProps = {
   brandName: Brand["brand_name"];
   brandBranch: BrandBranch["branch_name"];
@@ -27,16 +29,6 @@ export default function BranchHomeHeader({
 }: BranchHomeHeaderProps) {
   const pathname = usePathname();
   const { containerWidth, setContainerRef } = useScreenSize();
-  const supabase = createClient();
-
-  const logout = async () => {
-    try {
-      await supabase.auth.signOut();
-      window.location.reload();
-    } catch (error) {
-      console.error("Could not sign out", error);
-    }
-  };
 
   return (
     <header ref={setContainerRef}>
@@ -63,17 +55,12 @@ export default function BranchHomeHeader({
               <Button
                 className="rounded-full border border-black w-8 h-8"
                 size="icon"
-                variant="ghost"
-              >
+                variant="ghost">
                 <Image
                   alt="Avatar"
                   className="rounded-full"
                   height="32"
-                  src={
-                    brandLogo
-                      ? brandLogo.replace("ipfs://", "https://ipfs.io/ipfs/")
-                      : ""
-                  }
+                  src={brandLogo}
                   style={{
                     aspectRatio: "32/32",
                     objectFit: "cover",
@@ -100,9 +87,10 @@ export default function BranchHomeHeader({
               <DropdownMenuItem
                 onClick={logout}
                 className="hover:cursor-pointer"
-                asChild
-              >
-                <Link href={`/`}>Çıkış Yap</Link>
+                asChild>
+                <Link href={`/`} prefetch={false}>
+                  Çıkış Yap
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -133,8 +121,7 @@ function Package2Icon(props: React.SVGProps<SVGSVGElement>) {
       stroke="#000"
       strokeWidth="2"
       strokeLinecap="round"
-      strokeLinejoin="round"
-    >
+      strokeLinejoin="round">
       <path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z" />
       <path d="m3 9 2.45-4.9A2 2 0 0 1 7.24 3h9.52a2 2 0 0 1 1.8 1.1L21 9" />
       <path d="M12 3v6" />
