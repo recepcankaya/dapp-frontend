@@ -2,8 +2,8 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { type CookieOptions, createServerClient } from "@supabase/ssr";
+
 import getUserID from "@/src/lib/getUserID";
-import { RedirectType, redirect } from "next/navigation";
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);  
@@ -35,16 +35,19 @@ export async function GET(request: Request) {
     if (!error) {
       const userID = await getUserID();
       const { data } = await supabase
-        .from("users")
-        .select("username")
-        .eq("id", userID)
-        .single();
+      .from("users")
+      .select("username")
+      .eq("id", userID)
+      .single();
 
       if (!data) {
-        return redirect(`${origin}/user/user-info`, "replace" as RedirectType);
+      return NextResponse.redirect(`${origin}/user/user-info`);
       } else {
-        return redirect(`${origin}${next}`);
+      return NextResponse.redirect(`${origin}${next}`);
       }
     }
   }
+
+  // return the user to an error page with instructions
+  return NextResponse.redirect(`${origin}/auth/auth-code-error`);
 }

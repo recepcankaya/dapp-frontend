@@ -13,6 +13,7 @@ import {
   DropdownMenu,
 } from "@/src/components/ui/dropdown-menu";
 import useScreenSize from "@/src/hooks/useScreenSize";
+import { createClient } from "@/src/lib/supabase/client";
 
 type AdminHomeHeaderProps = {
   brandName: Brand["brand_name"];
@@ -25,6 +26,16 @@ export default function AdminHomeHeader({
 }: AdminHomeHeaderProps) {
   const pathname = usePathname();
   const { containerWidth, setContainerRef } = useScreenSize();
+  const supabase = createClient();
+
+  const logout = async () => {
+    try {
+      await supabase.auth.signOut();
+      window.location.reload();
+    } catch (error) {
+      console.error("Could not sign out", error);
+    }
+  };
 
   return (
     <header ref={setContainerRef}>
@@ -79,8 +90,11 @@ export default function AdminHomeHeader({
                 Destek
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="hover:cursor-pointer">
-                Çıkış Yap
+              <DropdownMenuItem
+                onClick={logout}
+                className="hover:cursor-pointer"
+                asChild>
+                <Link href={`/`}>Çıkış Yap</Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
