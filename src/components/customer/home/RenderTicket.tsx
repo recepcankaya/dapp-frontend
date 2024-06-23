@@ -86,8 +86,7 @@ export default function RenderTicket({
               : ticketCircles.length === 7
               ? "grid-cols-4"
               : "grid-cols-4"
-          } justify-items-center content-around`}
-        >
+          } justify-items-center content-around`}>
           {ticketCircles.map((_, index) => (
             <li
               key={index}
@@ -98,19 +97,16 @@ export default function RenderTicket({
                     ? `url(${branchInfo.brand?.brand_logo_url}) no-repeat center center / contain`
                     : "#7B3501",
                 transform: "rotate(-45deg)",
-              }}
-            ></li>
+              }}></li>
           ))}
         </ul>
       </div>
       <Button
         asChild
-        className="mt-16 px-16 py-6 mb-8 mx-auto flex text-lg font-bold font-rosarivo rounded-xl border-2 border-lad-pink text-lad-white"
-      >
+        className="mt-16 px-16 py-6 mb-8 mx-auto flex text-lg font-bold font-rosarivo rounded-xl border-2 border-lad-pink text-lad-white">
         {branchInfo.menu && branchInfo.menu.length > 0 ? (
           <Link
-            href={`${pathname}/menu?brandID=${brandID}&branchID=${branchID}`}
-          >
+            href={`${pathname}/menu?brandID=${brandID}&branchID=${branchID}`}>
             Menü
           </Link>
         ) : (

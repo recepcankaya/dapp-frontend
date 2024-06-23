@@ -3,6 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { logout } from "@/src/lib/logout";
+import useScreenSize from "@/src/hooks/useScreenSize";
+
 import { Button } from "@/src/components/ui/button";
 import {
   DropdownMenuTrigger,
@@ -12,7 +15,6 @@ import {
   DropdownMenuContent,
   DropdownMenu,
 } from "@/src/components/ui/dropdown-menu";
-import useScreenSize from "@/src/hooks/useScreenSize";
 
 type AdminHomeHeaderProps = {
   brandName: Brand["brand_name"];
@@ -53,11 +55,7 @@ export default function AdminHomeHeader({
                   alt="Avatar"
                   className="rounded-full"
                   height="32"
-                  src={
-                    brandLogo
-                      ? brandLogo.replace("ipfs://", "https://ipfs.io/ipfs/")
-                      : ""
-                  }
+                  src={brandLogo}
                   style={{
                     aspectRatio: "32/32",
                     objectFit: "cover",
@@ -70,17 +68,22 @@ export default function AdminHomeHeader({
             <DropdownMenuContent align="end" className="bg-[#d8d0c3]">
               <DropdownMenuLabel>Hesabım</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="hover:cursor-pointer">
+              <DropdownMenuItem className="hover:cursor-pointer" asChild>
                 <Link href={`${pathname}/settings`} prefetch={false}>
                   Ayarlar
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem className="hover:cursor-pointer">
+              <DropdownMenuItem className="hover:cursor-pointer" asChild>
                 Destek
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="hover:cursor-pointer">
-                Çıkış Yap
+              <DropdownMenuItem
+                onClick={logout}
+                className="hover:cursor-pointer"
+                asChild>
+                <Link href={`/`} prefetch={false}>
+                  Çıkış Yap
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

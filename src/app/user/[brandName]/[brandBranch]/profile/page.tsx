@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 import { unstable_noStore as noStore } from "next/cache";
 
 import { createClient } from "@/src/lib/supabase/server";
@@ -13,16 +12,6 @@ export default async function Profile({
   noStore();
   const supabase = createClient();
   const userID = await getUserID();
-
-  const { data: username } = await supabase
-    .from("users")
-    .select("username")
-    .eq("id", userID)
-    .single();
-
-  if (!username?.username) {
-    redirect("/user/user-info");
-  }
 
   const { data: userTotalFreeRights, error } = await supabase
     .from("user_orders")
@@ -46,8 +35,7 @@ export default async function Profile({
     .single();
 
   return (
-    <div className="flex flex-col items-center pt-16">
-      <h1 className="text-xl mb-16 text-black">{username?.username}</h1>
+    <div className="flex flex-col items-center">
       <ProfileHOC
         userID={userID}
         userTotalFreeRights={totalFreeRights}

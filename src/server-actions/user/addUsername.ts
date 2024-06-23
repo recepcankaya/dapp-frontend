@@ -14,7 +14,7 @@ export default async function addUsername(prevState: any, formData: FormData) {
 
   const result = schema.safeParse({ username: formData.get("username") });
   if (!result.success) {
-    return { message: result.error.errors[0].message };
+    return { success: false, message: result.error.errors[0].message };
   }
   const supabase = createClient();
 
@@ -24,26 +24,44 @@ export default async function addUsername(prevState: any, formData: FormData) {
     redirect("/");
   }
 
-  const { error } = await supabase.from("users").insert({
-    id: userID,
-    username: result.data?.username,
-    last_login: String(new Date().toISOString()),
-  });
+  const { data: user } = await supabase
+    .from("users")
+    .select("id, username")
+    .eq("id", userID)
+    .single();
+
+  let error;
+  if (user?.id && !user?.username) {
+    ({ error } = await supabase
+      .from("users")
+      .update({ username: result.data?.username })
+      .eq("id", userID));
+  } else {
+    ({ error } = await supabase.from("users").insert({
+      id: userID,
+      username: result.data?.username,
+    }));
+  }
 
   if (error) {
     if (
       error?.message.includes("duplicate key value violates unique constraint")
     ) {
       return {
-        message: "Bu kullanıcı adı kullanımdadır. Lütfen başka bir kullanıcı adı seçiniz.",
+        success: false,
+        message:
+          "Bu kullanıcı adı kullanımdadır. Lütfen başka bir kullanıcı adı seçiniz.",
       };
     } else {
       return {
-        message: "Kullanıcı adı eklenirken bir hata oluştu. Lütfen tekrar deneyiniz.",
+        success: false,
+        message:
+          "Kullanıcı adı eklenirken bir hata oluştu. Lütfen tekrar deneyiniz.",
       };
     }
   } else {
     return {
+      success: true,
       message: "",
     };
   }

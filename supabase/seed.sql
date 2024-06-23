@@ -157,14 +157,10 @@ INSERT INTO
 INSERT INTO 
   public.users (
     id,
-    created_at,
-    last_login,
     username
   ) (
     SELECT
       id,
-      created_at,
-      last_sign_in_at,
       'user deneme' || (ROW_NUMBER() OVER ())
     FROM
       auth.users
