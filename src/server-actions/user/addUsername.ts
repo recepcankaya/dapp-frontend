@@ -40,7 +40,6 @@ export default async function addUsername(prevState: any, formData: FormData) {
     ({ error } = await supabase.from("users").insert({
       id: userID,
       username: result.data?.username,
-      last_login: String(new Date().toISOString()),
     }));
   }
 
