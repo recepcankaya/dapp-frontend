@@ -119,7 +119,7 @@ export default function CampaignCarousel({
             width={0}
             height={0}
             sizes="100vw"
-            className="block object-cover w-full h-full flex-shrink-0 flex-grow-0"
+            className="block object-contain w-full h-full flex-shrink-0 flex-grow-0"
             style={{
               translate: `${imageIndex * -100}%`,
               transition: "translate 300ms ease-in-out",
