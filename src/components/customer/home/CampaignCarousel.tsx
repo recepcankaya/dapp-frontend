@@ -4,7 +4,7 @@ import Image from "next/image";
 
 import CarouselModal from "./CarouselModal";
 import type { AdminCampaigns } from "@/src/lib/types/jsonQuery.types";
-
+import useSwipe from "@/src/hooks/useSwipe";
 /**
  * Renders a carousel component for displaying campaign images.
  *
@@ -17,12 +17,13 @@ export default function CampaignCarousel({
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
+  const { handleTouchStart, handleTouchEnd, swipeDirection } = useSwipe();
 
   /**
-   * Function to show the next image in the carousel.
+   * Functions to show the next(previous) image in the carousel.
    * If the modal is open, the function will return early and not perform any action.
-   * If the current image index is at the last image, it will wrap around and show the first image.
-   * Otherwise, it will increment the image index by 1.
+   * If the current image index is at the last(first) image, it will wrap around and show the first(last) image.
+   * Otherwise, it will increment(decrement) the image index by 1.
    */
   const showNextImage = useCallback(() => {
     if (isModalOpen) return;
@@ -31,6 +32,29 @@ export default function CampaignCarousel({
       return index + 1;
     });
   }, [campaigns, isModalOpen]);
+
+  const showPreviousImage = useCallback(() => {
+    if (isModalOpen) return;
+    setImageIndex((index: number) => {
+      return index === 0 ? (campaigns?.length ?? 0) - 1 : index - 1;
+    });
+  }, [campaigns, isModalOpen]);
+
+  /**
+   * Enable swiping functionality for the campaign carousel images unless a modal is open.
+   *
+   * @param swipeDirection The direction of the swipe action.
+   * @param campaigns Brand's campaigns to be displayed in the carousel.
+   * @param showNextImage Function to transition to the next image in the carousel.
+   * @param showPreviousImage Function to transition to the previous image (only for swiping) in the carousel.
+   */
+  useEffect(() => {
+    if (swipeDirection === "left") {
+      showNextImage(); // Assuming left swipe goes to the next image
+    } else if (swipeDirection === "right") {
+      showPreviousImage(); // Assuming right swipe goes to the previous image
+    }
+  }, [swipeDirection, campaigns, showNextImage, showPreviousImage]);
 
   /**
    * Cycles through carousel images automatically unless a modal is open.
@@ -75,7 +99,11 @@ export default function CampaignCarousel({
   if (!campaigns) return null;
 
   return (
-    <div className="w-full h-full relative">
+    <div
+      className="w-full h-full relative"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
       {isModalOpen && (
         <CarouselModal
           campaign={campaigns[imageIndex]}
@@ -104,7 +132,8 @@ export default function CampaignCarousel({
         style={{
           translate: "-50%",
         }}
-        className="absolute bottom-2 left-1/2 flex gap-2">
+        className="absolute bottom-2 left-1/2 flex gap-2"
+      >
         {campaigns.map((_, index) => (
           <div key={index} className="w-3 h-3">
             {index === imageIndex ? (
@@ -118,7 +147,8 @@ export default function CampaignCarousel({
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="h-full w-full">
+                className="h-full w-full"
+              >
                 <circle cx="12" cy="12" r="10" />
                 <circle cx="12" cy="12" r="1" />
               </svg>
@@ -133,7 +163,8 @@ export default function CampaignCarousel({
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="h-full w-full">
+                className="h-full w-full"
+              >
                 <circle cx="12" cy="12" r="10" />
               </svg>
             )}
