@@ -4,7 +4,7 @@ import RenderBrands from "@/src/components/customer/RenderBrands";
 export default async function Brands() {
   const supabase = createClient();
 
-  const { data: brands } = await supabase.from("brand_branch").select(`
+  let { data: brands } = await supabase.from("brand_branch").select(`
       id,
       branch_name,
       coords,
@@ -22,6 +22,10 @@ export default async function Brands() {
       </div>
     );
   }
+
+  brands = brands.filter(
+    (brand) => brand.id !== "140222c0-b33f-4795-ba75-4ce447d03320"
+  );
 
   return (
     <section className="flex justify-center pt-16">
