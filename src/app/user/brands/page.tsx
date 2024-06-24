@@ -24,7 +24,7 @@ export default async function Brands() {
   }
 
   brands = brands.filter(
-    (brand) => brand.id !== "140222c0-b33f-4795-ba75-4ce447d03320"
+    (brand) => brand.id !== "2fbbb072-4eeb-482c-b86a-85e43e12374c"
   );
 
   return (
