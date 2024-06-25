@@ -8,9 +8,9 @@ import decodeTurkishCharacters from "@/src/lib/convertToEnglishCharacters";
 export default async function addCampaign(prevState: any, formData: FormData) {
   const supabase = createClient();
   const userID = await getUserID();
-  const campaignName = formData.get("campaignName") as String;
+  const campaignName = formData.get("campaignName") as string;
   const campaignBanner = formData.get("banner");
-  const campaignFavourite = formData.get("favourite");
+  const campaignFavourite = formData.get("favourite")?.toString() === "true";
   const branchName = formData.get("branchName");
   const campaignNameForImage = campaignName?.replace(/\s/g, "-");
   const turnCampaignToEnglishChar =
@@ -59,12 +59,14 @@ export default async function addCampaign(prevState: any, formData: FormData) {
     .from("campaigns")
     .getPublicUrl(`${convertToEnglish}/${turnCampaignToEnglishChar}`);
 
-  const { error } = await supabase.rpc("add_campaign", {
-    row_id: userID,
-    name: String(campaignName),
-    image: productURL.publicUrl,
-    favourite: Boolean(campaignFavourite),
+  const { error } = await supabase.from("campaigns").insert({
+    branch_id: userID,
+    name: campaignName,
+    image_url: productURL.publicUrl,
+    is_favourite: campaignFavourite,
   });
+
+  console.log("inserting error", error);
 
   if (error) {
     return {
@@ -72,6 +74,8 @@ export default async function addCampaign(prevState: any, formData: FormData) {
       message: "Kampanya eklenirken bir hata oluştu. Lütfen tekrar deneyiniz.",
     };
   } else {
+    console.log("Checkpoint 8...");
+
     revalidatePath("/brand/[brand-home]/settings", "page");
     return { success: true, message: "Kampanya başarıyla eklendi." };
   }
