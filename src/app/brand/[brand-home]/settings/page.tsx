@@ -25,7 +25,8 @@ export default async function Settings() {
   const { data: campaigns } = await supabase
     .from("campaigns")
     .select("*")
-    .eq("branch_id", userID);
+    .eq("branch_id", userID)
+    .order("position", { ascending: true });
 
   if (!campaigns) {
     return;

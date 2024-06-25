@@ -49,7 +49,8 @@ export default async function CustomerHome({
   const { data: campaigns } = await supabase
     .from("campaigns")
     .select("*")
-    .eq("branch_id", searchParams.branchID);
+    .eq("branch_id", searchParams.branchID)
+    .order("position", { ascending: true });
 
   const favouriteCampaign = campaigns?.find(
     (campaign) => campaign.is_favourite
