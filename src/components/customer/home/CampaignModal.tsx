@@ -3,12 +3,10 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 
-import { Campaign } from "@/src/lib/types/jsonQuery.types";
-
 export default function CampaignModal({
   favouriteCampaign,
 }: {
-  favouriteCampaign: Campaign | null;
+  favouriteCampaign: Campaigns | undefined;
 }) {
   const [isModalOpen, setIsModalOpen] = useState(true);
 
@@ -54,10 +52,7 @@ export default function CampaignModal({
           onClick={() => setIsModalOpen(false)}>
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-52 min-[375px]:h-60 min-[425px]:h-80 min-[600px]:h-96 w-full">
             <Image
-              src={favouriteCampaign.campaign_image.replace(
-                "ipfs://",
-                "https://ipfs.io/ipfs/"
-              )}
+              src={favouriteCampaign.image_url}
               alt="campaign image"
               fill
               sizes="100vw"

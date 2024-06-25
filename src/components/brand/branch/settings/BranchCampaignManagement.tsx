@@ -3,7 +3,6 @@ import Image from "next/image";
 
 import DeleteCampaign from "./campaigns/DeleteCampaign";
 import UploadCampaign from "./campaigns/UploadCampaign";
-import type { AdminCampaigns } from "@/src/lib/types/jsonQuery.types";
 
 import {
   Table,
@@ -15,7 +14,7 @@ import {
 } from "@/src/components/ui/table";
 
 type BranchCampaignManagementProps = {
-  campaigns: AdminCampaigns["campaigns"];
+  campaigns: Campaigns[] | null;
 };
 
 export default function BranchCampaignManagement({
@@ -38,10 +37,10 @@ export default function BranchCampaignManagement({
             <TableBody>
               {campaigns.map((campaign) => (
                 <TableRow
-                  key={campaign.campaign_id}
+                  key={campaign.id}
                   className="hover:bg-gray-200 border-none">
                   <TableCell className="p-4">
-                    {campaign.favourite ? (
+                    {campaign.is_favourite ? (
                       <div className="w-8 h-8 rounded-full bg-green-600 md:ml-8"></div>
                     ) : (
                       <div className="w-8 h-8 rounded-full bg-[#DBB5B5] md:ml-8"></div>
@@ -49,20 +48,20 @@ export default function BranchCampaignManagement({
                   </TableCell>
                   <TableCell className="p-4">
                     <Image
-                      src={campaign.campaign_image}
-                      alt={campaign.campaign_name ?? "Kampanya resmi"}
+                      src={campaign.image_url}
+                      alt={campaign.name ?? "Kampanya resmi"}
                       width={128}
                       height={128}
                       className="rounded-md object-cover"
                     />
                   </TableCell>
                   <TableCell className="p-4 font-medium">
-                    {campaign.campaign_name}
+                    {campaign.name}
                   </TableCell>
                   <TableCell className="p-4">
                     <DeleteCampaign
-                      campaignID={campaign.campaign_id}
-                      campaignName={campaign.campaign_name}
+                      campaignID={campaign.id}
+                      campaignName={campaign.name}
                     />
                   </TableCell>
                 </TableRow>

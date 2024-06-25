@@ -10,7 +10,8 @@ export default async function addCampaign(prevState: any, formData: FormData) {
   const userID = await getUserID();
   const campaignName = formData.get("campaignName") as string;
   const campaignBanner = formData.get("banner");
-  const campaignFavourite = formData.get("favourite")?.toString() === "true";
+  const campaignFavourite =
+    formData.get("favourite")?.toString() === "on" ? true : false;
   const branchName = formData.get("branchName");
   const campaignNameForImage = campaignName?.replace(/\s/g, "-");
   const turnCampaignToEnglishChar =
@@ -66,16 +67,12 @@ export default async function addCampaign(prevState: any, formData: FormData) {
     is_favourite: campaignFavourite,
   });
 
-  console.log("inserting error", error);
-
   if (error) {
     return {
       success: false,
       message: "Kampanya eklenirken bir hata oluştu. Lütfen tekrar deneyiniz.",
     };
   } else {
-    console.log("Checkpoint 8...");
-
     revalidatePath("/brand/[brand-home]/settings", "page");
     return { success: true, message: "Kampanya başarıyla eklendi." };
   }

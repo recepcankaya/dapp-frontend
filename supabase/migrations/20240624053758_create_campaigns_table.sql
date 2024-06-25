@@ -7,6 +7,9 @@ CREATE TABLE public.campaigns (
   is_favourite BOOLEAN NOT NULL DEFAULT FALSE
 );
 
+ALTER SEQUENCE public.campaigns_position_seq MINVALUE 0;
+ALTER SEQUENCE public.campaigns_position_seq RESTART WITH 0;
+
 ALTER TABLE "public"."campaigns" ENABLE ROW LEVEL SECURITY;
 
 create policy "Enable ALL access for Branches based on id to campaigns table"

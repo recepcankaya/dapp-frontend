@@ -3,10 +3,6 @@ export type BrandBranchInfo =
 
 type BrandInfo = Database["public"]["Tables"]["brand"]["Row"];
 
-export interface AdminCampaigns extends Omit<BrandBranchInfo, "campaigns"> {
-  campaigns: Campaign[] | null;
-}
-
 export interface MonthlyOrdersJustMonth {
   [key: string]: number;
 }
@@ -14,13 +10,6 @@ export interface MonthlyOrdersJustMonth {
 export interface MonthlyOrdersWithYear {
   [key: string]: MonthlyOrdersJustMonth;
 }
-
-export type Campaign = {
-  campaign_id: string;
-  campaign_image: string;
-  campaign_name?: string;
-  favourite: boolean;
-};
 
 export type BrandBranchStatistics = Pick<
   BrandBranchInfo & BrandInfo,

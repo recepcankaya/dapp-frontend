@@ -18,12 +18,11 @@ import {
   AlertDialogTrigger,
 } from "@/src/components/ui/alert-dialog";
 import { Button } from "@/src/components/ui/button";
-import { Campaign } from "@/src/lib/types/jsonQuery.types";
 import SubmitButton from "@/src/components/ui/submit-button";
 
 type DeleteCampaignProps = {
-  campaignID: Campaign["campaign_id"];
-  campaignName: Campaign["campaign_name"];
+  campaignID: Campaigns["id"];
+  campaignName: Campaigns["name"];
 };
 
 export default function DeleteCampaign({

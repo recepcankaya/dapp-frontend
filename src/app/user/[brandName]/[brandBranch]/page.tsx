@@ -9,9 +9,6 @@ import RenderTicket from "@/src/components/customer/home/RenderTicket";
 import CampaignModal from "@/src/components/customer/home/CampaignModal";
 import BrandVideo from "@/src/components/customer/BrandVideo";
 
-import getUserID from "@/src/lib/getUserID";
-import { type AdminCampaigns } from "@/src/lib/types/jsonQuery.types";
-
 export default async function CustomerHome({
   searchParams,
 }: {
@@ -33,7 +30,6 @@ export default async function CustomerHome({
     .from("brand_branch")
     .select(
       `
-      campaigns,
       video_url,
       menu,
       brand (
@@ -50,9 +46,14 @@ export default async function CustomerHome({
     redirect("/user/brands");
   }
 
-  const favouriteCampaign = (
-    branchInfo.campaigns as AdminCampaigns["campaigns"]
-  )?.find((campaign) => campaign.favourite);
+  const { data: campaigns } = await supabase
+    .from("campaigns")
+    .select("*")
+    .eq("branch_id", searchParams.branchID);
+
+  const favouriteCampaign = campaigns?.find(
+    (campaign) => campaign.is_favourite
+  );
 
   return (
     <section className="h-screen w-screen">
@@ -61,7 +62,7 @@ export default async function CustomerHome({
         brandID={searchParams.brandID}
         branchID={searchParams.branchID}
       />
-      <CampaignModal favouriteCampaign={favouriteCampaign ?? null} />
+      <CampaignModal favouriteCampaign={favouriteCampaign} />
       <RenderTicket
         brandID={searchParams.brandID}
         branchID={searchParams.branchID}
@@ -70,11 +71,7 @@ export default async function CustomerHome({
         userID={user?.id ?? ""}
       />
       <section className="max-w-[768px] w-full aspect-video my-0 mx-auto">
-        <CampaignCarousel
-          campaigns={
-            (branchInfo.campaigns as AdminCampaigns["campaigns"]) ?? []
-          }
-        />
+        <CampaignCarousel campaigns={campaigns} />
       </section>
       {branchInfo.video_url ? (
         <BrandVideo brandVideo={branchInfo?.video_url} />

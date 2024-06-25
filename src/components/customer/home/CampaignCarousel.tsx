@@ -3,7 +3,6 @@ import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 
 import CarouselModal from "./CarouselModal";
-import type { AdminCampaigns } from "@/src/lib/types/jsonQuery.types";
 import useSwipe from "@/src/hooks/useSwipe";
 /**
  * Renders a carousel component for displaying campaign images.
@@ -13,7 +12,7 @@ import useSwipe from "@/src/hooks/useSwipe";
 export default function CampaignCarousel({
   campaigns,
 }: {
-  campaigns: AdminCampaigns["campaigns"];
+  campaigns: Campaigns[] | null;
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
@@ -102,8 +101,7 @@ export default function CampaignCarousel({
     <div
       className="w-full h-full relative"
       onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
-    >
+      onTouchEnd={handleTouchEnd}>
       {isModalOpen && (
         <CarouselModal
           campaign={campaigns[imageIndex]}
@@ -113,9 +111,9 @@ export default function CampaignCarousel({
       <div className="w-full h-full flex overflow-hidden">
         {campaigns.map((camp) => (
           <Image
-            key={camp.campaign_id}
-            src={camp.campaign_image}
-            alt={String(camp.campaign_name)}
+            key={camp.id}
+            src={camp.image_url}
+            alt={camp.name}
             width={0}
             height={0}
             sizes="100vw"
@@ -132,8 +130,7 @@ export default function CampaignCarousel({
         style={{
           translate: "-50%",
         }}
-        className="absolute bottom-2 left-1/2 flex gap-2"
-      >
+        className="absolute bottom-2 left-1/2 flex gap-2">
         {campaigns.map((_, index) => (
           <div key={index} className="w-3 h-3">
             {index === imageIndex ? (
@@ -147,8 +144,7 @@ export default function CampaignCarousel({
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="h-full w-full"
-              >
+                className="h-full w-full">
                 <circle cx="12" cy="12" r="10" />
                 <circle cx="12" cy="12" r="1" />
               </svg>
@@ -163,8 +159,7 @@ export default function CampaignCarousel({
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="h-full w-full"
-              >
+                className="h-full w-full">
                 <circle cx="12" cy="12" r="10" />
               </svg>
             )}
