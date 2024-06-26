@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { unstable_noStore as noStore } from "next/cache";
-
+import { useEffect } from "react";
 import { createClient } from "@/src/lib/supabase/server";
 import CustomerHomeHeader from "@/src/components/customer/home/CustomerHomeHeader";
 import CustomerHomeLinks from "@/src/components/customer/home/CustomerHomeLinks";

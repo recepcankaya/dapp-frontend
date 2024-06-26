@@ -12,6 +12,8 @@ import loginWithEmail from "../server-actions/user/login";
 import { Button } from "@/src/components/ui/button";
 import { Label } from "@/src/components/ui/label";
 import { Input } from "@/src/components/ui/input";
+import CustomLoading from "../components/CustomLoading";
+
 import {
   Dialog,
   DialogClose,
@@ -33,6 +35,7 @@ export default function Home() {
   const [mail, setMail] = useState("");
   const [state, loginEmailAction] = useFormState(loginWithEmail, message);
   const [loading, setLoading] = useState(false);
+  const [isSession, setIsSession] = useState(true);
   const supabase = createClient();
   const router = useRouter();
 
@@ -49,6 +52,7 @@ export default function Home() {
         data: { session },
       } = await supabase.auth.getSession();
       if (session) {
+        setIsSession(true);
         const { data: usersTable } = await supabase
           .from("users")
           .select("id")
@@ -85,6 +89,8 @@ export default function Home() {
             }
           }
         }
+      } else {
+        setIsSession(false);
       }
     };
 
@@ -122,7 +128,9 @@ export default function Home() {
     }
   };
 
-  return (
+  return isSession ? (
+    <CustomLoading />
+  ) : (
     <section className="flex flex-col min-h-screen items-center justify-center bg-[length:100%_100%]">
       <div className="mx-auto w-full max-w-md space-y-6 rounded-lg bg-white p-8 shadow-lg dark:bg-gray-950">
         <div className="space-y-2 text-center">
@@ -135,7 +143,8 @@ export default function Home() {
           <Button
             variant="outline"
             className="w-full"
-            onClick={handleLoginWithGoogle}>
+            onClick={handleLoginWithGoogle}
+          >
             <ChromeIcon className="mr-2 h-5 w-5" />
             Google ile Giriş Yap
           </Button>
@@ -197,7 +206,8 @@ export default function Home() {
                         <Button
                           type="submit"
                           className="mt-4"
-                          onClick={sendPasswordRecoveryMail}>
+                          onClick={sendPasswordRecoveryMail}
+                        >
                           {loading ? (
                             <div className="w-6 h-6 animate-spin rounded-full border-b-2 border-white"></div>
                           ) : (
@@ -219,7 +229,8 @@ export default function Home() {
           <Link
             href="/user/sign-up"
             className="font-medium underline underline-offset-2 hover:text-gray-900 dark:hover:text-gray-50"
-            prefetch={false}>
+            prefetch={false}
+          >
             {" "}
             Kayıt ol!
           </Link>
@@ -249,7 +260,8 @@ function ChromeIcon(props: React.SVGProps<SVGSVGElement>) {
       stroke="currentColor"
       strokeWidth="2"
       strokeLinecap="round"
-      strokeLinejoin="round">
+      strokeLinejoin="round"
+    >
       <circle cx="12" cy="12" r="10" />
       <circle cx="12" cy="12" r="4" />
       <line x1="21.17" x2="12" y1="8" y2="8" />
