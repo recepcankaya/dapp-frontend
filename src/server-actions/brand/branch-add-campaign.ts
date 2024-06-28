@@ -22,6 +22,14 @@ export default async function addCampaign(prevState: any, formData: FormData) {
     return {
       success: false,
       message: "Kampanya adı en az 3 karakter olmalıdır.",
+      campaign: {
+        id: "",
+        branch_id: "",
+        name: "",
+        image_url: "",
+        position: 0,
+        is_favourite: false,
+      },
     };
   }
 
@@ -29,6 +37,14 @@ export default async function addCampaign(prevState: any, formData: FormData) {
     return {
       success: false,
       message: "Kampanya afişi eklemelisiniz.",
+      campaign: {
+        id: "",
+        branch_id: "",
+        name: "",
+        image_url: "",
+        position: 0,
+        is_favourite: false,
+      },
     };
   }
 
@@ -42,6 +58,14 @@ export default async function addCampaign(prevState: any, formData: FormData) {
     return {
       success: false,
       message: "Kullanıcı bulunamadı. Lütfen tekrar giriş yapınız.",
+      campaign: {
+        id: "",
+        branch_id: "",
+        name: "",
+        image_url: "",
+        position: 0,
+        is_favourite: false,
+      },
     };
   }
 
@@ -53,6 +77,14 @@ export default async function addCampaign(prevState: any, formData: FormData) {
     return {
       success: false,
       message: "Kampanya yüklenirken bir hata oluştu. Lütfen tekrar deneyiniz.",
+      campaign: {
+        id: "",
+        branch_id: "",
+        name: "",
+        image_url: "",
+        position: 0,
+        is_favourite: false,
+      },
     };
   }
 
@@ -60,20 +92,35 @@ export default async function addCampaign(prevState: any, formData: FormData) {
     .from("campaigns")
     .getPublicUrl(`${convertToEnglish}/${turnCampaignToEnglishChar}`);
 
-  const { error } = await supabase.from("campaigns").insert({
-    branch_id: userID,
-    name: campaignName,
-    image_url: productURL.publicUrl,
-    is_favourite: campaignFavourite,
-  });
+  const { data: campaign, error } = await supabase
+    .from("campaigns")
+    .insert({
+      branch_id: userID,
+      name: campaignName,
+      image_url: productURL.publicUrl,
+      is_favourite: campaignFavourite,
+    })
+    .select();
 
   if (error) {
     return {
       success: false,
       message: "Kampanya eklenirken bir hata oluştu. Lütfen tekrar deneyiniz.",
+      campaign: {
+        id: "",
+        branch_id: "",
+        name: "",
+        image_url: "",
+        position: 0,
+        is_favourite: false,
+      },
     };
   } else {
     revalidatePath("/brand/[brand-home]/settings", "page");
-    return { success: true, message: "Kampanya başarıyla eklendi." };
+    return {
+      success: true,
+      message: "Kampanya başarıyla eklendi.",
+      campaign: campaign[0],
+    };
   }
 }

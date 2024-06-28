@@ -5,7 +5,6 @@ import { useFormState } from "react-dom";
 import { toast } from "react-toastify";
 
 import { getShortLengthToastOptions } from "@/src/lib/toastOptions";
-import { initialState } from "@/src/lib/feedbackForForms";
 import addCampaign from "@/src/server-actions/brand/branch-add-campaign";
 
 import { Checkbox } from "@/src/components/ui/checkbox";
@@ -21,7 +20,31 @@ import { Input } from "@/src/components/ui/input";
 import { Label } from "@/src/components/ui/label";
 import SubmitButton from "@/src/components/ui/submit-button";
 
-export default function UploadCampaign() {
+type UploadCampaignProps = {
+  setCampaignsArray: React.Dispatch<React.SetStateAction<Campaigns[] | null>>;
+};
+export type Status = {
+  success: unknown;
+  message: string;
+  campaign: Campaigns;
+};
+
+export const initialState: Status = {
+  success: undefined,
+  message: "",
+  campaign: {
+    id: "",
+    branch_id: "",
+    name: "",
+    image_url: "",
+    position: 0,
+    is_favourite: false,
+  },
+};
+
+export default function UploadCampaign({
+  setCampaignsArray,
+}: UploadCampaignProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const params = useParams<{ "brand-home": string }>();
   const [addState, addFormAction] = useFormState(addCampaign, initialState);
@@ -30,12 +53,18 @@ export default function UploadCampaign() {
     if (addState?.success === true) {
       setIsDialogOpen(false);
       toast.success(addState.message, getShortLengthToastOptions());
+      setCampaignsArray((prev) => [...(prev || []), addState.campaign]);
     }
 
     if (addState?.success === false) {
       toast.error(addState?.message, getShortLengthToastOptions());
     }
-  }, [addState.success, addState.message]);
+  }, [
+    addState.success,
+    addState.message,
+    setCampaignsArray,
+    addState.campaign,
+  ]);
 
   return (
     <div className="flex justify-center items-center mb-6 relative">

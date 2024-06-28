@@ -2,6 +2,7 @@
 import { Fragment, useRef, useState } from "react";
 import Image from "next/image";
 
+import { createClient } from "@/src/lib/supabase/client";
 import DeleteCampaign from "./campaigns/DeleteCampaign";
 import UploadCampaign from "./campaigns/UploadCampaign";
 
@@ -13,7 +14,6 @@ import {
   TableBody,
   TableCell,
 } from "@/src/components/ui/table";
-import { createClient } from "@/src/lib/supabase/client";
 
 type BranchCampaignManagementProps = {
   campaigns: Campaigns[] | null;
@@ -24,16 +24,12 @@ export default function BranchCampaignManagement({
   campaigns,
   branchID,
 }: BranchCampaignManagementProps) {
-  // const [campaignsArray, setCampaignsArray] = useState<Campaigns[] | null>(
-  //   null
-  // );
+  const [campaignsArray, setCampaignsArray] = useState<Campaigns[] | null>(
+    campaigns ? [...campaigns] : null
+  );
   const draggedCampaign = useRef<number | null>(null);
   const replacedCampaign = useRef<number | null>(null);
   const supabase = createClient();
-
-  // if (campaigns) {
-  //   setCampaignsArray(campaigns);
-  // }
 
   /**
    * Handles the drag start event for a campaign item.
@@ -97,6 +93,14 @@ export default function BranchCampaignManagement({
               .eq("id", positions![i].id);
           }
         }
+
+        const { data: updatedCampaigns } = await supabase
+          .from("campaigns")
+          .select("*")
+          .eq("branch_id", branchID)
+          .order("position", { ascending: true });
+
+        setCampaignsArray([...updatedCampaigns!]);
       } else {
         const { data: draggedCampaignPositionUpdated } = await supabase
           .from("campaigns")
@@ -125,14 +129,22 @@ export default function BranchCampaignManagement({
               .eq("id", positions![i].id);
           }
         }
+
+        const { data: updatedCampaigns } = await supabase
+          .from("campaigns")
+          .select("*")
+          .eq("branch_id", branchID)
+          .order("position", { ascending: true });
+
+        setCampaignsArray([...updatedCampaigns!]);
       }
     }
   };
 
   return (
     <section className="container mx-auto px-4 md:px-6 py-8 bg-[#D9D9D9] text-black mt-24">
-      <UploadCampaign />
-      {campaigns ? (
+      <UploadCampaign setCampaignsArray={setCampaignsArray!} />
+      {campaignsArray && campaignsArray.length > 0 ? (
         <div className="overflow-hidden">
           <Table>
             <TableHeader>
@@ -144,7 +156,7 @@ export default function BranchCampaignManagement({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {campaigns.map((campaign: Campaigns, index: number) => (
+              {campaignsArray.map((campaign: Campaigns, index: number) => (
                 <Fragment key={campaign.id}>
                   <TableRow
                     draggable
