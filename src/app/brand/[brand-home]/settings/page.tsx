@@ -18,9 +18,8 @@ export default async function Settings() {
     .select("menu")
     .eq("id", userID);
 
-  if (!menu) {
-    return;
-  }
+  // Refactor edilecek yeni veritabanı sisteminde
+  if (!menu) return null;
 
   const { data: campaigns } = await supabase
     .from("campaigns")
@@ -28,14 +27,10 @@ export default async function Settings() {
     .eq("branch_id", userID)
     .order("position", { ascending: true });
 
-  if (!campaigns) {
-    return;
-  }
-
   return (
     <main className="flex flex-col min-h-[100dvh]">
       <BranchChangePassword />
-      <BranchCampaignManagement campaigns={campaigns} />
+      <BranchCampaignManagement campaigns={campaigns} branchID={userID} />
       <BranchMenu menu={menu[0]?.menu as CategoryProduct[]} />
     </main>
   );

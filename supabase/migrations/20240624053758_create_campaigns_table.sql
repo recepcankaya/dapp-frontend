@@ -12,14 +12,11 @@ ALTER SEQUENCE public.campaigns_position_seq RESTART WITH 0;
 
 ALTER TABLE "public"."campaigns" ENABLE ROW LEVEL SECURITY;
 
-create policy "Enable ALL access for Branches based on id to campaigns table"
-on "public"."campaigns"
-to authenticated
-using (
-  (branch_id = auth.uid())
-)with check (
-  (branch_id = auth.uid())
-);
+CREATE POLICY "Enable ALL access for Branches based on id to campaigns table"
+ON "public"."campaigns"
+TO authenticated
+USING ( (SELECT auth.uid()) = branch_id ) 
+WITH CHECK ( (SELECT auth.uid()) = branch_id );
 
 CREATE POLICY "Enable read access for all users for campaigns table"
 ON "public"."campaigns"
