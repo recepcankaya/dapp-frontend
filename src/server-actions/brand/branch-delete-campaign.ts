@@ -22,23 +22,66 @@ export default async function deleteCampaign(
   const { error: deleteCampaignImage } = await supabase.storage
     .from("campaigns")
     .remove([`${convertToEnglish}/${campaign?.name}`]);
-  
+
   if (deleteCampaignImage) {
     return {
       success: false,
       message: "Kampanya silinirken bir hata oluştu. Lütfen tekrar deneyiniz.",
+      campaign: {
+        id: "",
+        branch_id: "",
+        name: "",
+        image_url: "",
+        position: 0,
+        is_favourite: false,
+      },
     };
   }
 
-  const { error } = await supabase.from("campaigns").delete().eq("id", campaignID);
+  const { data, error } = await supabase
+    .from("campaigns")
+    .delete()
+    .eq("id", campaignID)
+    .select("*")
+    .single();
+
+  const { data: repositionedCampaigns } = await supabase
+    .from("campaigns")
+    .select("position, id")
+    .eq("branch_id", data!?.branch_id)
+    .gt("position", data!?.position)
+    .order("position", { ascending: true });
+  
+  if (repositionedCampaigns) {
+    for (let i = 0; i < repositionedCampaigns.length; i++) {
+      const { data: otherPositionsUpdated } = await supabase
+        .from("campaigns")
+        .update({
+          position: repositionedCampaigns[i].position - 1,
+        })
+        .eq("id", repositionedCampaigns[i].id);
+    }
+  }
 
   if (error) {
     return {
       success: false,
       message: "Kampanya silinirken bir hata oluştu. Lütfen tekrar deneyiniz.",
+      campaign: {
+        id: "",
+        branch_id: "",
+        name: "",
+        image_url: "",
+        position: 0,
+        is_favourite: false,
+      },
     };
   } else {
     revalidatePath("/brand/[brand-home]/settings", "page");
-    return { success: true, message: "Kampanya başarıyla silindi." };
+    return {
+      success: true,
+      message: "Kampanya başarıyla silindi.",
+      campaign: data,
+    };
   }
 }

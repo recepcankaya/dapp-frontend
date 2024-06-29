@@ -1,14 +1,11 @@
 CREATE TABLE public.campaigns (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  branch_id UUID NOT NULL REFERENCES public.brand_branch(id) ON DELETE CASCADE,
+  branch_id UUID REFERENCES public.brand_branch(id) ON DELETE CASCADE,
   name TEXT NOT NULL,
   image_url TEXT NOT NULL,
-  position SERIAL NOT NULL,
+  position INT NOT NULL,
   is_favourite BOOLEAN NOT NULL DEFAULT FALSE
 );
-
-ALTER SEQUENCE public.campaigns_position_seq MINVALUE 0;
-ALTER SEQUENCE public.campaigns_position_seq RESTART WITH 0;
 
 ALTER TABLE "public"."campaigns" ENABLE ROW LEVEL SECURITY;
 

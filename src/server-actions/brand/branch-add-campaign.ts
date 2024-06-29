@@ -92,6 +92,28 @@ export default async function addCampaign(prevState: any, formData: FormData) {
     .from("campaigns")
     .getPublicUrl(`${convertToEnglish}/${turnCampaignToEnglishChar}`);
 
+  const { data: maxPosition } = await supabase
+    .from("campaigns")
+    .select("position")
+    .eq("branch_id", userID)
+    .order("position", { ascending: false })
+    .limit(1)
+    .single();
+
+  const { data: favCampaign } = await supabase
+    .from("campaigns")
+    .select("id, is_favourite")
+    .eq("branch_id", userID)
+    .eq("is_favourite", true)
+    .single();
+
+  if (favCampaign) {
+    await supabase
+      .from("campaigns")
+      .update({ is_favourite: false })
+      .eq("id", favCampaign.id);
+  }
+
   const { data: campaign, error } = await supabase
     .from("campaigns")
     .insert({
@@ -99,6 +121,7 @@ export default async function addCampaign(prevState: any, formData: FormData) {
       name: campaignName,
       image_url: productURL.publicUrl,
       is_favourite: campaignFavourite,
+      position: maxPosition ? maxPosition.position + 1 : 0,
     })
     .select();
 

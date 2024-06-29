@@ -434,4 +434,9 @@ INSERT INTO
             auth.users.email LIKE '%brandbranch%'
     );
 
+INSERT INTO storage.buckets
+  (id, name, public)
+VALUES
+  ('campaigns', 'campaigns', true);
+
 COMMIT;

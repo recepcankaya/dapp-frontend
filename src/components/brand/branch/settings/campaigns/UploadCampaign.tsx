@@ -23,6 +23,7 @@ import SubmitButton from "@/src/components/ui/submit-button";
 type UploadCampaignProps = {
   setCampaignsArray: React.Dispatch<React.SetStateAction<Campaigns[] | null>>;
 };
+
 export type Status = {
   success: unknown;
   message: string;
@@ -53,6 +54,7 @@ export default function UploadCampaign({
     if (addState?.success === true) {
       setIsDialogOpen(false);
       toast.success(addState.message, getShortLengthToastOptions());
+      // Yeni favori afiş eklendiğinde diğer favori afiş false'a döneceği için burada da güncelle
       setCampaignsArray((prev) => [...(prev || []), addState.campaign]);
     }
 

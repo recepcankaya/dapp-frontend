@@ -5,7 +5,6 @@ import { useParams } from "next/navigation";
 import { toast } from "react-toastify";
 
 import { getShortLengthToastOptions } from "@/src/lib/toastOptions";
-import { initialState } from "@/src/lib/feedbackForForms";
 import deleteCampaign from "@/src/server-actions/brand/branch-delete-campaign";
 
 import {
@@ -23,26 +22,51 @@ import SubmitButton from "@/src/components/ui/submit-button";
 type DeleteCampaignProps = {
   campaignID: Campaigns["id"];
   campaignName: Campaigns["name"];
+  setCampaignsArray: React.Dispatch<React.SetStateAction<Campaigns[] | null>>;
+};
+
+export type Status = {
+  success: unknown;
+  message: string;
+  campaign: Campaigns;
+};
+
+export const initialState: Status = {
+  success: undefined,
+  message: "",
+  campaign: {
+    id: "",
+    branch_id: "",
+    name: "",
+    image_url: "",
+    position: 0,
+    is_favourite: false,
+  },
 };
 
 export default function DeleteCampaign({
   campaignID,
   campaignName,
+  setCampaignsArray,
 }: DeleteCampaignProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const params = useParams<{ "brand-home": string }>();
   const [state, deleteformAction] = useFormState(deleteCampaign, initialState);
+  const params = useParams<{ "brand-home": string }>();
 
   useEffect(() => {
     if (state?.success === true) {
       setIsDialogOpen(false);
       toast.success(state.message, getShortLengthToastOptions());
+      setCampaignsArray(
+        (prev) =>
+          prev?.filter((campaign) => campaign.id !== state.campaign.id) ?? []
+      );
     }
 
     if (state?.success === false) {
       toast.error(state?.message, getShortLengthToastOptions());
     }
-  }, [state?.success, state?.message]);
+  }, [state?.success, state?.message, setCampaignsArray, state?.campaign]);
 
   return (
     <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

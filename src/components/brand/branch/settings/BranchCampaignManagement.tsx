@@ -66,7 +66,7 @@ export default function BranchCampaignManagement({
       }
 
       if (draggedCampaign.current > replacedCampaign.current) {
-        const { data: draggedCampaignPositionUpdated } = await supabase
+        const { data: draggedCampaignPositionUpdated, error } = await supabase
           .from("campaigns")
           .update({
             position: replacedCampaign.current,
@@ -188,10 +188,10 @@ export default function BranchCampaignManagement({
                       <DeleteCampaign
                         campaignID={campaign.id}
                         campaignName={campaign.name}
+                        setCampaignsArray={setCampaignsArray!}
                       />
                     </TableCell>
                   </TableRow>
-                  {/* <div className="w-full h-0.5 bg-violet-400" /> */}
                 </Fragment>
               ))}
             </TableBody>
