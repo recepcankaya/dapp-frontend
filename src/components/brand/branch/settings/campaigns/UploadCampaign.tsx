@@ -54,8 +54,20 @@ export default function UploadCampaign({
     if (addState?.success === true) {
       setIsDialogOpen(false);
       toast.success(addState.message, getShortLengthToastOptions());
-      // Yeni favori afiş eklendiğinde diğer favori afiş false'a döneceği için burada da güncelle
-      setCampaignsArray((prev) => [...(prev || []), addState.campaign]);
+      setCampaignsArray((prev) => {
+        const updatedCampaigns = prev?.map((campaign) => {
+          if (
+            addState.campaign.is_favourite &&
+            campaign.id !== addState.campaign.id
+          ) {
+            return { ...campaign, is_favourite: false };
+          }
+          return campaign;
+        });
+
+        // Add the new campaign, ensuring it retains its is_favourite status
+        return [...(updatedCampaigns ?? []), addState.campaign];
+      });
     }
 
     if (addState?.success === false) {
