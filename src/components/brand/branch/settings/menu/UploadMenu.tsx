@@ -26,7 +26,7 @@ import {
   SelectValue,
 } from "@/src/components/ui/select";
 import { Textarea } from "@/src/components/ui/textarea";
-import { AddIcon } from "../campaigns/UploadCampaign";
+import { AddIcon } from "@/src/components/ui/SVG/Add";
 import SubmitButton from "@/src/components/ui/submit-button";
 
 type Props = {

@@ -23,6 +23,8 @@ export default async function deleteCampaign(
     .from("campaigns")
     .remove([`${convertToEnglish}/${campaign?.name}`]);
 
+  console.log("error", deleteCampaignImage);
+
   if (deleteCampaignImage) {
     return {
       success: false,
@@ -51,7 +53,7 @@ export default async function deleteCampaign(
     .eq("branch_id", data!?.branch_id)
     .gt("position", data!?.position)
     .order("position", { ascending: true });
-  
+
   if (repositionedCampaigns) {
     for (let i = 0; i < repositionedCampaigns.length; i++) {
       const { data: otherPositionsUpdated } = await supabase
