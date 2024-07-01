@@ -11,10 +11,13 @@ export default async function AdminHome() {
   const { data } = await supabase
     .from("brand")
     .select(
-      `brand_name, 
+      `id,
+      brand_name, 
       brand_logo_url, 
       required_number_for_free_right, 
       brand_branch(
+        id,
+        branch_name,
         total_orders, 
         total_used_free_rights, 
         total_unused_free_rights, 
@@ -102,6 +105,7 @@ export default async function AdminHome() {
         brandLogo={data[0].brand_logo_url}
       />
       <RenderAdminStatistics
+        brandData={data[0]}
         requiredNumberForFreeRight={data[0].required_number_for_free_right}
         weeklyTotalOrders={weeklyTotalOrders}
         calculatedData={calculatedData}
