@@ -1,5 +1,3 @@
-import { Json } from "./database.types";
-
 export type BrandBranchInfo =
   Database["public"]["Tables"]["brand_branch"]["Row"];
 
