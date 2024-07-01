@@ -23,7 +23,7 @@ import SubmitButton from "@/src/components/ui/submit-button";
 import { AddIcon } from "@/src/components/ui/SVG/Add";
 
 type UploadCampaignProps = {
-  setCampaignsArray: React.Dispatch<React.SetStateAction<Campaigns[] | null>>;
+  setCampaignsArray: React.Dispatch<React.SetStateAction<Campaigns[]>>;
 };
 
 export default function UploadCampaign({
@@ -63,9 +63,6 @@ export default function UploadCampaign({
 
   return (
     <div className="flex justify-center items-center mb-6 relative">
-      <h1 className="text-2xl font-bold underline underline-offset-4 absolute left-1/2 transform -translate-x-1/2">
-        Kampanya Yönetimi
-      </h1>
       <div className="ml-auto">
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger>
