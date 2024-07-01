@@ -2,8 +2,6 @@
 import { revalidatePath } from "next/cache";
 
 import { createClient } from "@/src/lib/supabase/server";
-import getUserID from "@/src/lib/getUserID";
-import { AdminCampaigns, Campaign } from "@/src/lib/types/jsonQuery.types";
 import decodeTurkishCharacters from "@/src/lib/convertToEnglishCharacters";
 
 export default async function deleteCampaign(
@@ -11,50 +9,81 @@ export default async function deleteCampaign(
   formData: FormData
 ) {
   const supabase = createClient();
-  const userID = await getUserID();
-  const campaignID = formData.get("campaignID");
+  const campaignID = formData.get("campaignID") as string;
   const branchName = formData.get("branchName");
   const convertToEnglish = decodeTurkishCharacters(String(branchName));
 
-  const { data } = await supabase
-    .from("brand_branch")
-    .select("campaigns")
-    .eq("id", userID);
-
-  if (!data || !data[0].campaigns) {
-    return;
-  }
-
-  const campaigns: AdminCampaigns["campaigns"] = data[0]
-    .campaigns as Campaign[];
-  const findCampaign = campaigns.find(
-    (campaign) => Number(campaign.campaign_id) === Number(campaignID)
-  );
-  const imageName = findCampaign?.campaign_image.split("/").pop();
+  const { data: campaign } = await supabase
+    .from("campaigns")
+    .select("*")
+    .eq("id", campaignID)
+    .single();
 
   const { error: deleteCampaignImage } = await supabase.storage
     .from("campaigns")
-    .remove([`${convertToEnglish}/${imageName}`]);
+    .remove([`${convertToEnglish}/${campaign?.name}`]);
+
+  console.log("error", deleteCampaignImage);
 
   if (deleteCampaignImage) {
     return {
       success: false,
       message: "Kampanya silinirken bir hata oluştu. Lütfen tekrar deneyiniz.",
+      campaign: {
+        id: "",
+        branch_id: "",
+        name: "",
+        image_url: "",
+        position: 0,
+        is_favourite: false,
+      },
     };
   }
 
-  const { error } = await supabase.rpc("delete_spesific_campaign", {
-    row_id: userID,
-    object_id: Number(findCampaign?.campaign_id),
-  });
+  const { data, error } = await supabase
+    .from("campaigns")
+    .delete()
+    .eq("id", campaignID)
+    .select("*")
+    .single();
+
+  const { data: repositionedCampaigns } = await supabase
+    .from("campaigns")
+    .select("position, id")
+    .eq("branch_id", data!?.branch_id)
+    .gt("position", data!?.position)
+    .order("position", { ascending: true });
+
+  if (repositionedCampaigns) {
+    for (let i = 0; i < repositionedCampaigns.length; i++) {
+      const { data: otherPositionsUpdated } = await supabase
+        .from("campaigns")
+        .update({
+          position: repositionedCampaigns[i].position - 1,
+        })
+        .eq("id", repositionedCampaigns[i].id);
+    }
+  }
 
   if (error) {
     return {
       success: false,
       message: "Kampanya silinirken bir hata oluştu. Lütfen tekrar deneyiniz.",
+      campaign: {
+        id: "",
+        branch_id: "",
+        name: "",
+        image_url: "",
+        position: 0,
+        is_favourite: false,
+      },
     };
   } else {
     revalidatePath("/brand/[brand-home]/settings", "page");
-    return { success: true, message: "Kampanya başarıyla silindi." };
+    return {
+      success: true,
+      message: "Kampanya başarıyla silindi.",
+      campaign: data,
+    };
   }
 }

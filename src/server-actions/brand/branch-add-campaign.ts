@@ -8,9 +8,10 @@ import decodeTurkishCharacters from "@/src/lib/convertToEnglishCharacters";
 export default async function addCampaign(prevState: any, formData: FormData) {
   const supabase = createClient();
   const userID = await getUserID();
-  const campaignName = formData.get("campaignName") as String;
+  const campaignName = formData.get("campaignName") as string;
   const campaignBanner = formData.get("banner");
-  const campaignFavourite = formData.get("favourite");
+  const campaignFavourite =
+    formData.get("favourite")?.toString() === "on" ? true : false;
   const branchName = formData.get("branchName");
   const campaignNameForImage = campaignName?.replace(/\s/g, "-");
   const turnCampaignToEnglishChar =
@@ -21,6 +22,14 @@ export default async function addCampaign(prevState: any, formData: FormData) {
     return {
       success: false,
       message: "Kampanya adı en az 3 karakter olmalıdır.",
+      campaign: {
+        id: "",
+        branch_id: "",
+        name: "",
+        image_url: "",
+        position: 0,
+        is_favourite: false,
+      },
     };
   }
 
@@ -28,6 +37,14 @@ export default async function addCampaign(prevState: any, formData: FormData) {
     return {
       success: false,
       message: "Kampanya afişi eklemelisiniz.",
+      campaign: {
+        id: "",
+        branch_id: "",
+        name: "",
+        image_url: "",
+        position: 0,
+        is_favourite: false,
+      },
     };
   }
 
@@ -41,6 +58,14 @@ export default async function addCampaign(prevState: any, formData: FormData) {
     return {
       success: false,
       message: "Kullanıcı bulunamadı. Lütfen tekrar giriş yapınız.",
+      campaign: {
+        id: "",
+        branch_id: "",
+        name: "",
+        image_url: "",
+        position: 0,
+        is_favourite: false,
+      },
     };
   }
 
@@ -52,6 +77,14 @@ export default async function addCampaign(prevState: any, formData: FormData) {
     return {
       success: false,
       message: "Kampanya yüklenirken bir hata oluştu. Lütfen tekrar deneyiniz.",
+      campaign: {
+        id: "",
+        branch_id: "",
+        name: "",
+        image_url: "",
+        position: 0,
+        is_favourite: false,
+      },
     };
   }
 
@@ -59,20 +92,58 @@ export default async function addCampaign(prevState: any, formData: FormData) {
     .from("campaigns")
     .getPublicUrl(`${convertToEnglish}/${turnCampaignToEnglishChar}`);
 
-  const { error } = await supabase.rpc("add_campaign", {
-    row_id: userID,
-    name: String(campaignName),
-    image: productURL.publicUrl,
-    favourite: Boolean(campaignFavourite),
-  });
+  const { data: maxPosition } = await supabase
+    .from("campaigns")
+    .select("position")
+    .eq("branch_id", userID)
+    .order("position", { ascending: false })
+    .limit(1)
+    .single();
+
+  const { data: favCampaign } = await supabase
+    .from("campaigns")
+    .select("id, is_favourite")
+    .eq("branch_id", userID)
+    .eq("is_favourite", true)
+    .single();
+
+  if (favCampaign) {
+    await supabase
+      .from("campaigns")
+      .update({ is_favourite: false })
+      .eq("id", favCampaign.id);
+  }
+
+  const { data: campaign, error } = await supabase
+    .from("campaigns")
+    .insert({
+      branch_id: userID,
+      name: campaignName,
+      image_url: productURL.publicUrl,
+      is_favourite: campaignFavourite,
+      position: maxPosition ? maxPosition.position + 1 : 0,
+    })
+    .select();
 
   if (error) {
     return {
       success: false,
       message: "Kampanya eklenirken bir hata oluştu. Lütfen tekrar deneyiniz.",
+      campaign: {
+        id: "",
+        branch_id: "",
+        name: "",
+        image_url: "",
+        position: 0,
+        is_favourite: false,
+      },
     };
   } else {
     revalidatePath("/brand/[brand-home]/settings", "page");
-    return { success: true, message: "Kampanya başarıyla eklendi." };
+    return {
+      success: true,
+      message: "Kampanya başarıyla eklendi.",
+      campaign: campaign[0],
+    };
   }
 }

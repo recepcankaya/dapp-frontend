@@ -11,7 +11,6 @@ type RenderTicketProps = {
   brandID: Brand["id"];
   branchID: BrandBranch["id"];
   branchInfo: {
-    campaigns: BrandBranch["campaigns"];
     video_url: BrandBranch["video_url"];
     menu: BrandBranch["menu"];
     brand: {
