@@ -38,7 +38,7 @@ export default function BranchCampaignManagement({
    * @param e - The drag event object.
    * @param index - The index of the campaign item being dragged.
    */
-  const handleDragStart = (e: React.DragEvent, index: number) => {
+  const handleDragStart = (index: number) => {
     draggedCampaign.current = index;
   };
 
@@ -48,7 +48,7 @@ export default function BranchCampaignManagement({
    * @param e - The drag event object.
    * @param index - The index of the campaign being replaced.
    */
-  const handleDragEnter = (e: React.DragEvent, index: number) => {
+  const handleDragEnter = (index: number) => {
     replacedCampaign.current = index;
   };
 
@@ -143,7 +143,7 @@ export default function BranchCampaignManagement({
   };
 
   return (
-    <div className="mt-12 md:mt-0">
+    <div>
       <UploadCampaign setCampaignsArray={setCampaignsArray!} />
       <div className="overflow-hidden">
         <Table>
@@ -160,8 +160,8 @@ export default function BranchCampaignManagement({
               <Fragment key={campaign.id}>
                 <TableRow
                   draggable
-                  onDragStart={(e) => handleDragStart(e, index)}
-                  onDragEnter={(e) => handleDragEnter(e, index)}
+                  onDragStart={(e) => handleDragStart(index)}
+                  onDragEnter={(e) => handleDragEnter(index)}
                   onDragEnd={(e) => handleDragEnd(e)}
                   className="hover:bg-gray-200 border-none active:cursor-grabbing">
                   <TableCell className="p-4">
