@@ -3,8 +3,9 @@ import { Fragment, useRef, useState } from "react";
 import Image from "next/image";
 
 import { createClient } from "@/src/lib/supabase/client";
-import DeleteCampaign from "./campaigns/DeleteCampaign";
 import UploadCampaign from "./campaigns/UploadCampaign";
+import DeleteCampaign from "./campaigns/DeleteCampaign";
+import UpdateCampaign from "./campaigns/UpdateCampaign";
 
 import {
   Table,
@@ -16,7 +17,7 @@ import {
 } from "@/src/components/ui/table";
 
 type BranchCampaignManagementProps = {
-  campaigns: Campaigns[] | null;
+  campaigns: Campaigns[];
   branchID: BrandBranch["id"];
 };
 
@@ -24,9 +25,9 @@ export default function BranchCampaignManagement({
   campaigns,
   branchID,
 }: BranchCampaignManagementProps) {
-  const [campaignsArray, setCampaignsArray] = useState<Campaigns[] | null>(
-    campaigns ? [...campaigns] : null
-  );
+  const [campaignsArray, setCampaignsArray] = useState<Campaigns[]>([
+    ...campaigns,
+  ]);
   const draggedCampaign = useRef<number | null>(null);
   const replacedCampaign = useRef<number | null>(null);
   const supabase = createClient();
@@ -142,64 +143,60 @@ export default function BranchCampaignManagement({
   };
 
   return (
-    <section className="container mx-auto px-4 md:px-6 py-8 bg-[#D9D9D9] text-black mt-24">
+    <div className="mt-12 md:mt-0">
       <UploadCampaign setCampaignsArray={setCampaignsArray!} />
-      {campaignsArray && campaignsArray.length > 0 ? (
-        <div className="overflow-hidden">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-1/7 p-4">Kampanya Favori mi?</TableHead>
-                <TableHead className="w-2/7 p-4">Kampanyanın Resmi</TableHead>
-                <TableHead className="w-2/7 p-4">Kampanyanın Adı</TableHead>
-                <TableHead className="w-1/7 p-4"></TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {campaignsArray.map((campaign: Campaigns, index: number) => (
-                <Fragment key={campaign.id}>
-                  <TableRow
-                    draggable
-                    onDragStart={(e) => handleDragStart(e, index)}
-                    onDragEnter={(e) => handleDragEnter(e, index)}
-                    onDragEnd={(e) => handleDragEnd(e)}
-                    className="hover:bg-gray-200 border-none active:cursor-grabbing">
-                    <TableCell className="p-4">
-                      {campaign.is_favourite ? (
-                        <div className="w-8 h-8 rounded-full bg-green-600 md:ml-8"></div>
-                      ) : (
-                        <div className="w-8 h-8 rounded-full bg-[#DBB5B5] md:ml-8"></div>
-                      )}
-                    </TableCell>
-                    <TableCell className="p-4">
-                      <Image
-                        src={campaign.image_url}
-                        alt={campaign.name ?? "Kampanya resmi"}
-                        priority
-                        width={128}
-                        height={128}
-                        className="rounded-md object-cover"
-                      />
-                    </TableCell>
-                    <TableCell className="p-4 font-medium">
-                      {campaign.name}
-                    </TableCell>
-                    <TableCell className="p-4">
-                      <DeleteCampaign
-                        campaignID={campaign.id}
-                        campaignName={campaign.name}
-                        setCampaignsArray={setCampaignsArray!}
-                      />
-                    </TableCell>
-                  </TableRow>
-                </Fragment>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      ) : (
-        <p>Aktif kampanyanız bulunmamaktadır.</p>
-      )}
-    </section>
+      <div className="overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-1/7 p-4">Kampanya Favori mi?</TableHead>
+              <TableHead className="w-2/7 p-4">Kampanyanın Resmi</TableHead>
+              <TableHead className="w-2/7 p-4">Kampanyanın Adı</TableHead>
+              <TableHead className="w-1/7 p-4"></TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {campaignsArray.map((campaign: Campaigns, index: number) => (
+              <Fragment key={campaign.id}>
+                <TableRow
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, index)}
+                  onDragEnter={(e) => handleDragEnter(e, index)}
+                  onDragEnd={(e) => handleDragEnd(e)}
+                  className="hover:bg-gray-200 border-none active:cursor-grabbing">
+                  <TableCell className="p-4">
+                    <UpdateCampaign
+                      isCampaignFavourite={campaign.is_favourite ?? false}
+                      campaignID={campaign.id}
+                      setCampaignsArray={setCampaignsArray!}
+                    />
+                  </TableCell>
+                  <TableCell className="p-4">
+                    <Image
+                      src={campaign.image_url}
+                      alt={campaign.name ?? "Kampanya resmi"}
+                      priority
+                      width={128}
+                      height={128}
+                      className="rounded-md object-cover"
+                    />
+                  </TableCell>
+                  <TableCell className="p-4 font-medium">
+                    {campaign.name}
+                  </TableCell>
+                  <TableCell className="p-4">
+                    <DeleteCampaign
+                      campaignID={campaign.id}
+                      campaignName={campaign.name}
+                      setCampaignsArray={setCampaignsArray!}
+                    />
+                  </TableCell>
+                </TableRow>
+              </Fragment>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </div>
   );
 }

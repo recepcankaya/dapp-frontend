@@ -24,7 +24,7 @@ import { TrashIcon } from "@/src/components/ui/SVG/Trash";
 type DeleteCampaignProps = {
   campaignID: Campaigns["id"];
   campaignName: Campaigns["name"];
-  setCampaignsArray: React.Dispatch<React.SetStateAction<Campaigns[] | null>>;
+  setCampaignsArray: React.Dispatch<React.SetStateAction<Campaigns[]>>;
 };
 
 export default function DeleteCampaign({
