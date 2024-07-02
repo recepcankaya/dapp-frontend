@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 
 import type { CategoryProduct, Product } from "@/src/lib/types/product.types";
@@ -24,14 +24,12 @@ export default function RenderMenu({ menu }: Props) {
                 <li
                   key={item.categoryID}
                   onClick={() => setSelectedTab(item.category)}
-                  className="font-bold inline-block select-none hover:cursor-pointer drop-shadow-2xl font-lad-island-moments text-3xl min-w-fit"
+                  className="font-semibold inline-block select-none hover:cursor-pointer  min-w-fit"
                   style={{
                     textDecoration:
                       selectedTab === item.category ? "underline" : "none",
                     textUnderlineOffset: "4px",
-                    textShadow: "1px 3px 3px rgba(0, 0, 0, 0.5)",
-                  }}
-                >
+                  }}>
                   {item.category}
                 </li>
               ))}
@@ -48,8 +46,7 @@ export default function RenderMenu({ menu }: Props) {
                   <>
                     <li
                       className="flex items-start justify-between overflow-hidden mb-12"
-                      key={product.id}
-                    >
+                      key={product.id}>
                       <div className="w-[70px] h-[70px] relative">
                         <Image
                           className="rounded-lg"
