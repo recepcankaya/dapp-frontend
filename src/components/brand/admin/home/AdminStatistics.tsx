@@ -1,17 +1,14 @@
 "use client";
-import React, { useState } from "react";
-import {
-  AdminBrandBranchInfo,
-  AdminHomeStatistics,
-} from "@/src/lib/types/jsonQuery.types";
+import { useState } from "react";
+import { AdminBrandBranchInfo, AdminHomeStatistics } from "@/src/lib/types/jsonQuery.types";
 import AdminHomeCards from "./AdminHomeCards";
 import AdminLineChart from "./AdminLineChart";
 import AdminHomeBranchCard from "./AdminHomeBranchCard";
 
 type AdminStatisticsProps = {
   brandData: AdminBrandBranchInfo;
-  requiredNumberForFreeRight: number;
-  weeklyTotalOrders: any;
+  requiredNumberForFreeRight: Brand["required_number_for_free_right"];
+  weeklyTotalOrders: BrandBranch["weekly_total_orders"];
   calculatedData: AdminHomeStatistics;
 };
 
@@ -22,12 +19,29 @@ export default function RenderAdminStatistics({
   calculatedData,
 }: AdminStatisticsProps) {
   const [branchCalculatedData, setBranchCalculatedData] = useState(calculatedData);
+  const [branchWeeklyTotalOrder, setBranchWeeklytotalOrder] = useState(weeklyTotalOrders);
   const [selectedBranch, setSelectedBranch] = useState<string | null>(null);
+
+  const calculateWeeklyTotalOrders = (weeklyTotalOrders: {
+    [key: string]: number;
+  }) => {
+    const result: { [key: string]: number } = {};
+
+    Object.keys(weeklyTotalOrders).forEach((day) => {
+      const value = weeklyTotalOrders[day];
+      if (typeof value === "number") {
+        result[day] = value;
+      }
+    });
+
+    return result;
+  };
 
   const handleBranchSelect = (branchName: string | null) => {
     if (branchName === selectedBranch) {
       setSelectedBranch(null);
       setBranchCalculatedData(calculatedData);
+      setBranchWeeklytotalOrder(weeklyTotalOrders);
     } else {
       setSelectedBranch(branchName);
       if (branchName) {
@@ -46,6 +60,13 @@ export default function RenderAdminStatistics({
             monthly_total_orders: selectedBranchData.monthly_total_orders,
           };
 
+          setBranchWeeklytotalOrder(
+            calculateWeeklyTotalOrders(
+              selectedBranchData.weekly_total_orders as {
+                [key: string]: number;
+              }
+            )
+          );
           setBranchCalculatedData(updatedCalculatedData);
         }
       }
@@ -64,7 +85,7 @@ export default function RenderAdminStatistics({
         adminData={branchCalculatedData}
         selectedBranch={selectedBranch}
       />
-      <AdminLineChart weeklyTotalOrders={weeklyTotalOrders} />
+      <AdminLineChart weeklyTotalOrders={branchWeeklyTotalOrder} />
     </main>
   );
 }
