@@ -1,9 +1,8 @@
-// @use client;
-import React from "react";
+"use client";
 import type { AdminHomeStatistics } from "@/src/lib/types/jsonQuery.types";
 
 type AdminHomeCardsProps = {
-  requiredNumberForFreeRight: number;
+  requiredNumberForFreeRight: Brand["required_number_for_free_right"];
   adminData: AdminHomeStatistics;
   selectedBranch: string | null;
 };
@@ -70,8 +69,7 @@ export default function AdminHomeCards({
       {statistics.map((item) => (
         <div
           key={item.id}
-          className="flex flex-col gap-4 rounded-xl bg-[#ad775f] px-6 py-3 shadow-xl"
-        >
+          className="flex flex-col gap-4 rounded-xl bg-[#ad775f] px-6 py-3 shadow-xl">
           <div className="text-4xl font-bold text-center">{item.number}</div>
           <h3 className="text-lg font-semibold text-center">{item.text}</h3>
         </div>

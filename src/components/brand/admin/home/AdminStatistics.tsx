@@ -1,11 +1,16 @@
 "use client";
 import { useEffect, useState } from "react";
-import { AdminBrandBranchInfo, AdminHomeStatistics } from "@/src/lib/types/jsonQuery.types";
+import { usePathname, useRouter } from "next/navigation";
+
 import AdminHomeCards from "./AdminHomeCards";
 import AdminLineChart from "./AdminLineChart";
 import AdminHomeBranchCard from "./AdminHomeBranchCard";
-import { usePathname, useRouter } from "next/navigation";
 import { convertString } from "@/src/lib/utils";
+
+import type {
+  AdminBrandBranchInfo,
+  AdminHomeStatistics,
+} from "@/src/lib/types/jsonQuery.types";
 
 type AdminStatisticsProps = {
   brandData: AdminBrandBranchInfo;
@@ -20,8 +25,10 @@ export default function RenderAdminStatistics({
   weeklyTotalOrders,
   calculatedData,
 }: AdminStatisticsProps) {
-  const [branchCalculatedData, setBranchCalculatedData] = useState(calculatedData);
-  const [branchWeeklyTotalOrder, setBranchWeeklytotalOrder] = useState(weeklyTotalOrders);
+  const [branchCalculatedData, setBranchCalculatedData] =
+    useState(calculatedData);
+  const [branchWeeklyTotalOrder, setBranchWeeklytotalOrder] =
+    useState(weeklyTotalOrders);
   const [selectedBranch, setSelectedBranch] = useState<string | null>(null);
 
   const router = useRouter();
@@ -29,10 +36,9 @@ export default function RenderAdminStatistics({
 
   useEffect(() => {
     if (!selectedBranch) {
-      router.push(pathname, undefined); 
+      router.push(pathname);
     }
   }, [selectedBranch, pathname, router]);
-
 
   const calculateWeeklyTotalOrders = (weeklyTotalOrders: {
     [key: string]: number;
@@ -54,7 +60,7 @@ export default function RenderAdminStatistics({
       setSelectedBranch(null);
       setBranchCalculatedData(calculatedData);
       setBranchWeeklytotalOrder(weeklyTotalOrders);
-      router.push(`${pathname}`, undefined);     
+      router.push(`${pathname}`);
     } else {
       setSelectedBranch(branchName);
       if (branchName) {
@@ -81,7 +87,8 @@ export default function RenderAdminStatistics({
             )
           );
           setBranchCalculatedData(updatedCalculatedData);
-          router.push(`${pathname}?branch=${convertString(branchName)}`, undefined);        }
+          router.push(`${pathname}?branch=${convertString(branchName)}`);
+        }
       }
     }
   };
