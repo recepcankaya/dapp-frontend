@@ -10,7 +10,7 @@ export default async function deleteCampaign(
 ) {
   const supabase = createClient();
   const campaignID = formData.get("campaignID") as string;
-  const branchName = formData.get("branchName");
+  const branchName = formData.get("branchName") ?? "";
   const convertToEnglish = decodeTurkishCharacters(String(branchName));
 
   const { data: campaign } = await supabase
@@ -47,10 +47,11 @@ export default async function deleteCampaign(
     .select("*")
     .single();
 
+  const branchID = data?.branch_id ?? "";
   const { data: repositionedCampaigns } = await supabase
     .from("campaigns")
     .select("position, id")
-    .eq("branch_id", data!?.branch_id)
+    .eq("branch_id", branchID)
     .gt("position", data!?.position)
     .order("position", { ascending: true });
 

@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import { toast } from "react-toastify";
 
 import { getShortLengthToastOptions } from "@/src/lib/toastOptions";
-import { initialState } from "@/src/lib/feedbackForForms";
+import { initialState } from "@/src/lib/productInitialState";
 import addMenuProduct from "@/src/server-actions/brand/branch-add-menu-product";
 
 import {
@@ -30,24 +30,31 @@ import { AddIcon } from "@/src/components/ui/SVG/Add";
 import SubmitButton from "@/src/components/ui/submit-button";
 
 type Props = {
+  setMenusArray: React.Dispatch<React.SetStateAction<Menus[] | null>>;
   categories: string[];
 };
 
-export default function UploadMenu({ categories }: Props) {
+export default function UploadMenu({ setMenusArray, categories }: Props) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const params = useParams<{ "brand-home": string }>();
-  const [state, formAction] = useFormState(addMenuProduct, initialState);
+  const [updateState, formAction] = useFormState(addMenuProduct, initialState);
 
   useEffect(() => {
-    if (state?.success === true) {
+    if (updateState?.success === true) {
       setIsDialogOpen(false);
-      toast.success(state.message, getShortLengthToastOptions());
+      toast.success(updateState.message, getShortLengthToastOptions());
+      setMenusArray((prevMenus) => [...(prevMenus ?? []), updateState.product]);
     }
 
-    if (state?.success === false) {
-      toast.error(state?.message, getShortLengthToastOptions());
+    if (updateState?.success === false) {
+      toast.error(updateState?.message, getShortLengthToastOptions());
     }
-  }, [state]);
+  }, [
+    updateState.success,
+    updateState.message,
+    updateState.product,
+    setMenusArray,
+  ]);
 
   return (
     <div className="flex justify-center items-center mb-6 relative">

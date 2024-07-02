@@ -163,7 +163,8 @@ export default function BranchCampaignManagement({
                     onDragStart={(e) => handleDragStart(e, index)}
                     onDragEnter={(e) => handleDragEnter(e, index)}
                     onDragEnd={(e) => handleDragEnd(e)}
-                    className="hover:bg-gray-200 border-none active:cursor-grabbing">
+                    className="hover:bg-gray-200 border-none active:cursor-grabbing touch-auto"
+                  >
                     <TableCell className="p-4">
                       {campaign.is_favourite ? (
                         <div className="w-8 h-8 rounded-full bg-green-600 md:ml-8"></div>

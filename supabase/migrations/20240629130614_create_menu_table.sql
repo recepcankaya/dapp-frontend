@@ -6,7 +6,7 @@ CREATE TABLE public.menus (
   price NUMERIC,
   image_url TEXT,
   category TEXT NOT NULL,
-  position INT NOT NULL,
+  position INT NOT NULL
 );
 
 ALTER TABLE "public"."menus" ENABLE ROW LEVEL SECURITY;

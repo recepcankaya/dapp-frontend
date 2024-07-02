@@ -7,4 +7,5 @@ declare global {
   type Campaigns = DB["public"]["Tables"]["campaigns"]["Row"];
   type UserOrders = DB["public"]["Tables"]["user_orders"]["Row"];
   type User = DB["public"]["Tables"]["users"]["Row"];
+  type Menus = DB["public"]["Tables"]["menus"]["Row"];
 }

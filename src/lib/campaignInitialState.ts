@@ -1,11 +1,11 @@
 export type CampaignStatus = {
-  success: unknown;
+  success: boolean;
   message: string;
   campaign: Campaigns;
 };
 
 export const initialState: CampaignStatus = {
-  success: undefined,
+  success: false,
   message: "",
   campaign: {
     id: "",

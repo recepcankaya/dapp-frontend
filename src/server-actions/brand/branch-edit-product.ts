@@ -3,7 +3,7 @@ import { createClient } from "@/src/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import getUserID from "@/src/lib/getUserID";
 import decodeTurkishCharacters from "@/src/lib/convertToEnglishCharacters";
-import { CategoryProduct, Product } from "@/src/lib/types/product.types";
+import { Product } from "@/src/lib/types/product.types";
 
 export default async function editMenuProduct(
   prevState: any,
@@ -12,36 +12,25 @@ export default async function editMenuProduct(
   const userID = await getUserID();
   const productName = formData.get("name") as string;
   const branchName = formData.get("branchName");
-  const description = formData.get("editDescription");
-  const price = formData.get("editPrice");
+  const description = String(formData.get("editDescription"));
+  const price = Number(formData.get("editPrice"));
   const image = formData.get("editImage") as File;
-  const productID = formData.get("productID");
+  const productID = String(formData.get("productID"));
   const productNameForImage = productName?.replace(/\s/g, "-");
   const turnProductToEnglishChar = decodeTurkishCharacters(productNameForImage);
   const convertToEnglish = decodeTurkishCharacters(String(branchName));
   const supabase = createClient();
 
   if (image.name !== undefined) {
-    const { data: products } = await supabase
-      .from("brand_branch")
-      .select("menu")
-      .eq("id", userID)
+    const { data: findProduct } = await supabase
+      .from("menus")
+      .select("image_url")
+      .eq("id", productID)
       .single();
 
-    const findProduct: Product | undefined = (
-      products?.menu as CategoryProduct[]
-    )?.reduce((prev: Product | undefined, cat) => {
-      return (
-        prev ||
-        cat.products.find(
-          (product: Product) => Number(product.id) === Number(productID)
-        )
-      );
-    }, undefined);
-
     let imageUploadError = null;
-
-    if (findProduct?.image.length === 0) {
+    // -----------------------------------------
+    if (findProduct?.image_url && findProduct.image_url.length === 0) {
       const uploadingResult = await supabase.storage
         .from("menus")
         .upload(`${convertToEnglish}/${turnProductToEnglishChar}`, image);
@@ -56,13 +45,13 @@ export default async function editMenuProduct(
     const { data: productURL } = supabase.storage
       .from("menus")
       .getPublicUrl(`${convertToEnglish}/${turnProductToEnglishChar}`);
-
-    const { error } = await supabase.rpc("edit_product_from_menu", {
-      p_new_price: `${price} TL`,
-      p_new_description: String(description),
-      p_product_id: Number(productID),
-      p_brand_branch_id: userID,
-      p_new_image: productURL.publicUrl,
+    // -----------------------------------------
+    const { error } = await supabase.from("menus").update({
+      price: price,
+      name: productName,
+      description: description,
+      image_url: productURL.publicUrl,
+      id: productID,
     });
 
     if (error || imageUploadError) {
@@ -74,35 +63,92 @@ export default async function editMenuProduct(
         return {
           success: false,
           message: "Lütfen geçerli bir resim dosyası yükleyiniz.",
+          product: {
+            branch_id: "",
+            description: "",
+            id: "",
+            image_url: "",
+            name: "",
+            price: 0,
+            position: 0,
+            category: "",
+          },
         };
       } else {
         return {
           success: false,
           message:
             "Ürün güncellenirken bir hata oluştu. Lütfen tekrar deneyiniz.",
+          product: {
+            branch_id: "",
+            description: "",
+            id: "",
+            image_url: "",
+            name: "",
+            price: 0,
+            position: 0,
+            category: "",
+          },
         };
       }
     } else {
       revalidatePath("/brand/[brand-home]/settings", "page");
-      return { success: true, message: "Ürün başarıyla güncellendi." };
+      return {
+        success: true,
+        message: "Ürün başarıyla güncellendi.",
+        product: {
+          branch_id: userID,
+          description: description,
+          id: productID,
+          image_url: productURL.publicUrl,
+          name: productName,
+          price: price,
+          position: prevState.product.position as number,
+          category: prevState.product.category as string,
+        },
+      };
     }
   } else {
-    const { error } = await supabase.rpc("edit_product_from_menu", {
-      p_new_price: `${price} TL`,
-      p_new_description: String(description),
-      p_product_id: Number(productID),
-      p_brand_branch_id: userID,
-      p_new_image: "",
+    const { error } = await supabase.from("menus").update({
+      branch_id: userID,
+      price: price,
+      name: productName,
+      description: description,
+      image_url: "",
+      id: productID,
     });
     if (error) {
       return {
         success: false,
         message:
           "Ürün güncellenirken bir hata oluştu. Lütfen tekrar deneyiniz.",
+        product: {
+          branch_id: "",
+          description: "",
+          id: "",
+          image_url: "",
+          name: "",
+          price: 0,
+          position: 0,
+          category: "",
+        },
       };
     } else {
       revalidatePath("/brand/[brand-home]/settings", "page");
-      return { success: true, message: "Ürün başarıyla güncellendi." };
+      return {
+        success: true,
+        message: "Ürün başarıyla güncellendi.",
+        product: {
+          branch_id: userID,
+          description: description,
+          id: productID,
+          image_url: "",
+          name: productName,
+          price: price,
+          position: prevState.product.position as number,
+          category: prevState.product.category as string,
+        },
+      };
     }
   }
 }

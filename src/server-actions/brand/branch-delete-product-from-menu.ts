@@ -4,62 +4,92 @@ import { revalidatePath } from "next/cache";
 import getUserID from "@/src/lib/getUserID";
 import decodeTurkishCharacters from "@/src/lib/convertToEnglishCharacters";
 
-import type { CategoryProduct, Product } from "@/src/lib/types/product.types";
-
 export default async function deleteProductFromMenu(
   prevState: any,
   formData: FormData
 ) {
-  try {
-    const userID = await getUserID();
-    const productID = formData.get("productID");
-    const branchName = formData.get("branchName");
-    const convertToEnglish = decodeTurkishCharacters(String(branchName));
+  const userID = await getUserID();
+  const productID = String(formData.get("productID"));
+  const branchName = formData.get("branchName");
+  const convertToEnglish = decodeTurkishCharacters(String(branchName));
 
-    const supabase = createClient();
+  const supabase = createClient();
 
-    const { data } = await supabase
-      .from("brand_branch")
-      .select("menu")
-      .eq("id", userID)
-      .single();
+  const { data: findProduct } = await supabase
+    .from("menus")
+    .select("image_url")
+    .eq("id", productID)
+    .single();
 
-    if (!data?.menu) {
-      return {
-        success: false,
-        message: "Menü bulunamadı.",
-      };
-    }
+  if (!findProduct) {
+    return {
+      success: false,
+      message: "Menü bulunamadı.",
+      product: {
+        branch_id: "",
+        description: "",
+        id: "",
+        image_url: "",
+        name: "",
+        price: 0,
+        position: 0,
+        category: "",
+      },
+    };
+  }
 
-    const findProduct: Product | undefined = (data.menu as CategoryProduct[])
-      .flatMap((category: CategoryProduct) => category.products)
-      .find((product: Product) => Number(product.id) === Number(productID));
-    const imageName = findProduct?.image.split("/").pop();
+  const imageName =
+    findProduct?.image_url && findProduct.image_url.split("/").pop();
 
-    const { error: deleteProductImage } = await supabase.storage
-      .from("menus")
-      .remove([`${convertToEnglish}/${imageName}`]);
+  const { error: deleteProductImage } = await supabase.storage
+    .from("menus")
+    .remove([`${convertToEnglish}/${imageName}`]);
 
-    if (deleteProductImage) {
-      return {
-        success: false,
-        message: "Ürün silinirken bir hata oluştu. Lütfen tekrar deneyiniz.",
-      };
-    }
+  if (deleteProductImage) {
+    return {
+      success: false,
+      message: "Ürün silinirken bir hata oluştu. Lütfen tekrar deneyiniz.",
+      product: {
+        branch_id: "",
+        description: "",
+        id: "",
+        image_url: "",
+        name: "",
+        price: 0,
+        position: 0,
+        category: "",
+      },
+    };
+  }
 
-    const { error } = await supabase.rpc("delete_product_from_menu", {
-      p_brand_branch_id: userID,
-      p_product_id: Number(productID),
-    });
+  const { data: product, error } = await supabase
+    .from("menus")
+    .delete()
+    .eq("id", productID)
+    .select("*")
+    .single();
 
-    if (error) {
-      return {
-        success: false,
-        message: "Ürün silinirken bir hata oluştu. Lütfen tekrar deneyiniz.",
-      };
-    } else {
-      revalidatePath("/brand/[brand-home]/settings", "page");
-      return { success: true, message: "Ürün başarıyla silindi." };
-    }
-  } catch (error) {}
+  if (error) {
+    return {
+      success: false,
+      message: "Ürün silinirken bir hata oluştu. Lütfen tekrar deneyiniz.",
+      product: {
+        branch_id: "",
+        description: "",
+        id: "",
+        image_url: "",
+        name: "",
+        price: 0,
+        position: 0,
+        category: "",
+      },
+    };
+  } else {
+    revalidatePath("/brand/[brand-home]/settings", "page");
+    return {
+      success: true,
+      message: "Ürün başarıyla silindi.",
+      product: product,
+    };
+  }
 }

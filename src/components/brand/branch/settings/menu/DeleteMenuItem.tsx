@@ -5,8 +5,8 @@ import { useParams } from "next/navigation";
 import { toast } from "react-toastify";
 
 import { getShortLengthToastOptions } from "@/src/lib/toastOptions";
-import { initialState } from "@/src/lib/feedbackForForms";
 import deleteProductFromMenu from "@/src/server-actions/brand/branch-delete-product-from-menu";
+import { initialState } from "@/src/lib/productInitialState";
 
 import {
   AlertDialog,
@@ -20,23 +20,43 @@ import {
 import { Button } from "@/src/components/ui/button";
 import SubmitButton from "@/src/components/ui/submit-button";
 
-import type { Product } from "@/src/lib/types/product.types";
-
-export default function DeleteMenuItem({ product }: { product: Product }) {
+type Props = {
+  product: {
+    branch_id: string | null;
+    category: string;
+    description: string | null;
+    id: string;
+    image_url: string | null;
+    name: string;
+    position: number;
+    price: number | null;
+  };
+  setMenusArray: React.Dispatch<React.SetStateAction<Menus[] | null>>;
+};
+export default function DeleteMenuItem({ setMenusArray, product }: Props) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const params = useParams<{ "brand-home": string }>();
-  const [state, formAction] = useFormState(deleteProductFromMenu, initialState);
+  const [deleteState, formAction] = useFormState(
+    deleteProductFromMenu,
+    initialState
+  );
 
   useEffect(() => {
-    if (state?.success === true) {
+    if (deleteState?.success === true) {
       setIsDialogOpen(false);
-      toast.success(state.message, getShortLengthToastOptions());
+      toast.success(deleteState.message, getShortLengthToastOptions());
+      setMenusArray(
+        (prevMenus) =>
+          prevMenus?.filter(
+            (product) => product.id !== deleteState.product.id
+          ) ?? []
+      );
     }
 
-    if (state?.success === false) {
-      toast.error(state?.message, getShortLengthToastOptions());
+    if (deleteState?.success === false) {
+      toast.error(deleteState?.message, getShortLengthToastOptions());
     }
-  }, [state]);
+  }, [deleteState, setMenusArray]);
 
   return (
     <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -85,7 +105,8 @@ function TrashIcon(props: React.SVGProps<SVGSVGElement>) {
       stroke="currentColor"
       strokeWidth="2"
       strokeLinecap="round"
-      strokeLinejoin="round">
+      strokeLinejoin="round"
+    >
       <path d="M3 6h18" />
       <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
       <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />

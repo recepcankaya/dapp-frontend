@@ -9,13 +9,13 @@ export default async function addMenuProduct(
   formData: FormData
 ) {
   const userID = await getUserID();
-  const name = formData.get("name") as String;
-  const description = formData.get("description");
-  const price = formData.get("price");
+  const name = formData.get("name") as string;
+  const description = formData.get("description") as string;
+  const price = Number(formData.get("price"));
   const image = formData.get("image") as File;
-  const category = formData.get("category");
-  const newCategory = formData.get("newCategory");
-  const branchName = formData.get("branchName");
+  const category = formData.get("category") as string;
+  const newCategory = formData.get("newCategory") as string;
+  const branchName = formData.get("branchName") as string;
   const productNameForImage = name?.replace(/\s/g, "-");
   const turnProductToEnglishChar = decodeTurkishCharacters(productNameForImage);
   const convertToEnglish = decodeTurkishCharacters(String(branchName));
@@ -24,6 +24,16 @@ export default async function addMenuProduct(
     return {
       success: false,
       message: "Ürün adını girmelisiniz.",
+      product: {
+        branch_id: "",
+        description: "",
+        id: "",
+        image_url: "",
+        name: "",
+        price: 0,
+        position: 0,
+        category: "",
+      },
     };
   }
 
@@ -31,6 +41,16 @@ export default async function addMenuProduct(
     return {
       success: false,
       message: "Kategori seçmelisiniz.",
+      product: {
+        branch_id: "",
+        description: "",
+        id: "",
+        image_url: "",
+        name: "",
+        price: 0,
+        position: 0,
+        category: "",
+      },
     };
   }
 
@@ -38,10 +58,28 @@ export default async function addMenuProduct(
     return {
       success: false,
       message: "Sadece bir kategori seçimi yapmalısınız.",
+      product: {
+        branch_id: "",
+        description: "",
+        id: "",
+        image_url: "",
+        name: "",
+        price: 0,
+        position: 0,
+        category: "",
+      },
     };
   }
 
   const supabase = createClient();
+
+  const { data: maxPosition } = await supabase
+    .from("menus")
+    .select("position")
+    .eq("branch_id", userID)
+    .order("position", { ascending: false })
+    .limit(1)
+    .single();
 
   if (image.name !== undefined) {
     const { error: uploadingError } = await supabase.storage
@@ -52,6 +90,16 @@ export default async function addMenuProduct(
       return {
         success: false,
         message: "Ürün yüklenirken bir hata oluştu. Lütfen tekrar deneyiniz.",
+        product: {
+          branch_id: "",
+          description: "",
+          id: "",
+          image_url: "",
+          name: "",
+          price: 0,
+          position: 0,
+          category: "",
+        },
       };
     }
 
@@ -59,40 +107,78 @@ export default async function addMenuProduct(
       .from("menus")
       .getPublicUrl(`${convertToEnglish}/${turnProductToEnglishChar}`);
 
-    const { error } = await supabase.rpc("add_product_to_menu", {
-      p_product_name: String(name),
-      p_description: String(description),
-      p_price: price ? `${price} TL` : "0",
-      p_product_image: productURL.publicUrl,
-      p_category: String(category) || String(newCategory),
-      p_brand_branch_id: userID,
-    });
+    const { data: menu, error } = await supabase
+      .from("menus")
+      .insert({
+        branch_id: userID,
+        category: category || newCategory,
+        description: description as string,
+        image_url: productURL.publicUrl as string,
+        name: name as string,
+        position: maxPosition ? maxPosition.position + 1 : 0,
+        price: price,
+        // Add the missing property 'position'
+      })
+      .select();
 
     if (!error) {
       revalidatePath("/brand/[brand-home]/settings", "page");
-      return { success: true, message: "Ürün menünüze başarıyla eklendi." };
+      return {
+        success: true,
+        message: "Ürün menünüze başarıyla eklendi.",
+        product: menu[0],
+      };
     } else {
       return {
         success: false,
         message: "Ürün eklenirken bir hata oluştu. Lütfen tekrar deneyiniz.",
+        product: {
+          branch_id: "",
+          description: "",
+          id: "",
+          image_url: "",
+          name: "",
+          price: 0,
+          position: 0,
+          category: "",
+        },
       };
     }
   } else {
-    const { error } = await supabase.rpc("add_product_to_menu", {
-      p_product_name: String(name),
-      p_description: String(description),
-      p_price: price ? `${price} TL` : "0",
-      p_product_image: "",
-      p_category: String(category) || String(newCategory),
-      p_brand_branch_id: userID,
-    });
+    const { data: menu, error } = await supabase
+      .from("menus")
+      .insert({
+        branch_id: userID,
+        category: category || newCategory,
+        description: description as string,
+        image_url: "",
+        name: name as string,
+        position: maxPosition ? maxPosition.position + 1 : 0,
+        price: price,
+        // Add the missing property 'position'
+      })
+      .select();
     if (!error) {
       revalidatePath("/brand/[brand-home]/settings", "page");
-      return { success: true, message: "Ürün menünüze başarıyla eklendi." };
+      return {
+        success: true,
+        message: "Ürün menünüze başarıyla eklendi.",
+        product: menu[0],
+      };
     } else {
       return {
         success: false,
         message: "Ürün eklenirken bir hata oluştu. Lütfen tekrar deneyiniz.",
+        product: {
+          branch_id: "",
+          description: "",
+          id: "",
+          image_url: "",
+          name: "",
+          price: 0,
+          position: 0,
+          category: "",
+        },
       };
     }
   }

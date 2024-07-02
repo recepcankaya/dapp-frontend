@@ -1,8 +1,6 @@
 import RenderMenu from "@/src/components/customer/menu/RenderMenu";
 import { createClient } from "@/src/lib/supabase/server";
 
-import type { CategoryProduct } from "@/src/lib/types/product.types";
-
 export default async function Menu({
   searchParams,
 }: {
@@ -10,15 +8,15 @@ export default async function Menu({
 }) {
   const supabase = createClient();
 
-  const { data } = await supabase
-    .from("brand_branch")
-    .select("menu")
-    .eq("id", searchParams.branchID)
-    .single();
+  const { data: menu } = await supabase
+    .from("menus")
+    .select("*")
+    .eq("branch_id", searchParams.branchID)
+    .order("position", { ascending: true });
 
   return (
     <main>
-      <RenderMenu menu={data?.menu as CategoryProduct[]} />
+      <RenderMenu menus={menu as Menus[]} />
     </main>
   );
 }

@@ -77,7 +77,8 @@ export default function UploadCampaign({
             </DialogHeader>
             <form
               action={addFormAction}
-              className="grid gap-4 items-center py-4">
+              className="grid gap-4 items-center py-4"
+            >
               <Input
                 type="hidden"
                 name="branchName"
@@ -110,7 +111,8 @@ export default function UploadCampaign({
                 <Checkbox id="favourite" name="favourite" />
                 <Label
                   htmlFor="favourite"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 w-[73%]">
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 w-[73%]"
+                >
                   Favori afiş
                 </Label>
               </div>

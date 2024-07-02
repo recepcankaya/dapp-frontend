@@ -6,17 +6,16 @@ import BranchMenu from "@/src/components/brand/branch/settings/BranchMenu";
 import getUserID from "@/src/lib/getUserID";
 import { createClient } from "@/src/lib/supabase/server";
 
-import type { CategoryProduct } from "@/src/lib/types/product.types";
-
 export default async function Settings() {
   noStore();
   const supabase = createClient();
   const userID = await getUserID();
 
   const { data: menu } = await supabase
-    .from("brand_branch")
-    .select("menu")
-    .eq("id", userID);
+    .from("menus")
+    .select("*")
+    .eq("branch_id", userID)
+    .order("position", { ascending: true });
 
   // Refactor edilecek yeni veritabanı sisteminde
   if (!menu) return null;
@@ -31,7 +30,7 @@ export default async function Settings() {
     <main className="flex flex-col min-h-[100dvh]">
       <BranchChangePassword />
       <BranchCampaignManagement campaigns={campaigns} branchID={userID} />
-      <BranchMenu menu={menu[0]?.menu as CategoryProduct[]} />
+      <BranchMenu menus={menu} branchID={userID} />
     </main>
   );
 }

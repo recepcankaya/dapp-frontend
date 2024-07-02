@@ -5,9 +5,8 @@ import { useFormState } from "react-dom";
 import { toast } from "react-toastify";
 
 import { getShortLengthToastOptions } from "@/src/lib/toastOptions";
-import { initialState } from "@/src/lib/feedbackForForms";
 import editMenuProduct from "@/src/server-actions/brand/branch-edit-product";
-
+import { initialState } from "@/src/lib/productInitialState";
 import {
   Dialog,
   DialogContent,
@@ -21,9 +20,20 @@ import { Input } from "@/src/components/ui/input";
 import { Button } from "@/src/components/ui/button";
 import SubmitButton from "@/src/components/ui/submit-button";
 
-import type { Product } from "@/src/lib/types/product.types";
-
-export default function EditMenu({ product }: { product: Product }) {
+type Props = {
+  product: {
+    branch_id: string | null;
+    category: string;
+    description: string | null;
+    id: string;
+    image_url: string | null;
+    name: string;
+    position: number;
+    price: number | null;
+  };
+  setMenusArray: React.Dispatch<React.SetStateAction<Menus[] | null>>;
+};
+export default function EditMenu({ setMenusArray, product }: Props) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editState, editProductFormAction] = useFormState(
     editMenuProduct,
@@ -35,12 +45,20 @@ export default function EditMenu({ product }: { product: Product }) {
     if (editState?.success === true) {
       setIsDialogOpen(false);
       toast.success(editState.message, getShortLengthToastOptions());
+      setMenusArray((prevMenus) => {
+        const index = prevMenus?.findIndex(
+          (product) => product.id === editState.product.id
+        );
+        const updatedMenus = [...prevMenus!];
+        updatedMenus[index!] = editState.product;
+        return [...prevMenus!, editState.product];
+      });
     }
 
     if (editState?.success === false) {
       toast.error(editState?.message, getShortLengthToastOptions());
     }
-  }, [editState]);
+  }, [editState, setMenusArray]);
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -69,7 +87,7 @@ export default function EditMenu({ product }: { product: Product }) {
                 id="edit-price"
                 name="editPrice"
                 type="number"
-                defaultValue={product.price.split(" ")[0]}
+                defaultValue={product.price!}
                 className="bg-[#dbb5b59d]"
               />
             </div>
@@ -78,7 +96,7 @@ export default function EditMenu({ product }: { product: Product }) {
               <Input
                 id="edit-description"
                 name="editDescription"
-                defaultValue={product.description}
+                defaultValue={product.description!}
                 className="bg-[#dbb5b59d]"
               />
             </div>
@@ -113,7 +131,8 @@ function EditIcon(props: React.SVGProps<SVGSVGElement>) {
       stroke="currentColor"
       strokeWidth="2"
       strokeLinecap="round"
-      strokeLinejoin="round">
+      strokeLinejoin="round"
+    >
       <path d="M20 5H9l-7 7 7 7h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2Z" />
       <line x1="18" x2="12" y1="9" y2="15" />
       <line x1="12" x2="18" y1="9" y2="15" />
