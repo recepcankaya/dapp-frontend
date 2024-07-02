@@ -1,9 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AdminBrandBranchInfo, AdminHomeStatistics } from "@/src/lib/types/jsonQuery.types";
 import AdminHomeCards from "./AdminHomeCards";
 import AdminLineChart from "./AdminLineChart";
 import AdminHomeBranchCard from "./AdminHomeBranchCard";
+import { usePathname, useRouter } from "next/navigation";
+import { convertString } from "@/src/lib/utils";
 
 type AdminStatisticsProps = {
   brandData: AdminBrandBranchInfo;
@@ -21,6 +23,16 @@ export default function RenderAdminStatistics({
   const [branchCalculatedData, setBranchCalculatedData] = useState(calculatedData);
   const [branchWeeklyTotalOrder, setBranchWeeklytotalOrder] = useState(weeklyTotalOrders);
   const [selectedBranch, setSelectedBranch] = useState<string | null>(null);
+
+  const router = useRouter();
+  const pathname = usePathname();
+
+  useEffect(() => {
+    if (!selectedBranch) {
+      router.push(pathname, undefined); 
+    }
+  }, [selectedBranch, pathname, router]);
+
 
   const calculateWeeklyTotalOrders = (weeklyTotalOrders: {
     [key: string]: number;
@@ -42,6 +54,7 @@ export default function RenderAdminStatistics({
       setSelectedBranch(null);
       setBranchCalculatedData(calculatedData);
       setBranchWeeklytotalOrder(weeklyTotalOrders);
+      router.push(`${pathname}`, undefined);     
     } else {
       setSelectedBranch(branchName);
       if (branchName) {
@@ -68,7 +81,7 @@ export default function RenderAdminStatistics({
             )
           );
           setBranchCalculatedData(updatedCalculatedData);
-        }
+          router.push(`${pathname}?branch=${convertString(branchName)}`, undefined);        }
       }
     }
   };
