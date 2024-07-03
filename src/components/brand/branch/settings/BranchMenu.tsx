@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import { createClient } from "@/src/lib/supabase/client";
 
 import UploadMenu from "./menu/UploadMenu";
@@ -16,23 +16,20 @@ import {
   TableCell,
 } from "@/src/components/ui/table";
 
-import type { Product } from "@/src/lib/types/product.types";
-
 type BranchMenuProps = {
-  menus: Menus[] | null;
+  menus: Menus[];
   branchID: BrandBranch["id"];
 };
 
 export default function BranchMenu({ menus, branchID }: BranchMenuProps) {
-  const [menusArray, setMenusArray] = useState<Menus[] | null>(
-    menus ? [...menus] : null
-  );
+  const [menusArray, setMenusArray] = useState<Menus[]>([...menus]);
   const draggedProduct = useRef<number | null>(null);
   const replacedProduct = useRef<number | null>(null);
   const supabase = createClient();
-  const categories = menusArray
-    ? Array.from(new Set(menusArray.map((item) => item.category)))
-    : [];
+  const categories = Array.from(
+    new Set(menusArray.map((item) => item.category))
+  );
+
   /**
    * Handles the drag start event for a Menu item.
    *
@@ -142,84 +139,78 @@ export default function BranchMenu({ menus, branchID }: BranchMenuProps) {
       }
     }
   };
+
   return (
-    <div className="container mx-auto px-4 md:px-6 py-8 bg-[#D9D9D9] text-black mt-24">
+    <div>
       <UploadMenu setMenusArray={setMenusArray} categories={categories} />
-      {menusArray && menusArray.length > 0 ? (
-        categories.map((category) => (
-          <ul key={category} className="mt-12">
-            <h2 className="text-xl font-bold mb-4">{category}</h2>
-            <div className="overflow-hidden">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-1/5 p-4">Ürünün Resmi</TableHead>
-                    <TableHead className="w-1/5 p-4">Ürünün Adı</TableHead>
-                    <TableHead className="w-1/5 p-4">
-                      Ürünün Açıklaması
-                    </TableHead>
-                    <TableHead className="w-1/5 p-4">Ürünün Fiyatı</TableHead>
-                    <TableHead className="w-1/5 p-4">
-                      Ürün İçin Aksiyonlar
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {menusArray
-                    .filter((product) => product.category === category)
-                    .map((product: Menus, index: number) => (
-                      <TableRow
-                        draggable
-                        onDragStart={(e) => handleDragStart(e, index)}
-                        onDragEnter={(e) => handleDragEnter(e, index)}
-                        onDragEnd={(e) => handleDragEnd(e)}
-                        key={product.id}
-                        className="hover:bg-gray-200 border-none"
-                      >
-                        <TableCell className="p-4">
+      {categories.map((category) => (
+        <ul key={category} className="mt-12">
+          <h2 className="text-xl font-bold mb-4">{category}</h2>
+          <div className="overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-1/5 p-4">Ürünün Resmi</TableHead>
+                  <TableHead className="w-1/5 p-4">Ürünün Adı</TableHead>
+                  <TableHead className="w-1/5 p-4">Ürünün Açıklaması</TableHead>
+                  <TableHead className="w-1/5 p-4">Ürünün Fiyatı</TableHead>
+                  <TableHead className="w-1/5 p-4">
+                    Ürün İçin Aksiyonlar
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {menusArray
+                  .filter((product) => product.category === category)
+                  .map((product: Menus, index: number) => (
+                    <TableRow
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, index)}
+                      onDragEnter={(e) => handleDragEnter(e, index)}
+                      onDragEnd={(e) => handleDragEnd(e)}
+                      key={product.id}
+                      className="hover:bg-gray-200 border-none">
+                      <TableCell className="p-4">
+                        {product.image_url ? (
                           <Image
-                            src={
-                              product.image_url && product.image_url.length > 0
-                                ? product.image_url
-                                : "/"
-                            }
+                            src={product.image_url}
                             alt={product.name}
                             width={64}
                             height={64}
                             className="rounded-md object-cover"
                           />
-                        </TableCell>
-                        <TableCell className="p-4 font-medium">
-                          {product.name}
-                        </TableCell>
-                        <TableCell className="p-4">
-                          {product.description}
-                        </TableCell>
-                        <TableCell className="p-4">
-                          {product.price + " TL"}
-                        </TableCell>
-                        <TableCell className="p-4">
-                          <div className="flex gap-2">
-                            <EditMenu
-                              product={product}
-                              setMenusArray={setMenusArray}
-                            />
-                            <DeleteMenuItem
-                              product={product}
-                              setMenusArray={setMenusArray}
-                            />
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
-            </div>
-          </ul>
-        ))
-      ) : (
-        <p>Henüz menünüze ürün eklememişsiniz.</p>
-      )}
+                        ) : (
+                          <div></div>
+                        )}
+                      </TableCell>
+                      <TableCell className="p-4 font-medium">
+                        {product.name}
+                      </TableCell>
+                      <TableCell className="p-4">
+                        {product.description}
+                      </TableCell>
+                      <TableCell className="p-4">
+                        {product.price + " TL"}
+                      </TableCell>
+                      <TableCell className="p-4">
+                        <div className="flex gap-2">
+                          <EditMenu
+                            product={product}
+                            setMenusArray={setMenusArray}
+                          />
+                          <DeleteMenuItem
+                            product={product}
+                            setMenusArray={setMenusArray}
+                          />
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </div>
+        </ul>
+      ))}
     </div>
   );
 }

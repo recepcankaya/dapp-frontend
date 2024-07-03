@@ -1,19 +1,18 @@
 "use server";
-import { createClient } from "@/src/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+
+import { createClient } from "@/src/lib/supabase/server";
 import getUserID from "@/src/lib/getUserID";
 import decodeTurkishCharacters from "@/src/lib/convertToEnglishCharacters";
-import { Product } from "@/src/lib/types/product.types";
 
 export default async function editMenuProduct(
   prevState: any,
   formData: FormData
 ) {
-  const userID = await getUserID();
   const productName = formData.get("name") as string;
   const branchName = formData.get("branchName");
-  const description = String(formData.get("editDescription"));
-  const price = Number(formData.get("editPrice"));
+  const description = formData.get("editDescription");
+  const price = formData.get("editPrice");
   const image = formData.get("editImage") as File;
   const productID = String(formData.get("productID"));
   const productNameForImage = productName?.replace(/\s/g, "-");
@@ -21,38 +20,49 @@ export default async function editMenuProduct(
   const convertToEnglish = decodeTurkishCharacters(String(branchName));
   const supabase = createClient();
 
-  if (image.name !== undefined) {
-    const { data: findProduct } = await supabase
-      .from("menus")
-      .select("image_url")
-      .eq("id", productID)
-      .single();
+  const { data: findProduct } = await supabase
+    .from("menus")
+    .select()
+    .eq("id", productID)
+    .single();
 
+  if (image.name.toString() !== "undefined") {
     let imageUploadError = null;
     // -----------------------------------------
-    if (findProduct?.image_url && findProduct.image_url.length === 0) {
+    if (!findProduct?.image_url) {
       const uploadingResult = await supabase.storage
         .from("menus")
-        .upload(`${convertToEnglish}/${turnProductToEnglishChar}`, image);
+        .upload(
+          `${convertToEnglish}/${findProduct?.category}/${turnProductToEnglishChar}`,
+          image
+        );
       imageUploadError = uploadingResult.error;
     } else {
       const updatingResult = await supabase.storage
         .from("menus")
-        .update(`${convertToEnglish}/${turnProductToEnglishChar}`, image);
+        .update(
+          `${convertToEnglish}/${findProduct.category}/${turnProductToEnglishChar}`,
+          image
+        );
       imageUploadError = updatingResult.error;
     }
 
     const { data: productURL } = supabase.storage
       .from("menus")
-      .getPublicUrl(`${convertToEnglish}/${turnProductToEnglishChar}`);
+      .getPublicUrl(
+        `${convertToEnglish}/${findProduct?.category}/${turnProductToEnglishChar}`
+      );
     // -----------------------------------------
-    const { error } = await supabase.from("menus").update({
-      price: price,
-      name: productName,
-      description: description,
-      image_url: productURL.publicUrl,
-      id: productID,
-    });
+    const { data: updatedProduct, error } = await supabase
+      .from("menus")
+      .update({
+        price: Number(price) ?? findProduct?.price,
+        description: String(description) ?? findProduct?.description,
+        image_url: productURL.publicUrl,
+      })
+      .eq("id", productID)
+      .select()
+      .single();
 
     if (error || imageUploadError) {
       if (
@@ -96,27 +106,20 @@ export default async function editMenuProduct(
       return {
         success: true,
         message: "Ürün başarıyla güncellendi.",
-        product: {
-          branch_id: userID,
-          description: description,
-          id: productID,
-          image_url: productURL.publicUrl,
-          name: productName,
-          price: price,
-          position: prevState.product.position as number,
-          category: prevState.product.category as string,
-        },
+        product: updatedProduct,
       };
     }
   } else {
-    const { error } = await supabase.from("menus").update({
-      branch_id: userID,
-      price: price,
-      name: productName,
-      description: description,
-      image_url: "",
-      id: productID,
-    });
+    const { data: updatedProduct, error } = await supabase
+      .from("menus")
+      .update({
+        price: Number(price) ?? findProduct?.price,
+        description: String(description) ?? findProduct?.description,
+      })
+      .eq("id", productID)
+      .select()
+      .single();
+
     if (error) {
       return {
         success: false,
@@ -138,16 +141,7 @@ export default async function editMenuProduct(
       return {
         success: true,
         message: "Ürün başarıyla güncellendi.",
-        product: {
-          branch_id: userID,
-          description: description,
-          id: productID,
-          image_url: "",
-          name: productName,
-          price: price,
-          position: prevState.product.position as number,
-          category: prevState.product.category as string,
-        },
+        product: updatedProduct,
       };
     }
   }

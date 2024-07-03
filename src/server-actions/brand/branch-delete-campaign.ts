@@ -23,8 +23,6 @@ export default async function deleteCampaign(
     .from("campaigns")
     .remove([`${convertToEnglish}/${campaign?.name}`]);
 
-  console.log("error", deleteCampaignImage);
-
   if (deleteCampaignImage) {
     return {
       success: false,

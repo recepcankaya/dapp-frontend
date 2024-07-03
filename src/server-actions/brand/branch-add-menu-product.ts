@@ -1,6 +1,7 @@
 "use server";
-import { createClient } from "@/src/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+
+import { createClient } from "@/src/lib/supabase/server";
 import getUserID from "@/src/lib/getUserID";
 import decodeTurkishCharacters from "@/src/lib/convertToEnglishCharacters";
 
@@ -81,15 +82,21 @@ export default async function addMenuProduct(
     .limit(1)
     .single();
 
-  if (image.name !== undefined) {
+  if (image.name.toString() !== "undefined") {
     const { error: uploadingError } = await supabase.storage
       .from("menus")
-      .upload(`${convertToEnglish}/${turnProductToEnglishChar}`, image);
+      .upload(
+        `${convertToEnglish}/${
+          category || newCategory
+        }/${turnProductToEnglishChar}`,
+        image
+      );
 
     if (uploadingError) {
       return {
         success: false,
-        message: "Ürün yüklenirken bir hata oluştu. Lütfen tekrar deneyiniz.",
+        message:
+          "Ürün resmi yüklenirken bir hata oluştu. Lütfen tekrar deneyiniz.",
         product: {
           branch_id: "",
           description: "",
@@ -117,7 +124,6 @@ export default async function addMenuProduct(
         name: name as string,
         position: maxPosition ? maxPosition.position + 1 : 0,
         price: price,
-        // Add the missing property 'position'
       })
       .select();
 
@@ -155,9 +161,9 @@ export default async function addMenuProduct(
         name: name as string,
         position: maxPosition ? maxPosition.position + 1 : 0,
         price: price,
-        // Add the missing property 'position'
       })
       .select();
+
     if (!error) {
       revalidatePath("/brand/[brand-home]/settings", "page");
       return {

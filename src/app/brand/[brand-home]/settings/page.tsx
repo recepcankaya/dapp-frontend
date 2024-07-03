@@ -17,9 +17,6 @@ export default async function Settings() {
     .eq("branch_id", userID)
     .order("position", { ascending: true });
 
-  // Refactor edilecek yeni veritabanı sisteminde
-  if (!menu) return null;
-
   const { data: campaigns } = await supabase
     .from("campaigns")
     .select("*")
@@ -39,7 +36,18 @@ export default async function Settings() {
           <p className="mt-12 md:mt-0">Aktif kampanyanız bulunmamaktadır.</p>
         )}
       </section>
-      <BranchMenu menu={menu[0]?.menu as CategoryProduct[]} />
+      <section className="container mx-auto px-4 md:px-6 py-8 bg-[#D9D9D9] text-black mt-24">
+        <h2 className="text-lg sm:text-xl md:text-2xl font-bold underline underline-offset-4 absolute left-1/2 transform -translate-x-1/2">
+          Menü Yönetimi
+        </h2>
+        {menu ? (
+          <BranchMenu menus={menu} branchID={userID} />
+        ) : (
+          <p className="mt-12 text-center">
+            Menünüze henüz ürün eklemesi yapmamışsınız.
+          </p>
+        )}
+      </section>
     </main>
   );
 }

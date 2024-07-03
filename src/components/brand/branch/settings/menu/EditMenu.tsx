@@ -19,19 +19,11 @@ import { Label } from "@/src/components/ui/label";
 import { Input } from "@/src/components/ui/input";
 import { Button } from "@/src/components/ui/button";
 import SubmitButton from "@/src/components/ui/submit-button";
+import { EditIcon } from "@/src/components/ui/SVG/Edit";
 
 type Props = {
-  product: {
-    branch_id: string | null;
-    category: string;
-    description: string | null;
-    id: string;
-    image_url: string | null;
-    name: string;
-    position: number;
-    price: number | null;
-  };
-  setMenusArray: React.Dispatch<React.SetStateAction<Menus[] | null>>;
+  product: Menus;
+  setMenusArray: React.Dispatch<React.SetStateAction<Menus[]>>;
 };
 export default function EditMenu({ setMenusArray, product }: Props) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -45,20 +37,21 @@ export default function EditMenu({ setMenusArray, product }: Props) {
     if (editState?.success === true) {
       setIsDialogOpen(false);
       toast.success(editState.message, getShortLengthToastOptions());
-      setMenusArray((prevMenus) => {
-        const index = prevMenus?.findIndex(
-          (product) => product.id === editState.product.id
-        );
-        const updatedMenus = [...prevMenus!];
-        updatedMenus[index!] = editState.product;
-        return [...prevMenus!, editState.product];
+      setMenusArray((prev) => {
+        const findProduct = prev.find((item) => item.id === product.id);
+        if (findProduct) {
+          findProduct.price = editState.product.price;
+          findProduct.description = editState.product.description;
+          findProduct.image_url = editState.product.image_url;
+        }
+        return [...prev];
       });
     }
 
     if (editState?.success === false) {
       toast.error(editState?.message, getShortLengthToastOptions());
     }
-  }, [editState, setMenusArray]);
+  }, [editState, setMenusArray, product]);
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -116,26 +109,5 @@ export default function EditMenu({ setMenusArray, product }: Props) {
         </form>
       </DialogContent>
     </Dialog>
-  );
-}
-
-function EditIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M20 5H9l-7 7 7 7h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2Z" />
-      <line x1="18" x2="12" y1="9" y2="15" />
-      <line x1="12" x2="18" y1="9" y2="15" />
-    </svg>
   );
 }

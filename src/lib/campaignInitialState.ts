@@ -1,5 +1,5 @@
 export type CampaignStatus = {
-  success: boolean;
+  success: unknown;
   message: string;
   campaign: Campaigns;
 };
