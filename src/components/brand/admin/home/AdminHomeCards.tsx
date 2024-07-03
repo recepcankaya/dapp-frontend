@@ -4,47 +4,63 @@ import type { AdminHomeStatistics } from "@/src/lib/types/jsonQuery.types";
 type AdminHomeCardsProps = {
   requiredNumberForFreeRight: Brand["required_number_for_free_right"];
   adminData: AdminHomeStatistics;
+  selectedBranch: string | null;
 };
 
 export default function AdminHomeCards({
   requiredNumberForFreeRight,
   adminData,
+  selectedBranch,
 }: AdminHomeCardsProps) {
   const statistics = [
     {
       id: 0,
       number: adminData.daily_total_orders,
-      text: "Bugün verilen sipariş sayısı",
+      text: selectedBranch
+        ? "Seçili şube için toplam sipariş sayısı"
+        : "Toplam sipariş sayısı",
     },
     {
       id: 1,
       number: adminData.daily_total_used_free_rights,
-      text: "Bugün kullanılan ödül sayısı",
+      text: selectedBranch
+        ? "Seçili şube için bugüne kadar kullanılan ödüller"
+        : "Bugüne kadar kullanılmış ödüller",
     },
     {
       id: 2,
       number: adminData.monthly_total_orders,
-      text: "Bu ay verilen sipariş sayısı",
+      text: selectedBranch
+        ? "Seçili şube için bu ay verilen sipariş sayısı"
+        : "Bu ay verilen sipariş sayısı",
     },
     {
       id: 3,
       number: adminData.total_orders,
-      text: "Toplam sipariş sayısı",
+      text: selectedBranch
+        ? "Seçili şube için toplam sipariş sayısı"
+        : "Toplam sipariş sayısı",
     },
     {
       id: 4,
       number: adminData.total_used_free_rights,
-      text: "Bugüne kadar kullanılmış ödüller",
+      text: selectedBranch
+        ? "Seçili şube için bugüne kadar kullanılmış ödüller"
+        : "Bugüne kadar kullanılmış ödüller",
     },
     {
       id: 5,
       number: adminData.total_unused_free_rights,
-      text: "Bekleyen ödüllerin sayısı",
+      text: selectedBranch
+        ? "Seçili şube için bekleyen ödüllerin sayısı"
+        : "Bekleyen ödüllerin sayısı",
     },
     {
       id: 6,
       number: requiredNumberForFreeRight,
-      text: "Ödül için sipariş sayısı",
+      text: selectedBranch
+        ? "Seçili şube ödül için sipariş sayısı"
+        : "Ödül için sipariş sayısı",
     },
   ];
 

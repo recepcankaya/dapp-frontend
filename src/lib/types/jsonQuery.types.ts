@@ -32,3 +32,11 @@ export type AdminHomeStatistics = Pick<
   | "daily_total_used_free_rights"
   | "monthly_total_orders"
 >;
+
+type AdminBrandInfo = Pick<BrandInfo, "id" | "brand_name" | "brand_logo_url" | "required_number_for_free_right">;
+type AdminBranchInfo = Pick<BrandBranchInfo, "id" | "branch_name" | "total_orders" | "total_used_free_rights" | "total_unused_free_rights" | "daily_total_orders" | "daily_total_used_free_rights" | "monthly_total_orders" | "weekly_total_orders">; 
+
+export type AdminBrandBranchInfo = AdminBrandInfo & {
+  brand_branch: AdminBranchInfo[];
+};
+

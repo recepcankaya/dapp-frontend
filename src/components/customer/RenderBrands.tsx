@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 
 import { haversine } from "@/src/lib/haveresine";
 import { Input } from "../ui/input";
+import { convertString } from "@/src/lib/utils";
 
 type RenderBrandsProps = {
   brands: {
@@ -32,9 +33,7 @@ type BrandItem = {
   } | null;
 };
 
-function convertString(str: string): string {
-  return str.toLowerCase().replace(/\s+/g, "-");
-}
+
 
 export default function RenderBrands(brands: RenderBrandsProps) {
   const [customerLocation, setCustomerLocation] = useState<{
