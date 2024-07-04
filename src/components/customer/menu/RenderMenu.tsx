@@ -19,20 +19,20 @@ export default function RenderMenu({ menu }: Props) {
         <div className="flex flex-col justify-center items-center w-full">
           <div className="w-full flex flex-col justify-center mt-20 gap-y-2">
             <h1 className="font-bold mb-3 pl-4 sm:pl-5 text-xl">Menü</h1>
-            <div className="flex gap-8 justify-start overflow-y-auto bg-[#DBB5B5] p-6 relative drop-shadow-xl overflow-x-auto">
-              {menu.map((item: CategoryProduct) => (
-                <li
-                  key={item.categoryID}
-                  onClick={() => setSelectedTab(item.category)}
-                  className="font-semibold inline-block select-none hover:cursor-pointer  min-w-fit"
-                  style={{
-                    textDecoration:
-                      selectedTab === item.category ? "underline" : "none",
-                    textUnderlineOffset: "4px",
-                  }}>
-                  {item.category}
-                </li>
-              ))}
+            <div className="flex gap-8 justify-start overflow-y-auto bg-[#DBB5B5] p-6 relative overflow-x-auto">
+            {menu.map((item: CategoryProduct) => (
+                 <li
+                 key={item.categoryID}
+                 onClick={() => setSelectedTab(item.category)}
+                 className="font-semibold inline-block select-none hover:cursor-pointer  min-w-fit"
+                 style={{
+                   textDecoration:
+                     selectedTab === item.category ? "underline" : "none",
+                   textUnderlineOffset: "4px",
+                 }}>
+                 {item.category}
+               </li>
+                ))}
             </div>
           </div>
           <div className="mt-4 w-[90vw] flex-col">
