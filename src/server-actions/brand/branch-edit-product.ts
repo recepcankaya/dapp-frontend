@@ -22,26 +22,17 @@ export default async function editMenuProduct(
   const supabase = createClient();
 
   if (image.name !== undefined) {
-    const { data: products } = await supabase
-      .from("brand_branch")
-      .select("menu")
-      .eq("id", userID)
-      .single();
-
-    const findProduct: Product | undefined = (
-      products?.menu as CategoryProduct[]
-    )?.reduce((prev: Product | undefined, cat) => {
-      return (
-        prev ||
-        cat.products.find(
-          (product: Product) => Number(product.id) === Number(productID)
-        )
-      );
-    }, undefined);
+    /**
+     * Find product içerisinde default resim olduğunda önceki kod içerisinde if bloğuna giriş yapılamıyordu. 
+     */
 
     let imageUploadError = null;
+    const { data: files, error: listError } = await supabase.storage
+      .from("menus")
+      .list(convertToEnglish);
+    const fileExists = files ? files.some(file => (file.name === turnProductToEnglishChar)) : false;
 
-    if (findProduct?.image.length === 0) {
+    if (!fileExists) {
       const uploadingResult = await supabase.storage
         .from("menus")
         .upload(`${convertToEnglish}/${turnProductToEnglishChar}`, image);
