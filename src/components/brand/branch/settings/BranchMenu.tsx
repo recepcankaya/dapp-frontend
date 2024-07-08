@@ -15,6 +15,7 @@ import {
   TableBody,
   TableCell,
 } from "@/src/components/ui/table";
+import { Input } from "@/src/components/ui/input";
 
 type BranchMenuProps = {
   menus: Menus[];
@@ -30,6 +31,9 @@ export default function BranchMenu({ menus, branchID }: BranchMenuProps) {
     number | null
   >(null);
   const [category, setCategory] = useState<string>("");
+  const [changeCategory, setChangeCategory] = useState<boolean>(false);
+  const [hasCategoryChanged, setHasCategoryChanged] = useState<boolean>(false);
+  const [newCategoryName, setNewCategoryName] = useState<string>("");
   const supabase = createClient();
   const categories = Array.from(
     new Set(menusArray.map((item) => item.category))
@@ -167,6 +171,22 @@ export default function BranchMenu({ menus, branchID }: BranchMenuProps) {
     return startIndex;
   };
 
+  const handleChangingCategoryName = async (
+    e: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (e.key === "Enter") {
+      await supabase
+        .from("menus")
+        .update({
+          category: newCategoryName,
+        })
+        .eq("category", category);
+
+      setHasCategoryChanged(true);
+      setChangeCategory(false);
+    }
+  };
+
   return (
     <div>
       <UploadMenu setMenusArray={setMenusArray} categories={categories} />
@@ -174,7 +194,24 @@ export default function BranchMenu({ menus, branchID }: BranchMenuProps) {
         const startingIndex = calculateStartingIndex(category);
         return (
           <ul key={category} className="mt-12">
-            <h2 className="text-xl font-bold mb-4">{category}</h2>
+            {changeCategory ? (
+              <Input
+                onChange={(e) => {
+                  setNewCategoryName(e.target.value);
+                  setCategory(category);
+                }}
+                value={newCategoryName}
+                onKeyDown={handleChangingCategoryName}
+                className="w-1/4"
+              />
+            ) : (
+              <h2
+                className="text-xl font-bold mb-4 cursor-pointer"
+                onClick={() => setChangeCategory(true)}>
+                {hasCategoryChanged ? newCategoryName : category}
+              </h2>
+            )}
+
             <div className="overflow-hidden">
               <Table>
                 <TableHeader>
