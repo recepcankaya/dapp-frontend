@@ -1,8 +1,8 @@
 "use client";
 import Image from "next/image";
-import { useRef, useState, useEffect } from "react";
-import { createClient } from "@/src/lib/supabase/client";
+import { useState, useEffect } from "react";
 
+import { createClient } from "@/src/lib/supabase/client";
 import UploadMenu from "./menu/UploadMenu";
 import EditMenu from "./menu/EditMenu";
 import DeleteMenuItem from "./menu/DeleteMenuItem";

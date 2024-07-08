@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { getShortLengthToastOptions } from "@/src/lib/toastOptions";
 import { initialState } from "@/src/lib/productInitialState";
 import addMenuProduct from "@/src/server-actions/brand/branch-add-menu-product";
+import ShowProductDemo from "./ShowProductDemo";
 
 import {
   Dialog,
@@ -34,8 +35,21 @@ type Props = {
   categories: Menus["category"][];
 };
 
+export type ProductInfo = {
+  name: string;
+  price: string;
+  description: string;
+  image: File | null;
+};
+
 export default function UploadMenu({ setMenusArray, categories }: Props) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [productInfo, setProductInfo] = useState<ProductInfo>({
+    name: "",
+    price: "",
+    description: "",
+    image: null,
+  });
   const [updateState, formAction] = useFormState(addMenuProduct, initialState);
   const params = useParams<{ "brand-home": string }>();
 
@@ -56,6 +70,11 @@ export default function UploadMenu({ setMenusArray, categories }: Props) {
     setMenusArray,
   ]);
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files ? e.target.files[0] : null;
+    setProductInfo({ ...productInfo, image: file });
+  };
+
   return (
     <div className="flex justify-center items-center mb-6 relative">
       <div className="ml-auto">
@@ -75,7 +94,15 @@ export default function UploadMenu({ setMenusArray, categories }: Props) {
               />
               <div>
                 <Label htmlFor="name">Ürünün İsmi</Label>
-                <Input id="name" name="name" className="bg-[#dbb5b59d]" />
+                <Input
+                  id="name"
+                  name="name"
+                  className="bg-[#dbb5b59d]"
+                  onChange={(e) =>
+                    setProductInfo({ ...productInfo, name: e.target.value })
+                  }
+                  value={productInfo.name}
+                />
               </div>
               <div>
                 <Label htmlFor="price">Ürünün Fiyatı</Label>
@@ -84,6 +111,13 @@ export default function UploadMenu({ setMenusArray, categories }: Props) {
                   name="price"
                   type="number"
                   className="bg-[#dbb5b59d]"
+                  onChange={(e) =>
+                    setProductInfo({
+                      ...productInfo,
+                      price: e.target.value.toString(),
+                    })
+                  }
+                  value={productInfo.price}
                 />
               </div>
               <div className="grid gap-2">
@@ -92,6 +126,13 @@ export default function UploadMenu({ setMenusArray, categories }: Props) {
                   id="description"
                   name="description"
                   className="bg-[#dbb5b59d]"
+                  onChange={(e) =>
+                    setProductInfo({
+                      ...productInfo,
+                      description: e.target.value,
+                    })
+                  }
+                  value={productInfo.description}
                 />
               </div>
               <div className="grid gap-2">
@@ -101,6 +142,7 @@ export default function UploadMenu({ setMenusArray, categories }: Props) {
                   name="image"
                   type="file"
                   className="bg-[#dbb5b59d]"
+                  onChange={handleFileChange}
                 />
               </div>
               <div className="grid gap-2">
@@ -118,7 +160,7 @@ export default function UploadMenu({ setMenusArray, categories }: Props) {
                   </SelectContent>
                 </Select>
                 <div className="grid gap-2">
-                  <Label htmlFor="image">Yeni Kategori Açmak İçin</Label>
+                  <Label htmlFor="new-category">Yeni Kategori Açmak İçin</Label>
                   <Input
                     id="new-category"
                     name="newCategory"
@@ -130,6 +172,7 @@ export default function UploadMenu({ setMenusArray, categories }: Props) {
                 <SubmitButton type="submit" className="mt-8" title="Kaydet" />
               </DialogFooter>
             </form>
+            <ShowProductDemo productInfo={productInfo} />
           </DialogContent>
         </Dialog>
       </div>
