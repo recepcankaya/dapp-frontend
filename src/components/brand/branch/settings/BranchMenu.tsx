@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { createClient } from "@/src/lib/supabase/client";
 
 import UploadMenu from "./menu/UploadMenu";
@@ -23,67 +23,83 @@ type BranchMenuProps = {
 
 export default function BranchMenu({ menus, branchID }: BranchMenuProps) {
   const [menusArray, setMenusArray] = useState<Menus[]>([...menus]);
-  const draggedProduct = useRef<number | null>(null);
-  const replacedProduct = useRef<number | null>(null);
+  const [draggedProductIndex, setDraggedProductIndex] = useState<number | null>(
+    null
+  );
+  const [replacedProductIndex, setReplacedProductIndex] = useState<
+    number | null
+  >(null);
+  const [category, setCategory] = useState<string>("");
   const supabase = createClient();
   const categories = Array.from(
     new Set(menusArray.map((item) => item.category))
   );
 
-  /**
-   * Handles the drag start event for a Menu item.
-   *
-   * @param e - The drag event object.
-   * @param index - The index of the Menu item being dragged.
-   */
+  useEffect(() => {
+    const handleDragOver = (e: DragEvent) => {
+      e.preventDefault();
+      window.scrollBy(0, e.movementY);
+    };
+
+    window.addEventListener("dragover", handleDragOver);
+
+    return () => {
+      window.removeEventListener("dragover", handleDragOver);
+    };
+  }, []);
+
   const handleDragStart = (e: React.DragEvent, index: number) => {
-    draggedProduct.current = index;
+    setDraggedProductIndex(index);
   };
 
-  /**
-   * Handles the drag enter event for a Menu item.
-   *
-   * @param e - The drag event object.
-   * @param index - The index of the Menu being replaced.
-   */
-  const handleDragEnter = (e: React.DragEvent, index: number) => {
-    replacedProduct.current = index;
+  const handleDragEnter = (
+    e: React.DragEvent,
+    index: number,
+    category: Menus["category"]
+  ) => {
+    setReplacedProductIndex(index);
+    setCategory(category);
   };
 
-  /**
-   * Handles the drag end event for Menu items.
-   * @param e - The drag event object.
-   */
-  const handleDragEnd = async (e: React.DragEvent) => {
+  const handleDragEnd = async (e: React.DragEvent, productID: Menus["id"]) => {
     if (
-      replacedProduct.current !== null &&
-      draggedProduct.current !== null &&
+      draggedProductIndex !== null &&
+      replacedProductIndex !== null &&
       menus
     ) {
-      if (draggedProduct.current === replacedProduct.current) {
+      if (draggedProductIndex === replacedProductIndex) {
         return;
       }
 
-      if (draggedProduct.current > replacedProduct.current) {
+      if (draggedProductIndex > replacedProductIndex) {
         const { data: draggedProductPositionUpdated, error } = await supabase
           .from("menus")
           .update({
-            position: replacedProduct.current,
+            position: replacedProductIndex,
+            category: category,
           })
-          .eq("branch_id", branchID)
-          .eq("position", draggedProduct.current)
-          .select("id")
+          .eq("id", productID)
+          .select("category")
           .single();
+
+        if (draggedProductPositionUpdated!.category !== category) {
+          await supabase
+            .from("menus")
+            .update({
+              category: category,
+            })
+            .eq("id", productID);
+        }
 
         const { data: positions } = await supabase
           .from("menus")
           .select("position, id")
           .eq("branch_id", branchID)
-          .gte("position", replacedProduct.current)
-          .lt("position", draggedProduct.current);
+          .gte("position", replacedProductIndex)
+          .lt("position", draggedProductIndex);
 
         for (let i = 0; i < positions!.length; i++) {
-          if (positions![i].id !== draggedProductPositionUpdated!.id) {
+          if (positions![i].id !== productID) {
             const { data: otherPositionsUpdated } = await supabase
               .from("menus")
               .update({
@@ -101,25 +117,25 @@ export default function BranchMenu({ menus, branchID }: BranchMenuProps) {
 
         setMenusArray([...updatedMenus!]);
       } else {
-        const { data: draggedProductPositionUpdated } = await supabase
+        const { data: draggedProductPositionUpdated, error } = await supabase
           .from("menus")
           .update({
-            position: replacedProduct.current,
+            position: replacedProductIndex,
+            category: category,
           })
-          .eq("branch_id", branchID)
-          .eq("position", draggedProduct.current)
-          .select("id")
+          .eq("id", productID)
+          .select("category")
           .single();
 
         const { data: positions } = await supabase
           .from("menus")
           .select("position, id")
           .eq("branch_id", branchID)
-          .lte("position", replacedProduct.current)
-          .gt("position", draggedProduct.current);
+          .lte("position", replacedProductIndex)
+          .gt("position", draggedProductIndex);
 
         for (let i = 0; i < positions!.length; i++) {
-          if (positions![i].id !== draggedProductPositionUpdated!.id) {
+          if (positions![i].id !== productID) {
             const { data: otherPositionsUpdated } = await supabase
               .from("menus")
               .update({
@@ -140,77 +156,98 @@ export default function BranchMenu({ menus, branchID }: BranchMenuProps) {
     }
   };
 
+  const calculateStartingIndex = (currentCategory: Menus["category"]) => {
+    let startIndex = 0;
+    for (const category of categories) {
+      if (category === currentCategory) break;
+      startIndex += menusArray.filter(
+        (menu) => menu.category === category
+      ).length;
+    }
+    return startIndex;
+  };
+
   return (
     <div>
       <UploadMenu setMenusArray={setMenusArray} categories={categories} />
-      {categories.map((category) => (
-        <ul key={category} className="mt-12">
-          <h2 className="text-xl font-bold mb-4">{category}</h2>
-          <div className="overflow-hidden">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-1/5 p-4">Ürünün Resmi</TableHead>
-                  <TableHead className="w-1/5 p-4">Ürünün Adı</TableHead>
-                  <TableHead className="w-1/5 p-4">Ürünün Açıklaması</TableHead>
-                  <TableHead className="w-1/5 p-4">Ürünün Fiyatı</TableHead>
-                  <TableHead className="w-1/5 p-4">
-                    Ürün İçin Aksiyonlar
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {menusArray
-                  .filter((product) => product.category === category)
-                  .map((product: Menus, index: number) => (
-                    <TableRow
-                      draggable
-                      onDragStart={(e) => handleDragStart(e, index)}
-                      onDragEnter={(e) => handleDragEnter(e, index)}
-                      onDragEnd={(e) => handleDragEnd(e)}
-                      key={product.id}
-                      className="hover:bg-gray-200 border-none">
-                      <TableCell className="p-4">
-                        {product.image_url ? (
-                          <Image
-                            src={product.image_url}
-                            alt={product.name}
-                            width={64}
-                            height={64}
-                            className="rounded-md object-cover"
-                          />
-                        ) : (
-                          <div></div>
-                        )}
-                      </TableCell>
-                      <TableCell className="p-4 font-medium">
-                        {product.name}
-                      </TableCell>
-                      <TableCell className="p-4">
-                        {product.description}
-                      </TableCell>
-                      <TableCell className="p-4">
-                        {product.price + " TL"}
-                      </TableCell>
-                      <TableCell className="p-4">
-                        <div className="flex gap-2">
-                          <EditMenu
-                            product={product}
-                            setMenusArray={setMenusArray}
-                          />
-                          <DeleteMenuItem
-                            product={product}
-                            setMenusArray={setMenusArray}
-                          />
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
-          </div>
-        </ul>
-      ))}
+      {categories.map((category) => {
+        const startingIndex = calculateStartingIndex(category);
+        return (
+          <ul key={category} className="mt-12">
+            <h2 className="text-xl font-bold mb-4">{category}</h2>
+            <div className="overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-1/5 p-4">Ürünün Resmi</TableHead>
+                    <TableHead className="w-1/5 p-4">Ürünün Adı</TableHead>
+                    <TableHead className="w-1/5 p-4">
+                      Ürünün Açıklaması
+                    </TableHead>
+                    <TableHead className="w-1/5 p-4">Ürünün Fiyatı</TableHead>
+                    <TableHead className="w-1/5 p-4">
+                      Ürün İçin Aksiyonlar
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {menusArray
+                    .filter((product) => product.category === category)
+                    .map((product: Menus, index: number) => {
+                      const globalIndex = startingIndex + index;
+                      return (
+                        <TableRow
+                          draggable
+                          onDragStart={(e) => handleDragStart(e, globalIndex)}
+                          onDragEnter={(e) =>
+                            handleDragEnter(e, globalIndex, category)
+                          }
+                          onDragEnd={(e) => handleDragEnd(e, product.id)}
+                          key={product.id}
+                          className="hover:bg-gray-200 border-none">
+                          <TableCell className="p-4">
+                            {product.image_url ? (
+                              <Image
+                                src={product.image_url}
+                                alt={product.name}
+                                width={64}
+                                height={64}
+                                className="rounded-md object-cover"
+                              />
+                            ) : (
+                              <div></div>
+                            )}
+                          </TableCell>
+                          <TableCell className="p-4 font-medium">
+                            {product.name}
+                          </TableCell>
+                          <TableCell className="p-4">
+                            {product.description}
+                          </TableCell>
+                          <TableCell className="p-4">
+                            {product.price + " TL"}
+                          </TableCell>
+                          <TableCell className="p-4">
+                            <div className="flex gap-2">
+                              <EditMenu
+                                product={product}
+                                setMenusArray={setMenusArray}
+                              />
+                              <DeleteMenuItem
+                                product={product}
+                                setMenusArray={setMenusArray}
+                              />
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                </TableBody>
+              </Table>
+            </div>
+          </ul>
+        );
+      })}
     </div>
   );
 }
