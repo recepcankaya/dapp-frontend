@@ -5,7 +5,7 @@ export type CampaignStatus = {
 };
 
 export const initialState: CampaignStatus = {
-  success: false,
+  success: undefined,
   message: "",
   campaign: {
     id: "",

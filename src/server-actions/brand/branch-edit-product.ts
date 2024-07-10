@@ -88,7 +88,7 @@ export default async function editMenuProduct(
         return {
           success: false,
           message:
-            "Ürün güncellenirken bir hata oluştu. Lütfen tekrar deneyiniz.",
+            "Ürün resmi güncellenirken bir hata oluştu. Lütfen tekrar deneyiniz.",
           product: {
             branch_id: "",
             description: "",

@@ -30,10 +30,11 @@ export default function BranchMenu({ menus, branchID }: BranchMenuProps) {
   const [replacedProductIndex, setReplacedProductIndex] = useState<
     number | null
   >(null);
-  const [category, setCategory] = useState<string>("");
-  const [changeCategory, setChangeCategory] = useState<boolean>(false);
-  const [hasCategoryChanged, setHasCategoryChanged] = useState<boolean>(false);
-  const [newCategoryName, setNewCategoryName] = useState<string>("");
+  const [categoryNames, setCategoryNames] = useState<Record<string, string>>(
+    {}
+  );
+  const [changingCategory, setChangingCategory] = useState<string | null>(null);
+  const [category, setCategory] = useState<Menus["category"]>("");
   const supabase = createClient();
   const categories = Array.from(
     new Set(menusArray.map((item) => item.category))
@@ -66,11 +67,7 @@ export default function BranchMenu({ menus, branchID }: BranchMenuProps) {
   };
 
   const handleDragEnd = async (e: React.DragEvent, productID: Menus["id"]) => {
-    if (
-      draggedProductIndex !== null &&
-      replacedProductIndex !== null &&
-      menus
-    ) {
+    if (draggedProductIndex !== null && replacedProductIndex !== null) {
       if (draggedProductIndex === replacedProductIndex) {
         return;
       }
@@ -172,18 +169,26 @@ export default function BranchMenu({ menus, branchID }: BranchMenuProps) {
   };
 
   const handleChangingCategoryName = async (
-    e: React.KeyboardEvent<HTMLInputElement>
+    e: React.KeyboardEvent<HTMLInputElement>,
+    category: Menus["category"]
   ) => {
     if (e.key === "Enter") {
       await supabase
         .from("menus")
         .update({
-          category: newCategoryName,
+          category: categoryNames[category],
         })
         .eq("category", category);
 
-      setHasCategoryChanged(true);
-      setChangeCategory(false);
+      setMenusArray((prevMenus) =>
+        prevMenus.map((menu) =>
+          menu.category === category
+            ? { ...menu, category: categoryNames[category] }
+            : menu
+        )
+      );
+
+      setChangingCategory(null);
     }
   };
 
@@ -193,25 +198,32 @@ export default function BranchMenu({ menus, branchID }: BranchMenuProps) {
       {categories.map((category) => {
         const startingIndex = calculateStartingIndex(category);
         return (
-          <ul key={category} className="mt-12">
-            {changeCategory ? (
+          <div key={category} className="mt-12">
+            {changingCategory === category ? (
               <Input
                 onChange={(e) => {
-                  setNewCategoryName(e.target.value);
-                  setCategory(category);
+                  setCategoryNames({
+                    ...categoryNames,
+                    [category]: e.target.value,
+                  });
                 }}
-                value={newCategoryName}
-                onKeyDown={handleChangingCategoryName}
+                value={categoryNames[category] || category}
+                onKeyDown={(e) => handleChangingCategoryName(e, category)}
                 className="w-1/4"
               />
             ) : (
               <h2
                 className="text-xl font-bold mb-4 cursor-pointer"
-                onClick={() => setChangeCategory(true)}>
-                {hasCategoryChanged ? newCategoryName : category}
+                onClick={() => {
+                  setChangingCategory(category);
+                  setCategoryNames({
+                    ...categoryNames,
+                    [category]: category,
+                  });
+                }}>
+                {categoryNames[category] || category}
               </h2>
             )}
-
             <div className="overflow-hidden">
               <Table>
                 <TableHeader>
@@ -282,7 +294,7 @@ export default function BranchMenu({ menus, branchID }: BranchMenuProps) {
                 </TableBody>
               </Table>
             </div>
-          </ul>
+          </div>
         );
       })}
     </div>

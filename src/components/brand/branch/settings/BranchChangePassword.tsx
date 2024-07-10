@@ -47,7 +47,7 @@ export default function BranchChangePassword() {
   }, [state.message, state.success]);
 
   return (
-    <section className="grid gap-6">
+    <section className="container grid gap-6">
       <Card className="pt-12 bg-[#D9D9D9]">
         <CardHeader>
           <CardTitle>Şifre Değiştirme</CardTitle>

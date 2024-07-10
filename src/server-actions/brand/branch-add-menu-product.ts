@@ -114,6 +114,12 @@ export default async function addMenuProduct(
       .from("menus")
       .getPublicUrl(`${convertToEnglish}/${turnProductToEnglishChar}`);
 
+    const { data: categoryPosition } = await supabase
+      .from("menus")
+      .select("category_position")
+      .eq("category", category)
+      .single();
+
     const { data: menu, error } = await supabase
       .from("menus")
       .insert({

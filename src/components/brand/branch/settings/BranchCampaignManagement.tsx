@@ -145,58 +145,62 @@ export default function BranchCampaignManagement({
   return (
     <div>
       <UploadCampaign setCampaignsArray={setCampaignsArray!} />
-      <div className="overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-1/7 p-4">Kampanya Favori mi?</TableHead>
-              <TableHead className="w-2/7 p-4">Kampanyanın Resmi</TableHead>
-              <TableHead className="w-2/7 p-4">Kampanyanın Adı</TableHead>
-              <TableHead className="w-1/7 p-4"></TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {campaignsArray.map((campaign: Campaigns, index: number) => (
-              <Fragment key={campaign.id}>
-                <TableRow
-                  draggable
-                  onDragStart={(e) => handleDragStart(index)}
-                  onDragEnter={(e) => handleDragEnter(index)}
-                  onDragEnd={(e) => handleDragEnd(e)}
-                  className="hover:bg-gray-200 border-none active:cursor-grabbing">
-                  <TableCell className="p-4">
-                    <UpdateCampaign
-                      isCampaignFavourite={campaign.is_favourite ?? false}
-                      campaignID={campaign.id}
-                      setCampaignsArray={setCampaignsArray!}
-                    />
-                  </TableCell>
-                  <TableCell className="p-4">
-                    <Image
-                      src={campaign.image_url}
-                      alt={campaign.name ?? "Kampanya resmi"}
-                      priority
-                      width={128}
-                      height={128}
-                      className="rounded-md object-cover"
-                    />
-                  </TableCell>
-                  <TableCell className="p-4 font-medium">
-                    {campaign.name}
-                  </TableCell>
-                  <TableCell className="p-4">
-                    <DeleteCampaign
-                      campaignID={campaign.id}
-                      campaignName={campaign.name}
-                      setCampaignsArray={setCampaignsArray!}
-                    />
-                  </TableCell>
-                </TableRow>
-              </Fragment>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+      {campaignsArray.length > 0 ? (
+        <div className="overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-1/7 p-4">Kampanya Favori mi?</TableHead>
+                <TableHead className="w-2/7 p-4">Kampanyanın Resmi</TableHead>
+                <TableHead className="w-2/7 p-4">Kampanyanın Adı</TableHead>
+                <TableHead className="w-1/7 p-4"></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {campaignsArray.map((campaign: Campaigns, index: number) => (
+                <Fragment key={campaign.id}>
+                  <TableRow
+                    draggable
+                    onDragStart={(e) => handleDragStart(index)}
+                    onDragEnter={(e) => handleDragEnter(index)}
+                    onDragEnd={(e) => handleDragEnd(e)}
+                    className="hover:bg-gray-200 border-none active:cursor-grabbing">
+                    <TableCell className="p-4">
+                      <UpdateCampaign
+                        isCampaignFavourite={campaign.is_favourite ?? false}
+                        campaignID={campaign.id}
+                        setCampaignsArray={setCampaignsArray!}
+                      />
+                    </TableCell>
+                    <TableCell className="p-4">
+                      <Image
+                        src={campaign.image_url}
+                        alt={campaign.name ?? "Kampanya resmi"}
+                        priority
+                        width={128}
+                        height={128}
+                        className="rounded-md object-cover"
+                      />
+                    </TableCell>
+                    <TableCell className="p-4 font-medium">
+                      {campaign.name}
+                    </TableCell>
+                    <TableCell className="p-4">
+                      <DeleteCampaign
+                        campaignID={campaign.id}
+                        campaignName={campaign.name}
+                        setCampaignsArray={setCampaignsArray!}
+                      />
+                    </TableCell>
+                  </TableRow>
+                </Fragment>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      ) : (
+        <p className="mt-12 text-center">Aktif kampanyanız bulunmamaktadır.</p>
+      )}
     </div>
   );
 }
