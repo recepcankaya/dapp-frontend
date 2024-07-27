@@ -195,108 +195,114 @@ export default function BranchMenu({ menus, branchID }: BranchMenuProps) {
   return (
     <div>
       <UploadMenu setMenusArray={setMenusArray} categories={categories} />
-      {categories.map((category) => {
-        const startingIndex = calculateStartingIndex(category);
-        return (
-          <div key={category} className="mt-12">
-            {changingCategory === category ? (
-              <Input
-                onChange={(e) => {
-                  setCategoryNames({
-                    ...categoryNames,
-                    [category]: e.target.value,
-                  });
-                }}
-                value={categoryNames[category] || category}
-                onKeyDown={(e) => handleChangingCategoryName(e, category)}
-                className="w-1/4"
-              />
-            ) : (
-              <h2
-                className="text-xl font-bold mb-4 cursor-pointer"
-                onClick={() => {
-                  setChangingCategory(category);
-                  setCategoryNames({
-                    ...categoryNames,
-                    [category]: category,
-                  });
-                }}>
-                {categoryNames[category] || category}
-              </h2>
-            )}
-            <div className="overflow-hidden">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-1/5 p-4">Ürünün Resmi</TableHead>
-                    <TableHead className="w-1/5 p-4">Ürünün Adı</TableHead>
-                    <TableHead className="w-1/5 p-4">
-                      Ürünün Açıklaması
-                    </TableHead>
-                    <TableHead className="w-1/5 p-4">Ürünün Fiyatı</TableHead>
-                    <TableHead className="w-1/5 p-4">
-                      Ürün İçin Aksiyonlar
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {menusArray
-                    .filter((product) => product.category === category)
-                    .map((product: Menus, index: number) => {
-                      const globalIndex = startingIndex + index;
-                      return (
-                        <TableRow
-                          draggable
-                          onDragStart={(e) => handleDragStart(e, globalIndex)}
-                          onDragEnter={(e) =>
-                            handleDragEnter(e, globalIndex, category)
-                          }
-                          onDragEnd={(e) => handleDragEnd(e, product.id)}
-                          key={product.id}
-                          className="hover:bg-gray-200 border-none">
-                          <TableCell className="p-4">
-                            {product.image_url ? (
-                              <Image
-                                src={product.image_url}
-                                alt={product.name}
-                                width={64}
-                                height={64}
-                                className="rounded-md object-cover"
-                              />
-                            ) : (
-                              <div></div>
-                            )}
-                          </TableCell>
-                          <TableCell className="p-4 font-medium">
-                            {product.name}
-                          </TableCell>
-                          <TableCell className="p-4">
-                            {product.description}
-                          </TableCell>
-                          <TableCell className="p-4">
-                            {product.price + " TL"}
-                          </TableCell>
-                          <TableCell className="p-4">
-                            <div className="flex gap-2">
-                              <EditMenu
-                                product={product}
-                                setMenusArray={setMenusArray}
-                              />
-                              <DeleteMenuItem
-                                product={product}
-                                setMenusArray={setMenusArray}
-                              />
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
-                </TableBody>
-              </Table>
+      {menusArray.length > 0 ? (
+        categories.map((category) => {
+          const startingIndex = calculateStartingIndex(category);
+          return (
+            <div key={category} className="mt-12">
+              {changingCategory === category ? (
+                <Input
+                  onChange={(e) => {
+                    setCategoryNames({
+                      ...categoryNames,
+                      [category]: e.target.value,
+                    });
+                  }}
+                  value={categoryNames[category] || category}
+                  onKeyDown={(e) => handleChangingCategoryName(e, category)}
+                  className="w-1/4"
+                />
+              ) : (
+                <h2
+                  className="text-xl font-bold mb-4 cursor-pointer"
+                  onClick={() => {
+                    setChangingCategory(category);
+                    setCategoryNames({
+                      ...categoryNames,
+                      [category]: category,
+                    });
+                  }}>
+                  {categoryNames[category] || category}
+                </h2>
+              )}
+              <div className="overflow-hidden">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-1/5 p-4">Ürünün Resmi</TableHead>
+                      <TableHead className="w-1/5 p-4">Ürünün Adı</TableHead>
+                      <TableHead className="w-1/5 p-4">
+                        Ürünün Açıklaması
+                      </TableHead>
+                      <TableHead className="w-1/5 p-4">Ürünün Fiyatı</TableHead>
+                      <TableHead className="w-1/5 p-4">
+                        Ürün İçin Aksiyonlar
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {menusArray
+                      .filter((product) => product.category === category)
+                      .map((product: Menus, index: number) => {
+                        const globalIndex = startingIndex + index;
+                        return (
+                          <TableRow
+                            draggable
+                            onDragStart={(e) => handleDragStart(e, globalIndex)}
+                            onDragEnter={(e) =>
+                              handleDragEnter(e, globalIndex, category)
+                            }
+                            onDragEnd={(e) => handleDragEnd(e, product.id)}
+                            key={product.id}
+                            className="hover:bg-gray-200 border-none">
+                            <TableCell className="p-4">
+                              {product.image_url ? (
+                                <Image
+                                  src={product.image_url}
+                                  alt={product.name}
+                                  width={64}
+                                  height={64}
+                                  className="rounded-md object-cover"
+                                />
+                              ) : (
+                                <div></div>
+                              )}
+                            </TableCell>
+                            <TableCell className="p-4 font-medium">
+                              {product.name}
+                            </TableCell>
+                            <TableCell className="p-4">
+                              {product.description}
+                            </TableCell>
+                            <TableCell className="p-4">
+                              {product.price + " TL"}
+                            </TableCell>
+                            <TableCell className="p-4">
+                              <div className="flex gap-2">
+                                <EditMenu
+                                  product={product}
+                                  setMenusArray={setMenusArray}
+                                />
+                                <DeleteMenuItem
+                                  product={product}
+                                  setMenusArray={setMenusArray}
+                                />
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                  </TableBody>
+                </Table>
+              </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })
+      ) : (
+        <p className="mt-12 text-center">
+          Menünüzde herhangi bir ürün bulunmamaktadır.
+        </p>
+      )}
     </div>
   );
 }

@@ -2,8 +2,18 @@
 import { revalidatePath } from "next/cache";
 
 import { createClient } from "@/src/lib/supabase/server";
-import getUserID from "@/src/lib/getUserID";
 import decodeTurkishCharacters from "@/src/lib/convertToEnglishCharacters";
+
+const initialProduct = {
+  branch_id: "",
+  description: "",
+  id: "",
+  image_url: "",
+  name: "",
+  price: 0,
+  position: 0,
+  category: "",
+};
 
 export default async function editMenuProduct(
   prevState: any,
@@ -28,7 +38,7 @@ export default async function editMenuProduct(
 
   if (image.name.toString() !== "undefined") {
     let imageUploadError = null;
-    // -----------------------------------------
+
     if (!findProduct?.image_url) {
       const uploadingResult = await supabase.storage
         .from("menus")
@@ -41,10 +51,31 @@ export default async function editMenuProduct(
       const updatingResult = await supabase.storage
         .from("menus")
         .update(
-          `${convertToEnglish}/${findProduct.category}/${turnProductToEnglishChar}`,
+          `${convertToEnglish}/${findProduct?.category}/${turnProductToEnglishChar}`,
           image
         );
       imageUploadError = updatingResult.error;
+    }
+
+    if (imageUploadError) {
+      if (
+        imageUploadError?.message.includes(
+          "The requested resource isn't a valid image for"
+        )
+      ) {
+        return {
+          success: false,
+          message: "Lütfen geçerli bir resim dosyası yükleyiniz.",
+          product: initialProduct,
+        };
+      } else {
+        return {
+          success: false,
+          message:
+            "Ürün resmi güncellenirken bir hata oluştu. Lütfen tekrar deneyiniz.",
+          product: initialProduct,
+        };
+      }
     }
 
     const { data: productURL } = supabase.storage
@@ -52,7 +83,7 @@ export default async function editMenuProduct(
       .getPublicUrl(
         `${convertToEnglish}/${findProduct?.category}/${turnProductToEnglishChar}`
       );
-    // -----------------------------------------
+
     const { data: updatedProduct, error } = await supabase
       .from("menus")
       .update({
@@ -64,43 +95,13 @@ export default async function editMenuProduct(
       .select()
       .single();
 
-    if (error || imageUploadError) {
-      if (
-        imageUploadError?.message.includes(
-          "The requested resource isn't a valid image for"
-        )
-      ) {
-        return {
-          success: false,
-          message: "Lütfen geçerli bir resim dosyası yükleyiniz.",
-          product: {
-            branch_id: "",
-            description: "",
-            id: "",
-            image_url: "",
-            name: "",
-            price: 0,
-            position: 0,
-            category: "",
-          },
-        };
-      } else {
-        return {
-          success: false,
-          message:
-            "Ürün resmi güncellenirken bir hata oluştu. Lütfen tekrar deneyiniz.",
-          product: {
-            branch_id: "",
-            description: "",
-            id: "",
-            image_url: "",
-            name: "",
-            price: 0,
-            position: 0,
-            category: "",
-          },
-        };
-      }
+    if (error) {
+      return {
+        success: false,
+        message:
+          "Ürün güncellenirken bir hata oluştu. Lütfen tekrar deneyiniz.",
+        product: initialProduct,
+      };
     } else {
       revalidatePath("/brand/[brand-home]/settings", "page");
       return {
@@ -125,16 +126,7 @@ export default async function editMenuProduct(
         success: false,
         message:
           "Ürün güncellenirken bir hata oluştu. Lütfen tekrar deneyiniz.",
-        product: {
-          branch_id: "",
-          description: "",
-          id: "",
-          image_url: "",
-          name: "",
-          price: 0,
-          position: 0,
-          category: "",
-        },
+        product: initialProduct,
       };
     } else {
       revalidatePath("/brand/[brand-home]/settings", "page");

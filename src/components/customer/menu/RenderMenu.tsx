@@ -23,7 +23,7 @@ export default function RenderMenu({ menus }: Props) {
         <div className="flex flex-col justify-center items-center w-full">
           <div className="w-full flex flex-col justify-center mt-20 gap-y-2">
             <h1 className="font-bold mb-3 pl-4 sm:pl-5 text-xl">Menü</h1>
-            <div className="flex gap-8 justify-start overflow-y-auto bg-[#DBB5B5] p-6 relative drop-shadow-xl overflow-x-auto">
+            <div className="flex gap-8 justify-start overflow-y-auto bg-[#DBB5B5] p-6 relative overflow-x-auto">
               {menusArray?.map((product) => (
                 <li
                   key={item.categoryID}

@@ -39,13 +39,7 @@ export default async function Settings() {
         <h2 className="text-lg sm:text-xl md:text-2xl font-bold underline underline-offset-4 absolute left-1/2 transform -translate-x-1/2">
           Menü Yönetimi
         </h2>
-        {menu ? (
-          <BranchMenu menus={menu} branchID={userID} />
-        ) : (
-          <p className="mt-12 text-center">
-            Menünüze henüz ürün eklemesi yapmamışsınız.
-          </p>
-        )}
+        <BranchMenu menus={menu ?? []} branchID={userID} />
       </section>
     </main>
   );

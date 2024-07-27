@@ -112,7 +112,11 @@ export default async function addMenuProduct(
 
     const { data: productURL } = supabase.storage
       .from("menus")
-      .getPublicUrl(`${convertToEnglish}/${turnProductToEnglishChar}`);
+      .getPublicUrl(
+        `${convertToEnglish}/${
+          category || newCategory
+        }/${turnProductToEnglishChar}`
+      );
 
     const { data: categoryPosition } = await supabase
       .from("menus")
